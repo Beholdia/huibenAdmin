@@ -51,10 +51,11 @@ service.interceptors.response.use(
 		}
 	},
 	(error) => {
+		console.log(error);
 		// 对响应错误做点什么
-		if (error.msg.indexOf('timeout') != -1) {
+		if (error.message.indexOf('timeout') != -1) {
 			ElMessage.error('网络超时');
-		} else if (error.msg == 'Network Error') {
+		} else if (error.message == 'Network Error') {
 			ElMessage.error('网络连接错误');
 		} else {
 			if (error.response.data) ElMessage.error(error.response.statusText);
