@@ -58,6 +58,8 @@
     "dotenv": "^16.0.1",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.23.0",
+    "less": "^4.2.0",
+    "less-loader": "^12.2.0",
     "prettier": "^3.2.5",
     "pug": "^3.0.3",
     "pug-html-loader": "^1.1.5",

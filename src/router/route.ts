@@ -993,7 +993,43 @@ export const demoRoutes:Array<RouteRecordRaw> = [
 				},
 			},
 		]
-	}
+	},
+	// {
+	// 	path: '/book',
+	// 	name: 'book',
+	// 	component: () => import('/@/layout/routerView/parent.vue'),
+	// 	redirect: '/book/newbook',
+	// 	children:[
+	// 		{
+	// 			path: '/book/newbook',
+	// 			name: 'newbook',
+	// 			component: () => import('/@/views/book/Newbook.vue'),
+	// 			meta: {
+	// 				title: '新书入库',
+	// 				isLink: '',
+	// 				isHide: false,
+	// 				isKeepAlive: true,
+	// 				isAffix: false,
+	// 				isIframe: false,
+	// 				roles: ['admin'],
+	// 				icon: 'iconfont icon-xitongshezhi',
+	// 			},
+	// 			children: [
+					
+	// 			],
+	// 		},
+	// 	],
+	// 	meta: {
+	// 		title: '书籍信息管理',
+	// 		isLink: '',
+	// 		isHide: false,
+	// 		isKeepAlive: true,
+	// 		isAffix: true,
+	// 		isIframe: false,
+	// 		roles: ['admin', 'common'],
+	// 		icon: 'iconfont icon-shouye',
+	// 	},
+	// },
 ]
 
 /**

@@ -10,11 +10,12 @@ import ElementPlus from 'element-plus';
 
 import 'element-plus/dist/index.css';
 import '/@/theme/index.scss';
+import './less/element.less';
 import mitt from 'mitt';
 import VueGridLayout from 'vue-grid-layout';
-import {getUpFileUrl, handleTree, parseTime, selectDictLabel} from '/@/utils/gfast';
-import {useDict} from '/@/api/system/dict/data';
-import {getItems, setItems, getOptionValue, isEmpty} from '/@/api/items'
+import { getUpFileUrl, handleTree, parseTime, selectDictLabel } from '/@/utils/gfast';
+import { useDict } from '/@/api/system/dict/data';
+import { getItems, setItems, getOptionValue, isEmpty } from '/@/api/items'
 // 分页组件
 import pagination from '/@/components/pagination/index.vue'
 
@@ -38,18 +39,18 @@ app.use(pinia)
     .use(VueGridLayout)
     .mount('#app');
 
-app.config.globalProperties.getUpFileUrl=getUpFileUrl
-app.config.globalProperties.handleTree=handleTree
-app.config.globalProperties.useDict=useDict
-app.config.globalProperties.selectDictLabel=selectDictLabel
+app.config.globalProperties.getUpFileUrl = getUpFileUrl
+app.config.globalProperties.handleTree = handleTree
+app.config.globalProperties.useDict = useDict
+app.config.globalProperties.selectDictLabel = selectDictLabel
 
-app.config.globalProperties.getItems=getItems
-app.config.globalProperties.setItems=setItems
-app.config.globalProperties.getOptionValue=getOptionValue
-app.config.globalProperties.isEmpty=isEmpty
-app.config.globalProperties.parseTime=parseTime
+app.config.globalProperties.getItems = getItems
+app.config.globalProperties.setItems = setItems
+app.config.globalProperties.getOptionValue = getOptionValue
+app.config.globalProperties.isEmpty = isEmpty
+app.config.globalProperties.parseTime = parseTime
 
-const globalProperties={
+const globalProperties = {
     mittBus: mitt(),
     i18n
 }
