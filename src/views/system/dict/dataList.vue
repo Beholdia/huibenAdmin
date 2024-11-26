@@ -4,33 +4,18 @@
       <div class="system-user-search mb15">
         <el-form :model="tableData.param" ref="queryRef" :inline="true" label-width="68px">
           <el-form-item label="字典类型" prop="dictType">
-            <el-input
-                v-model="tableData.param.dictType"
-                placeholder="请输入字典类型"
-                clearable
-                size="default"
-                @keyup.enter.native="dataList"
-            />
+            <el-input v-model="tableData.param.dictType" placeholder="请输入字典类型" clearable size="default"
+              @keyup.enter.native="dataList" />
           </el-form-item>
           <el-form-item label="字典标签" prop="dictLabel">
-            <el-input
-                v-model="tableData.param.dictLabel"
-                placeholder="请输入字典标签"
-                clearable
-                size="default"
-                @keyup.enter.native="dataList"
-            />
+            <el-input v-model="tableData.param.dictLabel" placeholder="请输入字典标签" clearable size="default"
+              @keyup.enter.native="dataList" />
           </el-form-item>
           <el-form-item label="状态" prop="status" style="width: 200px;">
-            <el-select
-                v-model="tableData.param.status"
-                placeholder="字典状态"
-                clearable
-                size="default"
-                style="width: 240px"
-            >
-              <el-option label="启用"  :value="1"/>
-              <el-option label="禁用"  :value="0"/>
+            <el-select v-model="tableData.param.status" placeholder="字典状态" clearable size="default"
+              style="width: 240px">
+              <el-option label="启用" :value="1" />
+              <el-option label="禁用" :value="0" />
             </el-select>
           </el-form-item>
           <el-form-item>
@@ -68,7 +53,7 @@
         <el-table-column label="字典键值" align="center" prop="dictValue" />
         <el-table-column label="字典排序" align="center" prop="dictSort" />
         <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
-        <el-table-column label="创建时间" align="center" prop="createdAt" width="180"/>
+        <el-table-column label="创建时间" align="center" prop="createdAt" width="180" />
         <el-table-column prop="status" label="字典状态" show-overflow-tooltip>
           <template #default="scope">
             <el-tag type="success" v-if="scope.row.status">启用</el-tag>
@@ -82,23 +67,18 @@
           </template>
         </el-table-column>
       </el-table>
-      <pagination
-          v-show="tableData.total>0"
-          :total="tableData.total"
-          v-model:page="tableData.param.pageNum"
-          v-model:limit="tableData.param.pageSize"
-          @pagination="dataList"
-      />
+      <pagination v-show="tableData.total > 0" :total="tableData.total" v-model:page="tableData.param.page"
+        v-model:limit="tableData.param.limit" @pagination="dataList" />
     </el-card>
-    <EditDic ref="editDicRef" @dataList="dataList" :dict-type="tableData.param.dictType"/>
+    <EditDic ref="editDicRef" @dataList="dataList" :dict-type="tableData.param.dictType" />
   </div>
 </template>
 
 <script lang="ts">
 import { toRefs, reactive, onMounted, ref, defineComponent } from 'vue';
-import { ElMessageBox, ElMessage,FormInstance} from 'element-plus';
+import { ElMessageBox, ElMessage, FormInstance } from 'element-plus';
 import EditDic from '/@/views/system/dict/component/editDicData.vue';
-import {getDataList,deleteData} from "/@/api/system/dict/data";
+import { getDataList, deleteData } from "/@/api/system/dict/data";
 import { useRoute } from 'vue-router';
 
 
@@ -115,16 +95,16 @@ interface TableDataRow {
   createdAt: string
 }
 interface TableDataState {
-  ids:number[];
+  ids: number[];
   tableData: {
     data: Array<TableDataRow>;
     total: number;
     loading: boolean;
     param: {
-      pageNum: number;
-      pageSize: number;
+      page: number;
+      limit: number;
       dictType: string;
-      dictLabel:string;
+      dictLabel: string;
       status: string;
     };
   };
@@ -139,17 +119,17 @@ export default defineComponent({
     const editDicRef = ref();
     const queryRef = ref();
     const state = reactive<TableDataState>({
-      ids:[],
+      ids: [],
       tableData: {
         data: [],
         total: 0,
         loading: false,
         param: {
-          pageNum: 1,
-          pageSize: 10,
-          dictLabel:'',
-          dictType:'',
-          status:''
+          page: 1,
+          limit: 10,
+          dictLabel: '',
+          dictType: '',
+          status: ''
         },
       },
     });
@@ -157,8 +137,8 @@ export default defineComponent({
     const initTableData = () => {
       dataList()
     };
-    const dataList=()=>{
-      getDataList(state.tableData.param).then((res:any)=>{
+    const dataList = () => {
+      getDataList(state.tableData.param).then((res: any) => {
         state.tableData.data = res.data.list;
         state.tableData.total = res.data.total;
       });
@@ -174,14 +154,14 @@ export default defineComponent({
     // 删除字典
     const onRowDel = (row: TableDataRow) => {
       let msg = '你确定要删除所选数据？';
-      let ids:number[] = [] ;
-      if(row){
+      let ids: number[] = [];
+      if (row) {
         msg = `此操作将永久删除用户：“${row.dictLabel}”，是否继续?`
         ids = [row.dictCode]
-      }else{
+      } else {
         ids = state.ids
       }
-      if(ids.length===0){
+      if (ids.length === 0) {
         ElMessage.error('请选择要删除的数据。');
         return
       }
@@ -190,13 +170,13 @@ export default defineComponent({
         cancelButtonText: '取消',
         type: 'warning',
       })
-          .then(() => {
-            deleteData(ids).then(()=>{
-              ElMessage.success('删除成功');
-              dataList();
-            })
+        .then(() => {
+          deleteData(ids).then(() => {
+            ElMessage.success('删除成功');
+            dataList();
           })
-          .catch(() => {});
+        })
+        .catch(() => { });
     };
     // 页面加载时
     onMounted(() => {
@@ -211,7 +191,7 @@ export default defineComponent({
       dataList()
     };
     // 多选框选中数据
-    const handleSelectionChange = (selection:TableDataRow[])=> {
+    const handleSelectionChange = (selection: TableDataRow[]) => {
       state.ids = selection.map(item => item.dictCode)
     };
     return {

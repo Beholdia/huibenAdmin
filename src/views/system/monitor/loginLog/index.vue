@@ -4,66 +4,31 @@
       <div class="system-user-search mb15">
         <el-form :model="tableData.param" ref="queryRef" :inline="true" label-width="68px">
           <el-form-item label="登录IP" prop="ipaddr">
-            <el-input
-                v-model="tableData.param.ipaddr"
-                placeholder="请输入登录地址"
-                clearable
-                style="width: 180px;"
-                size="default"
-                @keyup.enter.native="dataList"
-            />
+            <el-input v-model="tableData.param.ipaddr" placeholder="请输入登录地址" clearable style="width: 180px;"
+              size="default" @keyup.enter.native="dataList" />
           </el-form-item>
 
           <el-form-item label="登录地点" prop="loginLocation">
-            <el-input
-                v-model="tableData.param.loginLocation"
-                placeholder="请输入登录地点"
-                clearable
-                style="width: 180px;"
-                size="default"
-                @keyup.enter.native="dataList"
-            />
+            <el-input v-model="tableData.param.loginLocation" placeholder="请输入登录地点" clearable style="width: 180px;"
+              size="default" @keyup.enter.native="dataList" />
           </el-form-item>
 
           <el-form-item label="用户名称" prop="userName">
-            <el-input
-                v-model="tableData.param.userName"
-                placeholder="请输入用户名称"
-                clearable
-                style="width: 180px;"
-                size="default"
-                @keyup.enter.native="dataList"
-            />
+            <el-input v-model="tableData.param.userName" placeholder="请输入用户名称" clearable style="width: 180px;"
+              size="default" @keyup.enter.native="dataList" />
           </el-form-item>
 
           <el-form-item label="状态" prop="status">
-            <el-select
-                v-model="tableData.param.status"
-                placeholder="登录状态"
-                clearable
-                size="default"
-                style="width: 180px"
-            >
-              <el-option
-                  v-for="dict in admin_login_status"
-                  :key="dict.value"
-                  :label="dict.label"
-                  :value="dict.value"
-              />
+            <el-select v-model="tableData.param.status" placeholder="登录状态" clearable size="default"
+              style="width: 180px">
+              <el-option v-for="dict in admin_login_status" :key="dict.value" :label="dict.label" :value="dict.value" />
             </el-select>
           </el-form-item>
 
           <el-form-item label="登录时间" prop="dateRange">
-            <el-date-picker
-                v-model="tableData.param.dateRange"
-                size="default"
-                style="width: 240px"
-                value-format="YYYY-MM-DD"
-                type="daterange"
-                range-separator="-"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-            ></el-date-picker>
+            <el-date-picker v-model="tableData.param.dateRange" size="default" style="width: 240px"
+              value-format="YYYY-MM-DD" type="daterange" range-separator="-" start-placeholder="开始日期"
+              end-placeholder="结束日期"></el-date-picker>
           </el-form-item>
           <el-form-item>
             <el-button size="default" type="primary" class="ml10" @click="dataList">
@@ -106,49 +71,44 @@
         <el-table-column label="登录日期" align="center" prop="loginTime" width="180" />
         <el-table-column label="登录模块" alian="center" prop="module"></el-table-column>
       </el-table>
-      <pagination
-          v-show="tableData.total>0"
-          :total="tableData.total"
-          v-model:page="tableData.param.pageNum"
-          v-model:limit="tableData.param.pageSize"
-          @pagination="dataList"
-      />
+      <pagination v-show="tableData.total > 0" :total="tableData.total" v-model:page="tableData.param.page"
+        v-model:limit="tableData.param.limit" @pagination="dataList" />
     </el-card>
   </div>
 </template>
 
 <script lang="ts">
-import { toRefs, reactive, onMounted, ref, defineComponent,getCurrentInstance,unref } from 'vue';
-import { ElMessageBox, ElMessage,FormInstance} from 'element-plus';
-import { logList,deleteLog,clearLog } from '/@/api/system/monitor/loginLog';
+import { toRefs, reactive, onMounted, ref, defineComponent, getCurrentInstance, unref } from 'vue';
+import { ElMessageBox, ElMessage, FormInstance } from 'element-plus';
+import { logList, deleteLog, clearLog } from '/@/api/system/monitor/loginLog';
 
 // 定义接口来定义对象的类型
 interface TableDataRow {
-  infoId:number;
-  loginName:string;
-  ipaddr:string;
-  loginLocation:string;
-  browser:string;
-  os:string;
-  status:number;
-  msg:string;
-  loginTime:string;
-  module:string;
+  infoId: number;
+  loginName: string;
+  ipaddr: string;
+  loginLocation: string;
+  browser: string;
+  os: string;
+  status: number;
+  msg: string;
+  loginTime: string;
+  module: string;
 }
 interface TableDataState {
-  ids:number[];
+  ids: number[];
   tableData: {
     data: Array<TableDataRow>;
     total: number;
     loading: boolean;
     param: {
-      pageNum: number;
-      pageSize: number;
+      page: number;
+      limit: number;
       dateRange: string[];
       status: string;
-      ipaddr:string;
-      loginLocation:string;
-      userName:string;
+      ipaddr: string;
+      loginLocation: string;
+      userName: string;
     };
   };
 }
@@ -156,23 +116,23 @@ interface TableDataState {
 export default defineComponent({
   name: 'apiV1SystemLoginLogList',
   setup() {
-    const {proxy} = getCurrentInstance() as any;
+    const { proxy } = getCurrentInstance() as any;
     const queryRef = ref();
-    const {admin_login_status} = proxy.useDict('admin_login_status')
+    const { admin_login_status } = proxy.useDict('admin_login_status')
     const state = reactive<TableDataState>({
-      ids:[],
+      ids: [],
       tableData: {
         data: [],
         total: 0,
         loading: false,
         param: {
-          pageNum: 1,
-          pageSize: 10,
+          page: 1,
+          limit: 10,
           dateRange: [],
           status: '',
-          ipaddr:'',
-          loginLocation:'',
-          userName:''
+          ipaddr: '',
+          loginLocation: '',
+          userName: ''
         },
       },
     });
@@ -180,8 +140,8 @@ export default defineComponent({
     const initTableData = () => {
       dataList()
     };
-    const dataList=()=>{
-      logList(state.tableData.param).then((res:any)=>{
+    const dataList = () => {
+      logList(state.tableData.param).then((res: any) => {
         state.tableData.data = res.data.list;
         state.tableData.total = res.data.total;
       });
@@ -189,14 +149,14 @@ export default defineComponent({
     // 删除日志
     const onRowDel = (row: TableDataRow) => {
       let msg = '你确定要删除所选数据？';
-      let ids:number[] = [] ;
-      if(row){
+      let ids: number[] = [];
+      if (row) {
         msg = `此操作将永久删除：“${row.loginName}”，是否继续?`
         ids = [row.infoId]
-      }else{
+      } else {
         ids = state.ids
       }
-      if(ids.length===0){
+      if (ids.length === 0) {
         ElMessage.error('请选择要删除的数据。');
         return
       }
@@ -205,13 +165,13 @@ export default defineComponent({
         cancelButtonText: '取消',
         type: 'warning',
       })
-          .then(() => {
-            deleteLog(ids).then(()=>{
-              ElMessage.success('删除成功');
-              dataList();
-            })
+        .then(() => {
+          deleteLog(ids).then(() => {
+            ElMessage.success('删除成功');
+            dataList();
           })
-          .catch(() => {});
+        })
+        .catch(() => { });
     };
     // 清空日志
     const onRowClear = () => {
@@ -220,13 +180,13 @@ export default defineComponent({
         cancelButtonText: '取消',
         type: 'warning',
       })
-          .then(() => {
-            clearLog().then(()=>{
-              ElMessage.success('清除成功');
-              dataList();
-            })
+        .then(() => {
+          clearLog().then(() => {
+            ElMessage.success('清除成功');
+            dataList();
           })
-          .catch(() => {});
+        })
+        .catch(() => { });
     };
     // 页面加载时
     onMounted(() => {
@@ -239,11 +199,11 @@ export default defineComponent({
       dataList()
     };
     // 多选框选中数据
-    const handleSelectionChange = (selection:TableDataRow[])=> {
+    const handleSelectionChange = (selection: TableDataRow[]) => {
       state.ids = selection.map(item => item.infoId)
     };
     // 登录状态字典翻译
-    const statusFormat = (row:TableDataRow) => {
+    const statusFormat = (row: TableDataRow) => {
       return proxy.selectDictLabel(unref(admin_login_status), row.status);
     };
     return {

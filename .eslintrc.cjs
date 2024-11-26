@@ -72,5 +72,6 @@ module.exports = {
 		'no-case-declarations': 'off',
 		'no-console': 'error',
 		'no-redeclare': 'off',
+		'no-console': 'off',
 	},
 };

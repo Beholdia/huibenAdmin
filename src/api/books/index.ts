@@ -4,6 +4,7 @@ import request from '/@/utils/request';
  * 书籍信息管理api接口集合
  */
 
+// isbn查询信息
 export function searchIsbn(params: object) {
   return request({
     url: '/api/v1/system/book/search/isbn',
@@ -13,21 +14,23 @@ export function searchIsbn(params: object) {
 }
 
 /**
- * 获取验证码
+ * isbn手工添加
  */
-export function captcha() {
+export function isbnStore(params: object) {
   return request({
-    url: "/api/v1/system/captcha/get",
-    method: "get"
+    url: "/api/v1/system/book/isbn/store",
+    method: "post",
+    data: params,
   })
 }
 
 /**
- * 退出登录
+ * 新书入库
  */
-export function logout() {
+export function bookStore(params: object) {
   return request({
-    url: '/api/v1/system/user/logout',
-    method: 'get',
+    url: '/api/v1/system/book/store',
+    method: 'post',
+    data: params,
   });
 }
