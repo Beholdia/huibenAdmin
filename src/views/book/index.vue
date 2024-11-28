@@ -4,10 +4,10 @@
     el-input(v-model="isbn" placeholder="请输入ISBN" @keyup.enter="onSearchIsbn")
     el-button(type="primary" @click="onSearchIsbn" ) 确认
   .main
-    //- BaseForm(:formList="formFields" ref="formRef" @onSubmit="storeIsbn" :showAdd = "showIsbnAdd")
+    BaseForm(:formList="formFields" ref="formRef" @onSubmit="storeIsbn" :showAdd = "showIsbnAdd")
       template(#button)
         el-button(type="primary" @click="showDrawer = true" size="large" v-if="isbn_id") 新书入库
-//- NewBookDrawer(v-model:show="showDrawer" :isbn_id="isbn_id")
+  NewBookDrawer(v-model:show="showDrawer" :isbn_id="isbn_id")
 </template>
 
 <script setup>
