@@ -65,7 +65,7 @@ export const dynamicRoutes: Array<RouteRecordRaw> = [
 	},
 ];
 
-export const demoRoutes:Array<RouteRecordRaw> = [
+export const demoRoutes: Array<RouteRecordRaw> = [
 	{
 		path: '/demo',
 		name: 'demo',
@@ -81,7 +81,7 @@ export const demoRoutes:Array<RouteRecordRaw> = [
 			roles: ['admin'],
 			icon: 'iconfont icon-diannao',
 		},
-		children:[
+		children: [
 			{
 				path: '/demo/system',
 				name: 'system',
@@ -98,7 +98,7 @@ export const demoRoutes:Array<RouteRecordRaw> = [
 					icon: 'iconfont icon-xitongshezhi',
 				},
 				children: [
-					
+
 				],
 			},
 			{
@@ -107,7 +107,7 @@ export const demoRoutes:Array<RouteRecordRaw> = [
 				component: () => import('/@/layout/routerView/parent.vue'),
 				redirect: '/menu/menu1',
 				meta: {
-					title: 'message.router.menu',
+					title: 'message.router.menu',// 菜单嵌套
 					isLink: '',
 					isHide: false,
 					isKeepAlive: true,
@@ -123,7 +123,7 @@ export const demoRoutes:Array<RouteRecordRaw> = [
 						component: () => import('/@/layout/routerView/parent.vue'),
 						redirect: '/menu/menu1/menu11',
 						meta: {
-							title: 'message.router.menu1',
+							title: 'message.router.menu1',// 菜单1
 							isLink: '',
 							isHide: false,
 							isKeepAlive: true,
@@ -138,7 +138,7 @@ export const demoRoutes:Array<RouteRecordRaw> = [
 								name: 'menu11',
 								component: () => import('/@/views/menu/menu1/menu11/index.vue'),
 								meta: {
-									title: 'message.router.menu11',
+									title: 'message.router.menu11',// 菜单11
 									isLink: '',
 									isHide: false,
 									isKeepAlive: true,
@@ -994,42 +994,112 @@ export const demoRoutes:Array<RouteRecordRaw> = [
 			},
 		]
 	},
-	// {
-	// 	path: '/book',
-	// 	name: 'book',
-	// 	component: () => import('/@/layout/routerView/parent.vue'),
-	// 	redirect: '/book/newbook',
-	// 	children:[
-	// 		{
-	// 			path: '/book/newbook',
-	// 			name: 'newbook',
-	// 			component: () => import('/@/views/book/Newbook.vue'),
-	// 			meta: {
-	// 				title: '新书入库',
-	// 				isLink: '',
-	// 				isHide: false,
-	// 				isKeepAlive: true,
-	// 				isAffix: false,
-	// 				isIframe: false,
-	// 				roles: ['admin'],
-	// 				icon: 'iconfont icon-xitongshezhi',
-	// 			},
-	// 			children: [
-					
-	// 			],
-	// 		},
-	// 	],
-	// 	meta: {
-	// 		title: '书籍信息管理',
-	// 		isLink: '',
-	// 		isHide: false,
-	// 		isKeepAlive: true,
-	// 		isAffix: true,
-	// 		isIframe: false,
-	// 		roles: ['admin', 'common'],
-	// 		icon: 'iconfont icon-shouye',
-	// 	},
-	// },
+	{
+		path: '/book',
+		name: 'book',
+		component: () => import('/@/layout/routerView/parent.vue'),
+		redirect: '/book/new',
+		meta: {
+			title: '书籍信息管理',
+			isLink: '',
+			isHide: false,
+			isKeepAlive: true,
+			isAffix: false,
+			isIframe: false,
+			roles: ['admin', 'common'],
+			icon: 'iconfont icon-shouye',
+		},
+		children: [
+			{
+				path: '/book/new',
+				name: 'booknew',
+				component: () => import('/@/views/book/index.vue'),
+				meta: {
+					title: '新书入库',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					roles: ['admin'],
+					icon: 'iconfont icon-xitongshezhi',
+				},
+				children: [
+
+				],
+			},
+			{
+				path: '/book/list',
+				name: 'booklist',
+				component: () => import('/@/views/book/list.vue'),
+				meta: {
+					title: '书籍列表',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					roles: ['admin'],
+					icon: 'iconfont icon-xitongshezhi',
+				},
+				children: [
+
+				],
+			},
+		],
+
+	},
+	{
+		path: '/sys',
+		name: 'sys',
+		component: () => import('/@/layout/routerView/parent.vue'),
+		redirect: '/sys/book',
+		meta: {
+			title: '系统设置',
+			isLink: '',
+			isHide: false,
+			isKeepAlive: true,
+			isAffix: false,
+			isIframe: false,
+			roles: ['admin', 'common'],
+			icon: 'iconfont icon-shouye',
+		},
+		children: [
+			{
+				path: '/sys/book',
+				name: 'sysbook',
+				component: () => import('/@/layout/routerView/parent.vue'),
+				redirect: '/sys/book/age',
+				meta: {
+					title: '书籍入库设置',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					roles: ['admin', 'common'],
+					icon: 'iconfont icon-shouye',
+				},
+				children: [
+					{
+						path: '/sys/book/age',
+						name: 'sysbookage',
+						component: () => import('/@/views/sys/book/Age.vue'),
+						meta: {
+							title: '年龄分类',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin', 'common'],
+							icon: 'iconfont icon-shouye',
+						},
+					}
+				]
+			}
+		]
+	}
 ]
 
 /**

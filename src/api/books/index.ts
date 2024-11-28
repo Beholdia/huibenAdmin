@@ -34,3 +34,20 @@ export function bookStore(params: object) {
     data: params,
   });
 }
+
+// 书籍列表
+export function bookList(params: object) {
+  return request({
+    url: "/api/v1/system/book/list",
+    method: "get",
+    params
+  })
+}
+// 下架下架书籍
+export function changeSaleStatus(params: object) {
+  return request({
+    url: "/api/v1/system/book/sale_status/change",
+    method: "post",
+    data: params,
+  })
+}

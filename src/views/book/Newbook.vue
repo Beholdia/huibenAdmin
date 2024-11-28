@@ -1,1 +1,0 @@
-<template>新书入库</template>
