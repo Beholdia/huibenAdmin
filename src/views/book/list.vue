@@ -4,12 +4,16 @@
     BaseFilter(:filterList="filterList" @onFilter="onFilter" v-model:form="form" ref="filter")
       template(#button)
         el-button(type="primary", @click="goAdd") 新增
+        el-button(type="primary", @click="changeSaleStatusAll('on_sale')") 批量上架
+        el-button(type="primary", @click="changeSaleStatusAll('off_sale')") 批量下架
   .wrapper
-    el-table(:data="list" style="width: 100%")
+    el-table(:data="list" style="width: 100%",@selection-change="handleSelectionChange")
+      el-table-column(type="selection" width="55")
       el-table-column(prop="biz_books_id" label="序号")
       el-table-column( label="封面")
         template(#default="{row}")
-          img.cover(:src="url+row.pic")
+          //- img.cover(:src="url+row.pic")
+          img.cover(:src="row.pic")
       el-table-column(prop="title" label="正书名")
       el-table-column(prop="isbn" label="ISBN号" width="200px")
       el-table-column(prop="collection_no" label="馆藏书号" width="200px")
@@ -23,6 +27,11 @@
           p(v-if="row.borrow_status=== 'available'") 可借
           p(v-else-if="row.borrow_status=== 'borrowed'") 借出
           p(v-else) {{ row.borrow_status }}
+      el-table-column( label="销售状态")
+        template(#default="{row}")
+          p(v-if="row.sale_status=== 'on_sale'") 可售
+          p(v-else-if="row.sale_status=== 'off_sale'") 不可售
+          p(v-else) {{ row.sale_status }}
       el-table-column(label="操作" width="100px")
         template(#default="{row}")
           .buttons
@@ -46,7 +55,7 @@ const form = ref({
 const list = ref([]);
 const page = ref(1);
 const total = ref(0);
-const limit = ref(5);
+const limit = ref(8);
 const selectedId = ref(null);
 const titleName = ref(null);
 
@@ -128,6 +137,31 @@ const changeSaleStatus = async (row) => {
     console.log(error);
   }
 }
+const multipleSelection = ref([]);
+const handleSelectionChange = (val) => {
+  multipleSelection.value = val;
+  console.log(multipleSelection.value);
+};
+const changeSaleStatusAll = async (status) => {
+  try {
+    if (!multipleSelection.value.length) {
+      ElMessage({
+        message: '请选择书籍',
+        type: 'warning',
+      });
+      return;
+    }
+    await ElMessageBox.confirm(`确定批量处理吗？`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    await changeSaleStatusApi({ biz_books_ids: multipleSelection.value.map((item) => item.biz_books_id), sale_status: status });
+    getList(page.value);
+  } catch (error) {
+    console.log(error);
+  }
+}
 
 const statistics = ref();
 const getList = async (val) => {
@@ -149,22 +183,6 @@ onMounted(async () => {
 </script>
 
 <style lang="less" scoped>
-.filter {
-  background-color: #fff;
-  box-sizing: border-box;
-  padding: 20px 30px 10px 20px;
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.wrapper {
-  background-color: #fff;
-  padding: 20px 30px;
-  box-sizing: border-box;
-}
-
 .cover {
   width: 80px;
   height: 100px;

@@ -51,3 +51,26 @@ export function changeSaleStatus(params: object) {
     data: params,
   })
 }
+// 书架字典列表
+export function bookShelfList() {
+  return request({
+    url: "/api/v1/system/book/shelf/list",
+    method: "get",
+  })
+}
+//普通字典列表
+export function bookTagList(params: string) {
+  return request({
+    url: "/api/v1/system/book/tag/list",
+    method: "get",
+    params: { dict_type: params }
+  })
+}
+// 修改字典数据状态
+export function changeTagStatus(params: object) {
+  return request({
+    url: "/api/v1/system/dict/data/edit/status",
+    method: "put",
+    data: params,
+  })
+}

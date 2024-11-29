@@ -72,8 +72,8 @@ export default defineComponent({
 		});
 		// 页面销毁时，关闭监听布局配置/i18n监听
 		onUnmounted(() => {
-			proxy.mittBus.off('openSetingsDrawer', () => {});
-			proxy.mittBus.off('getI18nConfig', () => {});
+			proxy.mittBus.off('openSetingsDrawer', () => { });
+			proxy.mittBus.off('getI18nConfig', () => { });
 		});
 		// 监听路由的变化，设置网站标题
 		watch(
@@ -94,3 +94,20 @@ export default defineComponent({
 	},
 });
 </script>
+<style>
+.filter {
+	background-color: #fff;
+	box-sizing: border-box;
+	padding: 20px 30px 10px 20px;
+	margin-bottom: 10px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.wrapper {
+	background-color: #fff;
+	padding: 20px 30px;
+	box-sizing: border-box;
+}
+</style>
