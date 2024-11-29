@@ -3,31 +3,30 @@
   .filter
     BaseFilter(:filterList="filterList" @onFilter="onFilter" v-model:form="form" ref="filter")
       template(#button)
-        el-button(type="primary", @click="goAdd") 新增
         el-button(type="primary", @click="changeSaleStatusAll('on_sale')") 批量上架
         el-button(type="primary", @click="changeSaleStatusAll('off_sale')") 批量下架
   .wrapper
     el-table(:data="list" style="width: 100%",@selection-change="handleSelectionChange")
       el-table-column(type="selection" width="55")
       el-table-column(prop="biz_books_id" label="序号")
-      el-table-column( label="封面")
+      el-table-column( label="封面" width="100")
         template(#default="{row}")
           //- img.cover(:src="url+row.pic")
           img.cover(:src="row.pic")
-      el-table-column(prop="title" label="正书名")
+      el-table-column(prop="title" label="正书名"  width="100")
       el-table-column(prop="isbn" label="ISBN号" width="200px")
       el-table-column(prop="collection_no" label="馆藏书号" width="200px")
       el-table-column(prop="book_shelf.name" label="书架号")
-      el-table-column( label="借阅记录")
+      el-table-column( label="借阅记录" width="100")
         template(#default="{row}")
           el-button(link disabled v-if="row.borrow_times == 0" )  {{row.borrow_times}}
           el-button(link type="primary" v-else) {{row.borrow_times}}
-      el-table-column( label="借阅状态")
+      el-table-column( label="借阅状态"  width="100")
         template(#default="{row}")
           p(v-if="row.borrow_status=== 'available'") 可借
           p(v-else-if="row.borrow_status=== 'borrowed'") 借出
           p(v-else) {{ row.borrow_status }}
-      el-table-column( label="销售状态")
+      el-table-column( label="销售状态"  width="100")
         template(#default="{row}")
           p(v-if="row.sale_status=== 'on_sale'") 可售
           p(v-else-if="row.sale_status=== 'off_sale'") 不可售

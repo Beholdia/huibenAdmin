@@ -74,3 +74,13 @@ export function changeTagStatus(params: object) {
     data: params,
   })
 }
+// 书籍分类详情
+
+
+export function bookTagDetail(params: string) {
+  return request({
+    url: "/api/v1/system/book/tag/detail",
+    method: "get",
+    params: {dict_code:params},
+  })
+}

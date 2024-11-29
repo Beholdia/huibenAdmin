@@ -4,6 +4,7 @@ el-form(inline)
     v-for="item, index in props.filterList"
     :label="item.label"
     label-width="80px"
+    label-position="left"
   )
     el-input(
       v-model.trim="form[ item.model ]"
@@ -59,7 +60,7 @@ el-form(inline)
     //- )
 
   el-form-item
-    el-button(@click="getList") 查询
+    el-button(@click="getList" type="primary") 查询
     el-popconfirm(title="是否确认批量删除？" @confirm="emit('onBatchDel')", v-if="props.batchDel")
       template(#reference)
         el-button(type="danger") 批量删除
@@ -100,7 +101,12 @@ defineExpose({
 //   width: 200px !important;
 // }
 .el-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  // display: grid;
+  // grid-template-columns: 1fr 1fr 1fr;
+  display: flex;
+  flex-wrap: wrap;
+}
+.el-form-item {
+    width: 285px;
 }
 </style>
