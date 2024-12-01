@@ -1095,7 +1095,40 @@ export const demoRoutes: Array<RouteRecordRaw> = [
 							roles: ['admin', 'common'],
 							icon: 'iconfont icon-shouye',
 						},
-					}
+					},
+				]
+			},
+			{
+				path: '/sys/xcx',
+				name: 'sysxcx',
+				component: () => import('/@/layout/routerView/parent.vue'),
+				redirect: '/sys/xcx/banner',
+				meta: {
+					title: '小程序设置',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					roles: ['admin', 'common'],
+					icon: 'iconfont icon-shouye',
+				},
+				children: [
+					{
+						path: '/sys/xcx/banner',
+						name: 'sysxcxbanner',
+						component: () => import('/@/views/sys/xcx/Banner.vue'),
+						meta: {
+							title: '图片广告',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin', 'common'],
+							icon: 'iconfont icon-shouye',
+						},
+					},
 				]
 			}
 		]

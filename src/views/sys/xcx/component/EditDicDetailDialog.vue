@@ -9,8 +9,6 @@ el-drawer(:modelValue="show",:show-close="false" style="width: 50%;padding:20px"
       el-input(v-model="form.remark" placeholder="请输入备注" type="textarea" :rows="4")
     el-form-item(label="字典排序",)
       el-input-number(v-model="form.dictSort" placeholder="请输入字典排序")
-    el-form-item(label="logo",)
-      Uploader(:files="[form.logo ]" ref="imageUploader" :limit="1")
   template(#footer)
     el-button(@click="onClose") 取消
     el-popconfirm(title="确认提交？",@confirm="onSave")
@@ -20,13 +18,10 @@ el-drawer(:modelValue="show",:show-close="false" style="width: 50%;padding:20px"
 
 <script setup>
 import {
-  onUpdated, reactive, ref, getCurrentInstance,defineModel,computed
+  onUpdated, reactive, ref, getCurrentInstance,defineModel
 } from 'vue';
 import {bookTagDetail,editBookTag } from '/@/api/books/index.ts';
 import { ElMessage } from 'element-plus';
-import Uploader from '/@/components/Uploader.vue';
-
-const imageUploader = ref(null);
 
 const show = defineModel('show',{type:Boolean,default:false})
 const props = defineProps({
@@ -72,7 +67,7 @@ const onSave = async () => {
     await editBookTag({
       dict_label:dictLabel,
       dict_sort: dictSort,
-      logo:imageUploader.value.fileList[0].url,
+      logo,
       remark,
       dict_code:dictCode
     });

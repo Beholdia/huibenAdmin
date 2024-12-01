@@ -26,7 +26,7 @@
           p(v-if="row.borrow_status=== 'available'") 可借
           p(v-else-if="row.borrow_status=== 'borrowed'") 借出
           p(v-else) {{ row.borrow_status }}
-      el-table-column( label="销售状态"  width="100")
+      //- el-table-column( label="销售状态"  width="100")
         template(#default="{row}")
           p(v-if="row.sale_status=== 'on_sale'") 可售
           p(v-else-if="row.sale_status=== 'off_sale'") 不可售

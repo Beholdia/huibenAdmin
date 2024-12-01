@@ -110,9 +110,8 @@ const storeIsbn = async (info) => {
       // pubdate: dayjs(info.pubdate).format('YYYY-MM-DD'),
     });
     if (res.code === 0) {
-      // showIsbnAdd.value = false;
       isbn_id.value = res.data.biz_isbn_id;
-      showDrawer.value = false;
+      showDrawer.value = true;
       ElMessage.success('添加成功');
     }
   } catch (error) {
