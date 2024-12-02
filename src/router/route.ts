@@ -1145,6 +1145,21 @@ export const demoRoutes: Array<RouteRecordRaw> = [
 							icon: 'iconfont icon-shouye',
 						},
 					},
+					{
+						path: '/sys/xcx/column',
+						name: 'sysxcxcolumn',
+						component: () => import('/@/views/sys/xcx/Column.vue'),
+						meta: {
+							title: '栏目设置',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin', 'common'],
+							icon: 'iconfont icon-shouye',
+						},
+					},
 				]
 			}
 		]

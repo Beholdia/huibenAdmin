@@ -2,9 +2,9 @@
 .dict
   el-radio-group(type="button" v-model="type" @change="changeCategory")
     el-radio-button(:label="item.label" :value="item.value" v-for="item in types" size="default")
-  el-button(size="default" block class="editBtn" type="primary" @click="editBanner(null)") 添加
+  el-button(size="default" block class="editBtn" type="primary" @click="editColumn(null)") 添加
   el-table(:data="list")
-    el-table-column(prop="biz_banner_id" label="编号")
+    el-table-column(prop="biz_column_id" label="编号")
     el-table-column(label="图片" width="200px")
       template(#default="{row}")
         el-image(:src="row.pic" style="width: 100px; height: 100px" :preview-src-list="[ row.pic ]" :preview-teleported="true")
@@ -26,18 +26,18 @@
         el-switch(v-model="row.status" @change="editStatus(row)" :active-value="1" :inactive-value="0" inline-prompt active-text="启用" inactive-text="关闭" size="small")
     el-table-column(prop="" label="操作" width="200px")
       template(#default="{row}")
-        el-button(type="primary" size="small" @click="editBanner(row)") 编辑
-        el-button(type="danger" size="small" @click="deleteBanner(row)") 删除
-  EditBannerDetail(v-model:show="editBannerVisible",@onClose="closeEditDict ",:id="currentId")
+        el-button(type="primary" size="small" @click="editColumn(row)") 编辑
+        el-button(type="danger" size="small" @click="deleteColumn(row)") 删除
+  EditColumnDetail(v-model:show="editColumnVisible",@onClose="closeEditDict ",:id="currentId")
     </template>
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { bannerList, delBanner, editBannerSort, editBannerStatus } from '/@/api/xcx/index.ts';
+import { columnList, delColumn, editColumnSort, editColumnStatus } from '/@/api/xcx/column.ts';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import EditBannerDetail from './component/EditBannerDialog.vue';
+import EditColumnDetail from './component/EditBannerDialog.vue';
 
-const editBannerVisible = ref(false);
+const editColumnVisible = ref(false);
 const type = ref("isbn_age_cate");// 默认为年龄分类
 const types = ref([{
   label: "图片广告",
@@ -61,23 +61,23 @@ const types = ref([{
 const list = ref([
 ]);
 const currentId = ref(0);
-const editBanner = (row) => {
+const editColumn = (row) => {
   currentId.value = 0;
   if (row) {
-    currentId.value = row.biz_banner_id;
+    currentId.value = row.biz_column_id;
   }
-  editBannerVisible.value = true;
+  editColumnVisible.value = true;
 };
 
 const closeEditDict = (refreshList) => {
   if (refreshList) getList();
-  editBannerVisible.value = false;
+  editColumnVisible.value = false;
 };
 
 const editStatus = async (row) => {
   try {
-    await editBannerStatus({
-      "biz_banner_id": row.biz_banner_id,
+    await editColumnStatus({
+      "biz_column_id": row.biz_column_id,
       "status": row.status
     });
     ElMessage.success('操作成功');
@@ -87,14 +87,14 @@ const editStatus = async (row) => {
   }
 }
 
-const deleteBanner = async (row) => {
+const deleteColumn = async (row) => {
   try {
     await ElMessageBox.confirm(`确定删除此图文吗？`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
     })
-    await delBanner({ biz_banner_id: row.biz_banner_id });
+    await delColumn({ biz_column_id: row.biz_column_id });
     getList();
   } catch (error) {
     console.log(error);
@@ -103,8 +103,8 @@ const deleteBanner = async (row) => {
 }
 
 const editSort = async (row) => {
-  await editBannerSort({
-    "biz_banner_id": row.biz_banner_id,
+  await editColumnSort({
+    "biz_column_id": row.biz_column_id,
     "sort": Number(row.sort)
   });
   ElMessage.success('操作成功');
@@ -118,7 +118,7 @@ const changeCategory = (val) => {
 }
 
 const getList = async () => {
-  const res = await bannerList();
+  const res = await columnList();
   list.value = res?.data?.items || [];
 }
 

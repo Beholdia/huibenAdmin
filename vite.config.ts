@@ -4,7 +4,11 @@ import { defineConfig, loadEnv, ConfigEnv } from 'vite';
 import viteCompression from 'vite-plugin-compression';
 import { buildConfig } from './src/utils/build';
 import VueDevTools from 'vite-plugin-vue-devtools';
-
+import AutoImport from 'unplugin-auto-import/vite';
+import Components from 'unplugin-vue-components/vite';
+import { ElementPlusResolver } from 'unplugin-vue-components/resolvers';
+import Icons from 'unplugin-icons/vite';
+import IconsResolver from 'unplugin-icons/resolver';
 
 const pathResolve = (dir: string) => {
 	return resolve(__dirname, '.', dir);
@@ -18,7 +22,25 @@ const alias: Record<string, string> = {
 const viteConfig = defineConfig((mode: ConfigEnv) => {
 	const env = loadEnv(mode.mode, process.cwd());
 	return {
-		plugins: [vue(), viteCompression({disable:true}),VueDevTools()],
+		plugins: [vue(),
+			 viteCompression({disable:true}),
+			 VueDevTools(),
+			 
+
+			AutoImport({
+			  // 自动导入 Vue 相关函数，如：ref, reactive, toRef 等
+			  imports: ['vue'],
+			  // 自动导入 Element Plus 相关函数，如：ElMessage, ElMessageBox... (带样式)
+			  resolvers: [
+				ElementPlusResolver(),
+				// 自动导入图标组件
+				IconsResolver({
+				  prefix: 'Icon',
+				}),
+			  ],
+			}),
+
+			],
 		root: process.cwd(),
 		resolve: { alias },
 		base: mode.command === 'serve' ? './' : env.VITE_PUBLIC_PATH,

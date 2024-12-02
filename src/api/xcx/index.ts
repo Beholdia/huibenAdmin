@@ -1,7 +1,7 @@
 import request from '/@/utils/request';
 
 /**
- * 书籍信息管理api接口集合
+ * 图文
  */
 
 // 图片列表
@@ -39,5 +39,29 @@ export function editBannerStatus(params: object) {
     url: '/api/v1/system/banner/edit/status',
     method: 'post',
     data: params,
+  });
+}
+// 添加图文
+export function storeBanner(params: object) {
+  return request({
+    url: '/api/v1/system/banner/store',
+    method: 'post',
+    data: params,
+  });
+}
+// 修改图文
+export function editBanner(params: object) {
+  return request({
+    url: '/api/v1/system/banner/edit',
+    method: 'post',
+    data: params,
+  });
+}
+// 获取图文详情
+export function bannerDetail(params: string) {
+  return request({
+    url: '/api/v1/system/banner/detail',
+    method: 'get',
+    params:{ biz_banner_id: params },
   });
 }

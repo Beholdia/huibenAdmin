@@ -94,7 +94,7 @@ export default defineComponent({
 	},
 });
 </script>
-<style>
+<style lang="less">
 .filter {
 	background-color: #fff;
 	box-sizing: border-box;
@@ -109,5 +109,30 @@ export default defineComponent({
 	background-color: #fff;
 	padding: 20px 30px;
 	box-sizing: border-box;
+}
+
+* {
+  &::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+    border-radius: 14px;
+  }
+
+  &::-webkit-scrollbar-track {
+    border-radius: 14px;
+    background: #f1f1f1;
+    /* 设置滚动条轨道的背景颜色 */
+  }
+
+  &::-webkit-scrollbar-thumb {
+    border-radius: 14px;
+    background: #ccc;
+    /* 设置滚动条实际可拖动部分的颜色 */
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: #bbb;
+    /* 鼠标悬浮时滚动条的颜色 */
+  }
 }
 </style>
