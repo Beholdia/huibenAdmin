@@ -81,7 +81,7 @@ export function bookTagDetail(params: string) {
   return request({
     url: "/api/v1/system/book/tag/detail",
     method: "get",
-    params: {dict_code:params},
+    params: { dict_code: params },
   })
 }
 
@@ -108,5 +108,55 @@ export function deleteBookTag(params: string) {
     url: "/api/v1/system/book/tag/delete",
     method: "delete",
     params: { dict_code: params },
+  })
+}
+// 小程序状态修改
+export function editBookStatusTagXcx(params: object) {
+  return request({
+    url: "/api/v1/system/book/tag/edit/tiny_app_status",
+    method: "post",
+    data: params,
+  })
+
+}
+
+// 书架号详情
+export function bookShelfDetail(params: string) {
+  return request({
+    url: "/api/v1/system/book/shelf/detail",
+    method: "get",
+    params: { biz_bookshelf_id: params },
+  })
+}
+// 修改书架号
+export function editBookShelf(params: object) {
+  return request({
+    url: "/api/v1/system/book/shelf/edit",
+    method: "post",
+    data: params,
+  })
+}
+//修改书架号状态
+export function editBookShelfStatus(params: object) {
+  return request({
+    url: "/api/v1/system/book/shelf/edit/status",
+    method: "post",
+    data: params,
+  })
+}
+// 删除书架号
+export function deleteBookShelf(params: string) {
+  return request({
+    url: "/api/v1/system/book/shelf/delete",
+    method: "post",
+    params: { biz_bookshelf_id: params },
+  })
+}
+// 添加书架号
+export function addBookShelf(params: object) {
+  return request({
+    url: "/api/v1/system/book/shelf/add",
+    method: "post",
+    data: params,
   })
 }

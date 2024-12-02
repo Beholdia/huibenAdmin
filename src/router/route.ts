@@ -1068,8 +1068,9 @@ export const demoRoutes: Array<RouteRecordRaw> = [
 			{
 				path: '/sys/book',
 				name: 'sysbook',
-				component: () => import('/@/layout/routerView/parent.vue'),
-				redirect: '/sys/book/age',
+				// component: () => import('/@/layout/routerView/parent.vue'),
+				component: () => import('/@/views/sys/book/Index.vue'),
+				// redirect: '/sys/book/age',
 				meta: {
 					title: '书籍入库设置',
 					isLink: '',
@@ -1087,6 +1088,21 @@ export const demoRoutes: Array<RouteRecordRaw> = [
 						component: () => import('/@/views/sys/book/Age.vue'),
 						meta: {
 							title: '年龄分类',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin', 'common'],
+							icon: 'iconfont icon-shouye',
+						},
+					},
+					{
+						path: '/sys/book/shelf',
+						name: 'sysbookshelf',
+						component: () => import('/@/views/sys/book/Shelf.vue'),
+						meta: {
+							title: '书架号',
 							isLink: '',
 							isHide: false,
 							isKeepAlive: true,

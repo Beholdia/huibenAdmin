@@ -3,20 +3,16 @@
   .group
     el-radio-group(type="button" v-model="type" @change="changeCategory")
       el-radio-button(:label="item.label" :value="item.value" v-for="item in types" size="default")
-  el-button(size="default" block class="editBtn" type="primary") 添加
+  el-button(size="default" block class="editBtn" type="primary" @click="addShelf") 添加
   el-table(:data="list")
-    el-table-column(prop="dict_code" label="编号")
-    el-table-column(prop="dict_label" label="分类")
-    el-table-column(prop="count" label="书籍数量")
-    el-table-column(prop="dict_sort" label="排序")
+    el-table-column(prop="biz_bookshelf_id" label="编号")
+    el-table-column(prop="name" label="分类")
       template(#default="{row}")
-        el-input-number(v-model.number="row.dict_sort" size="small" @change="editSort(row)")
+        el-input(v-model="row.name" @change="changeName(row)" size="small")
+    el-table-column(prop="count" label="书籍数量")
     el-table-column(prop="status" label="状态" )
       template(#default="{row}")
-        el-switch(v-model="row.status" @change="editStatus(row)" active-value="1" inactive-value="0" inline-prompt active-text="启用" inactive-text="关闭" size="small")
-    el-table-column(prop="status" label="小程序状态" )
-      template(#default="{row}")
-        el-switch(v-model="row.tiny_app_status" @change="editXcxStatus(row)" active-value="1" inactive-value="0" inline-prompt active-text="启用" inactive-text="关闭" size="small")
+        el-switch(v-model="row.status" @change="editStatus(row)" :active-value="1" :inactive-value="0" inline-prompt active-text="启用" inactive-text="关闭" size="small")
     el-table-column(prop="" label="操作" width="200px")
       template(#default="{row}")
         el-button(type="primary" size="small" @click="editDict(row)") 编辑
@@ -26,12 +22,12 @@
 
 <script setup>
 import { onMounted, ref } from 'vue';
-import { bookShelfList, bookTagList, changeTagStatus, editBookTagSort, deleteBookTag, editBookStatusTagXcx } from '/@/api/books/index.ts';
+import { bookShelfList, deleteBookShelf, editBookShelf, editBookShelfStatus, addBookShelf } from '/@/api/books/index.ts';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import EditDicDetail from './component/EditDicDetailDialog.vue';
 
 const editDictVisible = ref(false);
-const type = ref("isbn_age_cate");// 默认为年龄分类
+const type = ref("book_shelf");// 默认为年龄分类
 const types = ref([{
   label: "年龄分类",
   value: "isbn_age_cate"
@@ -55,6 +51,10 @@ const types = ref([{
 }, {
   label: "书籍仓库",
   value: "book_warehouse"
+},
+{
+  label: "书架号",
+  value: "book_shelf"
 }
 ]);
 const list = ref([
@@ -76,21 +76,12 @@ const closeEditDict = (refreshList) => {
 };
 
 const editStatus = async (row) => {
-  console.log(row);
-  // todo
-
   try {
-    //   await ElMessageBox.confirm(`确定修改状态吗？`, '提示', {
-    //   confirmButtonText: '确定',
-    //   cancelButtonText: '取消',
-    //   type: 'warning',
-    // })
-
-    await changeTagStatus({
-      "dictCode": row.dict_code,
+    await editBookShelfStatus({
+      "biz_bookshelf_id": row.biz_bookshelf_id,
       "status": row.status
     });
-    getList();
+    ElMessage.success('修改成功');
   } catch (error) {
     console.log(error);
     // row.status = row.status ? 0 : 1;
@@ -117,14 +108,43 @@ const deleteDict = async (row) => {
       cancelButtonText: '取消',
       type: 'warning',
     })
-    await deleteBookTag(row.dict_code);
+    await deleteBookShelf(row.biz_bookshelf_id);
     getList();
   } catch (error) {
     console.log(error);
     ElMessage.error('已取消');
   }
 }
+const changeName = async (row) => {
+  try {
+    await editBookShelf({
+      "biz_bookshelf_id": row.biz_bookshelf_id,
+      "name": row.name
+    })
+    ElMessage.success('修改成功');
+  } catch (error) {
+    console.log(error);
+  }
+}
 
+const addShelf = async () => {
+  try {
+    const res = await ElMessageBox.prompt('请输入书架号', '提示', {
+      confirmButtonText: '确认',
+      cancelButtonText: '取消',
+    })
+    await addBookShelf(
+      {
+        "name": "name",
+        "status": "1"
+      }
+    )
+    getList();
+  } catch (error) {
+    console.log(error);
+  }
+
+}
 const editSort = async (row) => {
   console.log(row);
   await editBookTagSort({
@@ -142,13 +162,12 @@ const changeCategory = (val) => {
 }
 
 const getList = async () => {
-  const res = await bookTagList(type.value);
+  const res = await bookShelfList();
   list.value = res?.data?.items || [];
 }
 
 onMounted(async () => {
-  const res = await bookTagList('isbn_age_cate');
-  list.value = res?.data?.items || [];
+  getList();
 })
 
 </script>

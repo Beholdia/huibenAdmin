@@ -1,5 +1,5 @@
 <template lang="pug">
-el-drawer(:modelValue="show",:show-close="false" style="width: 50%;padding:20px" title="详情")
+el-drawer(:modelValue="show",:show-close="false" style="width: 50%;padding:20px" title="详情" @close="onClose(null)")
   el-form(style="margin-top:20px" label-width="120px" label-position="left")
     //- el-form-item(label="字典类型")
     //-   el-input(v-model="form.dict_type" placeholder="请输入字典类型",readonly)
@@ -20,20 +20,20 @@ el-drawer(:modelValue="show",:show-close="false" style="width: 50%;padding:20px"
 
 <script setup>
 import {
-  onUpdated, reactive, ref, getCurrentInstance,defineModel,computed
+  onUpdated, reactive, ref, getCurrentInstance, defineModel, computed
 } from 'vue';
-import {bookTagDetail,editBookTag } from '/@/api/books/index.ts';
+import { bookTagDetail, editBookTag } from '/@/api/books/index.ts';
 import { ElMessage } from 'element-plus';
 import Uploader from '/@/components/Uploader.vue';
 
 const imageUploader = ref(null);
 
-const show = defineModel('show',{type:Boolean,default:false})
+const show = defineModel('show', { type: Boolean, default: false })
 const props = defineProps({
   id: Number,
 });
 const form = reactive({
-  dictLabel: '',  dictCode: '', dictSort: 0,logo:'',remark:''
+  dictLabel: '', dictCode: '', dictSort: 0, logo: '', remark: ''
 });
 onUpdated(async () => {
   console.log(show.value);
@@ -46,8 +46,8 @@ onUpdated(async () => {
     // form.dict_type = dict_type;
     // form.dict_value = dict_value;
     form.dictSort = dictSort;
-    form.remark=remark;
-    form.logo=logo;
+    form.remark = remark;
+    form.logo = logo;
     form.dictCode = props.id;
     console.log(form);
   }
@@ -59,22 +59,22 @@ const onClose = (refreshList) => {
   // form.dict_value = '';
   form.dictSort = 0;
   form.id = '';
-  form.logo='';
-  form.remark='';
+  form.logo = '';
+  form.remark = '';
   show.value = false;
   emit('onClose', refreshList);
 };
 const onSave = async () => {
   const {
-    dictLabel, dictSort,dictCode,logo,remark
+    dictLabel, dictSort, dictCode, logo, remark
   } = form;
   if (props.id) {
     await editBookTag({
-      dict_label:dictLabel,
+      dict_label: dictLabel,
       dict_sort: dictSort,
-      logo:imageUploader.value.fileList[0].url,
+      logo: imageUploader.value.fileList[0].url,
       remark,
-      dict_code:dictCode
+      dict_code: dictCode
     });
   } else {
     ElMessage.error('请刷新重试');
