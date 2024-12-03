@@ -7,17 +7,17 @@
     el-table-column(prop="biz_column_id" label="编号")
     el-table-column(label="图片" width="200px")
       template(#default="{row}")
-        el-image(:src="row.pic" style="width: 100px; height: 100px" :preview-src-list="[ row.pic ]" :preview-teleported="true")
+        el-image(:src="row.logo" style="width: 100px; height: 100px" :preview-src-list="[ row.logo ]" :preview-teleported="true")
 
-    el-table-column(prop="position" label="位置")
-      template(#default="{row}")
-        span(v-if =" row.position == 'home'") 首页
-        span(v-if =" row.position == 'home_popup'") 弹出广告
-    el-table-column(prop="outlink" label="外链")
+    el-table-column(prop="title" label="名称")
     el-table-column( label="类型")
       template(#default="{row}")
-        span(v-if =" row.biz_type == 'url'") 站外跳转
+        span(v-if =" row.biz_type == 'outlink'") 站外跳转
         span(v-if =" row.biz_type == 'tiny_app'") 内部跳转
+    el-table-column(prop="outlink" label="外链")
+    el-table-column(label="内部链接")
+      template(#default="{row}")
+        span(v-if =" row.biz_type == 'tiny_app'") {{ row.tiny_app_site_map.dict_value+row.tiny_app_site_map_params}}
     el-table-column(prop="sort" label="排序")
       template(#default="{row}")
         el-input(v-model.number="row.sort" size="small" @change="editSort(row)")
@@ -35,7 +35,7 @@
 import { onMounted, ref } from 'vue';
 import { columnList, delColumn, editColumnSort, editColumnStatus } from '/@/api/xcx/column.ts';
 import { ElMessage, ElMessageBox } from 'element-plus';
-import EditColumnDetail from './component/EditBannerDialog.vue';
+import EditColumnDetail from './component/EditColumnDialog.vue';
 
 const editColumnVisible = ref(false);
 const type = ref("isbn_age_cate");// 默认为年龄分类
@@ -81,7 +81,7 @@ const editStatus = async (row) => {
       "status": row.status
     });
     ElMessage.success('操作成功');
-   await getList();
+    await getList();
   } catch (error) {
     console.log(error);
   }
@@ -89,7 +89,7 @@ const editStatus = async (row) => {
 
 const deleteColumn = async (row) => {
   try {
-    await ElMessageBox.confirm(`确定删除此图文吗？`, '提示', {
+    await ElMessageBox.confirm(`确定删除此栏目吗？`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
@@ -98,7 +98,7 @@ const deleteColumn = async (row) => {
     getList();
   } catch (error) {
     console.log(error);
-    ElMessage.error('已取消');
+    ElMessage.info('已取消');
   }
 }
 

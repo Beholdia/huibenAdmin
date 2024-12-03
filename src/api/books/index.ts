@@ -106,7 +106,7 @@ export function editBookTagSort(params: object) {
 export function deleteBookTag(params: string) {
   return request({
     url: "/api/v1/system/book/tag/delete",
-    method: "delete",
+    method: "post",
     params: { dict_code: params },
   })
 }

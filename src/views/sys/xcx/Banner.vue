@@ -14,9 +14,12 @@
         span(v-if =" row.position == 'home'") 首页
         span(v-if =" row.position == 'home_popup'") 弹出广告
     el-table-column(prop="outlink" label="外链")
+    el-table-column(label="内部链接")
+      template(#default="{row}")
+        span(v-if =" row.biz_type == 'tiny_app'") {{ row.tiny_app_site_map.dict_value+row.tiny_app_site_map_params}}
     el-table-column( label="类型")
       template(#default="{row}")
-        span(v-if =" row.biz_type == 'url'") 站外跳转
+        span(v-if =" row.biz_type == 'outlink'") 站外跳转
         span(v-if =" row.biz_type == 'tiny_app'") 内部跳转
     el-table-column(prop="sort" label="排序")
       template(#default="{row}")
@@ -81,7 +84,7 @@ const editStatus = async (row) => {
       "status": row.status
     });
     ElMessage.success('操作成功');
-   await getList();
+    await getList();
   } catch (error) {
     console.log(error);
   }

@@ -1161,6 +1161,21 @@ export const demoRoutes: Array<RouteRecordRaw> = [
 						},
 					},
 				]
+			},
+			{
+				path: '/sys/member',
+				name: 'sysmember',
+				component: () => import('../views/sys/member/Index.vue'),
+				meta: {
+					title: '会员价格设置',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					roles: ['admin', 'common'],
+					icon: 'iconfont icon-shouye',
+				},
 			}
 		]
 	}

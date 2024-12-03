@@ -64,16 +64,16 @@ const onSearchIsbn = async () => {
     formRef.value.filter.isbn_wellknow_brand_id = IsbnTagInfo.isbn_wellknow_brand_id;
     formRef.value.filter.isbn_feature_tag_id = IsbnTagInfo.isbn_feature_tag_id;
     formRef.value.filter.isbn_theme_tag_id = IsbnTagInfo.isbn_theme_tag_id;
-    // todo
-    // 两个标签换成tag 是否check保存在option里
+
+    // 两个标签换成tag 是否check保存在option里 循环查找OPTIONS里的选项是否被checked了
     formFields.value.at(-3).options.forEach(item => {
       if (!IsbnTagInfo.isbn_theme_tag_id) return
-      const res = IsbnTagInfo.isbn_theme_tag_id.find(id => id === item.dictCode)
+      const res = IsbnTagInfo.isbn_theme_tag_id.find(id => id === item.dict_code)
       if (res) item.checked = true;
     })
     formFields.value.at(-2).options.forEach(item => {
       if (!IsbnTagInfo.isbn_feature_tag_id) return
-      const res = IsbnTagInfo.isbn_feature_tag_id.find(id => id === item.dictCode)
+      const res = IsbnTagInfo.isbn_feature_tag_id.find(id => id === item.dict_code)
       if (res) item.checked = true;
     })
 
@@ -101,13 +101,13 @@ const storeIsbn = async (info) => {
       type: 'warning',
     })
 
-    const isbn_theme_tag_id = formFields.value.find(item => item.key === 'isbn_theme_tag_id').options.filter(item => item.checked).map(item => item.dictCode)
-    const isbn_feature_tag_id = formFields.value.find(item => item.key === 'isbn_feature_tag_id').options.filter(item => item.checked).map(item => item.dictCode)
+    const isbn_theme_tag_id = formFields.value.find(item => item.key === 'isbn_theme_tag_id').options.filter(item => item.checked).map(item => item.dict_code)
+    const isbn_feature_tag_id = formFields.value.find(item => item.key === 'isbn_feature_tag_id').options.filter(item => item.checked).map(item => item.dict_code)
     const res = await isbnStore({
       ...info,
       isbn_theme_tag_id,
-      isbn_feature_tag_id
-      // pubdate: dayjs(info.pubdate).format('YYYY-MM-DD'),
+      isbn_feature_tag_id,
+      pubdate: info.pubdate ? dayjs(info.pubdate).format('YYYY-MM-DD') : '',
     });
     if (res.code === 0) {
       isbn_id.value = res.data.biz_isbn_id;
@@ -139,56 +139,15 @@ const formFields = ref([
   { label: "出版作者", key: "pubauthor" },
   { label: "装帧方式", key: "binding" },
   { label: "", type: "divider", width: 'calc(90% + 32px)' },
-  { label: "语言分类", key: "isbn_language_cate_id", type: 'select', options: [], props: { label: 'dictLabel', value: "dictCode" } },
+  { label: "语言分类", key: "isbn_language_cate_id", type: 'select', options: [], props: { label: 'dict_label', value: "dict_code" } },
   { label: "年龄分类", key: "isbn_age_cate_id", type: 'select', },
   { label: "特色人物", key: "isbn_featured_character_id", type: 'select', options: [], },
   { label: "系列分类", key: "isbn_series_cate_id", type: 'select', options: [], },
   { label: "知名品牌", key: "isbn_wellknow_brand_id", type: 'select', options: [], },
-  { label: "主题标签", key: "isbn_theme_tag_id", type: "tag", width: "calc(90% + 32px)", options: [], multiple: true, props: { label: 'dictLabel', value: "dictCode" } },
-  { label: "特色标签", key: "isbn_feature_tag_id", type: "tag", width: "calc(90% + 32px)", options: [], multiple: true, props: { label: 'dictLabel', value: "dictCode" } },
-  // { label: "书架号", key: "biz_bookshelf_id" },
-  // // { label: "馆藏号", key: "warehouse_id" },
-  // { label: "采购价格", key: "purchase_price" },
-  // { label: "购书日期", key: "pubdate" },
-  // { label: "所在书库", key: "warehouse_id" },
+  { label: "主题标签", key: "isbn_theme_tag_id", type: "tag", width: "calc(90% + 32px)", options: [], multiple: true, props: { label: 'dict_label', value: "dict_code" } },
+  { label: "特色标签", key: "isbn_feature_tag_id", type: "tag", width: "calc(90% + 32px)", options: [], multiple: true, props: { label: 'dict_label', value: "dict_code" } },
   { label: "内容摘要", key: "summary", width: "calc(90% + 32px)", type: "textarea" },
 ]);
-// const formFields2 = [
-//   { label: "书架号", key: "biz_bookshelf_id" },
-//   // { label: "馆藏号", key: "warehouse_id" },
-//   { label: "采购价格", key: "purchase_price" },
-//   { label: "购书日期", key: "pubdate" },
-//   { label: "所在书库", key: "warehouse_id" },
-//   // { label: "内容摘要", key: "seriesCategory", width: "calc(90% + 32px)", type: "textarea" },
-// ]
-
-// const topicTags = ref(["文学启蒙", "儿童文学", "名家大师"]);
-// const featureTags = ref(["解决问题", "勇气", "挑战"]);
-
-// const newTopicTag = ref("");
-// const newFeatureTag = ref("");
-
-// const addTag = (type) => {
-//   if (type === "topic" && newTopicTag.value) {
-//     topicTags.value.push(newTopicTag.value);
-//     newTopicTag.value = "";
-//   } else if (type === "feature" && newFeatureTag.value) {
-//     featureTags.value.push(newFeatureTag.value);
-//     newFeatureTag.value = "";
-//   }
-// };
-
-// const removeTag = (tag, type) => {
-//   if (type === "topic") {
-//     topicTags.value = topicTags.value.filter((t) => t !== tag);
-//   } else if (type === "feature") {
-//     featureTags.value = featureTags.value.filter((t) => t !== tag);
-//   }
-// };
-
-// const handleSubmit = () => {
-//   console.log("Form data:", form);
-// };
 onMounted(async () => {
 
   const dicts = ['isbn_language_cate', 'isbn_age_cate', 'isbn_featured_character', 'isbn_series_cate', 'isbn_wellknow_brand', 'isbn_theme_tag', 'isbn_feature_tag']
@@ -197,14 +156,6 @@ onMounted(async () => {
     const list = data.list || [];
     formFields.value.find(item => item.key === `${dict}_id`).options = list;
   }
-  // 修改
-  // const { data } = await getDataListOption('isbn_theme_tag');
-  // const isbn_language_cate = data.list || [];
-  // formFields.value.find(item => item.key === 'isbn_theme_id').options = isbn_language_cate;
-
-  // const { data: data2 } = await getDataListOption('isbn_feature_tag');
-  // const list = data2.list || [];
-  // formFields.value.find(item => item.key === 'isbn_feature_id').options = list;
 })
 </script>
 

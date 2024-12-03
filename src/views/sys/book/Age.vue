@@ -90,7 +90,8 @@ const editStatus = async (row) => {
       "dictCode": row.dict_code,
       "status": row.status
     });
-    getList();
+    ElMessage.success('修改成功');
+    await getList();
   } catch (error) {
     console.log(error);
     // row.status = row.status ? 0 : 1;
@@ -105,6 +106,7 @@ const editXcxStatus = async (row) => {
       "tiny_app_status": row.tiny_app_status
     });
     getList();
+    ElMessage.success('修改成功');
   } catch (error) {
     console.log(error);
   }

@@ -4,11 +4,11 @@ el-drawer(:modelValue="show",:show-close="false" style="width: 50%;padding:20px"
     //- el-form-item(label="字典类型")
     //-   el-input(v-model="form.dict_type" placeholder="请输入字典类型",readonly)
     el-form-item(label="数据标签",)
-      el-input(v-model="form.dictLabel" placeholder="请输入数据标签")
+      el-input(v-model="form.dict_label" placeholder="请输入数据标签")
     el-form-item(label="备注",)
       el-input(v-model="form.remark" placeholder="请输入备注" type="textarea" :rows="4")
     el-form-item(label="字典排序",)
-      el-input-number(v-model="form.dictSort" placeholder="请输入字典排序")
+      el-input-number(v-model="form.dict_sort" placeholder="请输入字典排序")
     el-form-item(label="logo",)
       Uploader(:files="[form.logo ]" ref="imageUploader" :limit="1")
   template(#footer)
@@ -33,31 +33,31 @@ const props = defineProps({
   id: Number,
 });
 const form = reactive({
-  dictLabel: '', dictCode: '', dictSort: 0, logo: '', remark: ''
+  dict_label: '', dict_code: '', dict_sort: 0, logo: '', remark: ''
 });
 onUpdated(async () => {
   console.log(show.value);
   // form.dict_type = props.dictData.dict_type;
   if (show.value && props.id) {
     const {
-      dictLabel, logo, remark, dictSort,
+      dict_label, logo, remark, dict_sort,
     } = (await bookTagDetail(props.id)).data.dict;
-    form.dictLabel = dictLabel;
+    form.dict_label = dict_label;
     // form.dict_type = dict_type;
     // form.dict_value = dict_value;
-    form.dictSort = dictSort;
+    form.dict_sort = dict_sort;
     form.remark = remark;
     form.logo = logo;
-    form.dictCode = props.id;
+    form.dict_code = props.id;
     console.log(form);
   }
 });
 const emit = defineEmits(['onClose']);
 const onClose = (refreshList) => {
-  form.dictLabel = '';
+  form.dict_label = '';
   // form.dict_type = '';
   // form.dict_value = '';
-  form.dictSort = 0;
+  form.dict_sort = 0;
   form.id = '';
   form.logo = '';
   form.remark = '';
@@ -66,21 +66,21 @@ const onClose = (refreshList) => {
 };
 const onSave = async () => {
   const {
-    dictLabel, dictSort, dictCode, logo, remark
+    dict_label, dict_sort, dict_code, logo, remark
   } = form;
   if (props.id) {
     await editBookTag({
-      dict_label: dictLabel,
-      dict_sort: dictSort,
+      dict_label: dict_label,
+      dict_sort: dict_sort,
       logo: imageUploader.value.fileList[0].url,
       remark,
-      dict_code: dictCode
+      dict_code: dict_code
     });
   } else {
     ElMessage.error('请刷新重试');
     // 照理来说没有新增
     // await proxy.$api.system.addDictData({
-    //   dictLabel, dict_type, dict_value, dictSort,
+    //   dict_label, dict_type, dict_value, dict_sort,
     // });
   }
   onClose(true);

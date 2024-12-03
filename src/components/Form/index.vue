@@ -7,7 +7,7 @@ el-form(:inline="true" label-width="100px" label-position="left" class="currentF
     el-check-tag(v-if="item.type === 'tag'" v-for="subItem in item.options" :checked="subItem.checked" 
     @change="onChangeTag(subItem)" ) {{ subItem[item.props.label] }}
     el-select(v-model.trim="filter[ item.key ]" :placeholder="`请选择${item.label}`",clearable,v-if="item.type === 'select'" :multiple="item.multiple")
-      el-option(:value="subItem[item.props?.value||'dictCode']" :label="subItem[item.props?.label||'dictLabel']" v-for="subItem in item.options")
+      el-option(:value="subItem[item.props?.value||'dict_code']" :label="subItem[item.props?.label||'dict_label']" v-for="subItem in item.options")
     el-divider(v-if="item.type === 'divider'")
     el-cascader(v-model.trim="filter[ item.key ]" :options="item.options" :props="item.props" :placeholder="`请选择${item.label}`" clearable,v-if="item.type === 'cascader'")
     el-input(type="textarea" :autosize="{ minRows: 4, maxRows: 8 }" v-if="item.type === 'textarea'" v-model.trim="filter[ item.key ]" :placeholder="`请输入${item.label}`" clearable)

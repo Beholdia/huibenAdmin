@@ -15,7 +15,7 @@
         el-switch(v-model="row.status" @change="editStatus(row)" :active-value="1" :inactive-value="0" inline-prompt active-text="启用" inactive-text="关闭" size="small")
     el-table-column(prop="" label="操作" width="200px")
       template(#default="{row}")
-        el-button(type="primary" size="small" @click="editDict(row)") 编辑
+        //- el-button(type="primary" size="small" @click="editDict(row)") 编辑
         el-button(type="danger" size="small" @click="deleteDict(row)") 删除
   EditDicDetail(v-model:show="editDictVisible",@onClose="closeEditDict ",:id="currentDictId")
 </template>
@@ -135,7 +135,7 @@ const addShelf = async () => {
     })
     await addBookShelf(
       {
-        "name": "name",
+        "name": res.value,
         "status": "1"
       }
     )
