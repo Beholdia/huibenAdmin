@@ -5,7 +5,7 @@ Common(v-model:type="type")
 <script setup>
 import Common from './component/Common.vue'
 
-const type = ref('age')
+const type = ref('theme')
 </script>
 
 <style lang="less"></style>

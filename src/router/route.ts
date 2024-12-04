@@ -1068,8 +1068,8 @@ export const demoRoutes: Array<RouteRecordRaw> = [
 			{
 				path: '/sys/book',
 				name: 'sysbook',
-				// component: () => import('/@/layout/routerView/parent.vue'),
-				component: () => import('/@/views/sys/book/Index.vue'),
+				component: () => import('/@/layout/routerView/parent.vue'),
+				// component: () => import('/@/views/sys/book/Index.vue'),
 				// redirect: '/sys/book/age',
 				meta: {
 					title: '书籍入库设置',
@@ -1088,6 +1088,36 @@ export const demoRoutes: Array<RouteRecordRaw> = [
 						component: () => import('/@/views/sys/book/Age.vue'),
 						meta: {
 							title: '年龄分类',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin', 'common'],
+							icon: 'iconfont icon-shouye',
+						},
+					},
+					{
+						path: '/sys/book/theme',
+						name: 'sysbooktheme',
+						component: () => import('/@/views/sys/book/Theme.vue'),
+						meta: {
+							title: '主题标签',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin', 'common'],
+							icon: 'iconfont icon-shouye',
+						},
+					},
+					{
+						path: '/sys/book/theme?type=series',
+						name: 'sysbookseries',
+						component: () => import('/@/views/sys/book/Theme.vue'),
+						meta: {
+							title: '系列分类',
 							isLink: '',
 							isHide: false,
 							isKeepAlive: true,
@@ -1174,7 +1204,7 @@ export const demoRoutes: Array<RouteRecordRaw> = [
 					isAffix: false,
 					isIframe: false,
 					roles: ['admin', 'common'],
-					icon: 'iconfont icon-shouye',
+					// icon: 'iconfont icon-shouye',
 				},
 			}
 		]

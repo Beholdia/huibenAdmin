@@ -1,5 +1,6 @@
 <template>
 	<div class="h100">
+		45
 		<router-view v-slot="{ Component }">
 			<transition :name="setTransitionName" mode="out-in">
 				<keep-alive :include="getKeepAliveNames">
@@ -69,7 +70,7 @@ export default defineComponent({
 		});
 		// 页面卸载时
 		onUnmounted(() => {
-			proxy.mittBus.off('onTagsViewRefreshRouterView', () => {});
+			proxy.mittBus.off('onTagsViewRefreshRouterView', () => { });
 		});
 		// 监听路由变化，防止 tagsView 多标签时，切换动画消失
 		watch(

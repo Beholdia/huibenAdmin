@@ -1,7 +1,7 @@
 <template lang="pug">
 .list
   .filter
-    el-button(type="primary") 添加
+    el-button(type="primary" @click="showDrawer = true") 添加
   .wrapper
     el-table(:data="list" style="width: 100%",@selection-change="handleSelectionChange")
       //- el-table-column(type="selection" width="55")
@@ -10,25 +10,67 @@
       el-table-column(prop="valid_days" label="有效期（天）")
       el-table-column(prop="original_price" label="原价")
       el-table-column(prop="original_price" label="优惠价（元）")
-      el-table-column( label="状态"  width="100")
+      el-table-column(prop="status" label="状态" )
         template(#default="{row}")
-          p(v-if="row.borrow_status=== 'available'") 可借
-          p(v-else-if="row.borrow_status=== 'borrowed'") 借出
-          p(v-else) {{ row.borrow_status }}
+          el-switch(v-model="row.status" @change="editStatus(row)" active-value="1" inactive-value="0" inline-prompt active-text="启用" inactive-text="关闭" size="small")
       el-table-column(label="操作" width="100px")
         template(#default="{row}")
           .buttons
-            el-button(type="info" size="small") 编辑
+            el-button(type="info" size="small" @click="editVip(row)") 编辑
+            el-button(type="danger" size="small" @click="deleteDict(row)") 删除
+
     el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
+  EditMemberDrawer(v-model:show="showDrawer") 
   </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { bookList, changeSaleStatus as changeSaleStatusApi } from '/@/api/books/index.ts';
+import { editVipStatus,delVip} from '/@/api/member/index.ts';
 import BaseFilter from '/@/components/form/BaseFilter.vue'
 import { ElMessage, ElMessageBox } from 'element-plus';
+import EditMemberDrawer from './component/EditMemberDrawer.vue'
 
-const url = ref('');
+const showDrawer = ref(false);//弹框
+const currentId = ref(false);//当前id
+//修改状态
+const editStatus = async (row) => {
+  try {
+    await editVipStatus({
+      "biz_vip_id" : row.biz_vip_id,
+      "status": row.status
+    });
+    ElMessage.success('修改成功');
+    await getList();
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+// 删除
+const deleteVip = async (row) => {
+  try {
+    await ElMessageBox.confirm(`确定删除此分类吗？`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    await delVip(row.dict_code);
+    await getList();
+  } catch (error) {
+    ElMessage.info('已取消');
+  }
+}
+// 修改
+const editVip = (row) => {
+  currentId.value = 0;
+  if (row) {
+    currentId.value = row.biz_vip_id;
+  }
+  showDrawer.value = true;
+};
+// todo
+
 const form = ref({
   keyword: null,
 });
@@ -158,8 +200,6 @@ const getList = async (val) => {
 
 onMounted(async () => {
   getList(page.value);
-  url.value = import.meta.env.VITE_API_URL;
-  console.log(url.value);
 });
 </script>
 

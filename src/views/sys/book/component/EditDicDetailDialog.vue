@@ -1,14 +1,12 @@
 <template lang="pug">
-el-drawer(:modelValue="show",:show-close="false" style="width: 50%;padding:20px" title="详情" @close="onClose(null)")
-  el-form(style="margin-top:20px" label-width="120px" label-position="left")
-    //- el-form-item(label="字典类型")
-    //-   el-input(v-model="form.dict_type" placeholder="请输入字典类型",readonly)
-    el-form-item(label="数据标签",)
-      el-input(v-model="form.dict_label" placeholder="请输入数据标签")
-    el-form-item(label="备注",)
-      el-input(v-model="form.remark" placeholder="请输入备注" type="textarea" :rows="4")
-    el-form-item(label="字典排序",)
-      el-input-number(v-model="form.dict_sort" placeholder="请输入字典排序")
+el-drawer(:modelValue="show",:show-close="false" style="width: 50%;padding:20px" :title=" id? '编辑' :'添加'" @close="onClose(null)")
+  el-form(style="margin-top:20px" label-width="120px" label-position="left" )
+    el-form-item(:label="label",required)
+      el-input(v-model="form.dict_label" :placeholder="`请输入${label}`")
+    el-form-item(label="排序",)
+      el-input-number(v-model="form.dict_sort" placeholder="请输入排序")
+    el-form-item(label="一句话介绍",)
+      el-input(v-model="form.remark" placeholder="一句话介绍" type="textarea" :rows="4")
     el-form-item(label="logo",)
       Uploader(:files="[form.logo ]" ref="imageUploader" :limit="1")
   template(#footer)
@@ -31,6 +29,7 @@ const imageUploader = ref(null);
 const show = defineModel('show', { type: Boolean, default: false })
 const props = defineProps({
   id: Number,
+  label: { type: String, default: '分类名称' },
 });
 const form = reactive({
   dict_label: '', dict_code: '', dict_sort: 0, logo: '', remark: ''
