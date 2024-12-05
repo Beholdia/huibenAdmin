@@ -1,12 +1,12 @@
 <template lang="pug">
 .group
   el-radio-group(type="button" v-model="type" @change="changeCategory")
-    el-radio-button(:label="item.label" :value="item.route" v-for="item in sysBookTags" size="default")
+    el-radio-button(:label="item.label" :value="item.route" v-for="item in sysXcxTags" size="default")
 </template>
 
 <script setup>
 import { useRouter, useRoute } from 'vue-router';
-import { sysBookTags } from '/@/dicts'
+import { sysXcxTags } from '/@/dicts'
 
 const router = useRouter();
 const route = useRoute();
@@ -21,7 +21,7 @@ watch(() => props.biz_type, (val) => {
 }, { immediate: true }
 )
 const changeCategory = (val) => {
-  router.push({ name: 'sysbook' + val })
+  router.push({ name: 'sysxcx' + val })
 }
 </script>
 

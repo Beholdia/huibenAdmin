@@ -40,7 +40,7 @@ onUpdated(async () => {
   if (show.value && props.id) {
     const {
       title, valid_days, original_price, special_price
-    } = (await vipDetail(props.id)).data.dict;
+    } = (await vipDetail(props.id)).data.item;
     form.title = title;
     form.valid_days = valid_days;
     form.original_price = original_price;

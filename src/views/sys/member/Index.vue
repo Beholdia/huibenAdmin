@@ -1,43 +1,43 @@
 <template lang="pug">
 .list
   .filter
-    el-button(type="primary" @click="showDrawer = true") 添加
+    el-button(type="primary" @click="currentId=0;showDrawer = true") 添加
   .wrapper
     el-table(:data="list" style="width: 100%",@selection-change="handleSelectionChange")
       //- el-table-column(type="selection" width="55")
-      el-table-column(prop="biz_books_id" label="编号")
+      el-table-column(prop="biz_vip_id" label="编号")
       el-table-column(prop="title" label="会员类别")
       el-table-column(prop="valid_days" label="有效期（天）")
       el-table-column(prop="original_price" label="原价")
       el-table-column(prop="original_price" label="优惠价（元）")
       el-table-column(prop="status" label="状态" )
         template(#default="{row}")
-          el-switch(v-model="row.status" @change="editStatus(row)" active-value="1" inactive-value="0" inline-prompt active-text="启用" inactive-text="关闭" size="small")
+          el-switch(v-model="row.status" @change="editStatus(row)" :active-value="1" :inactive-value="0" inline-prompt active-text="启用" inactive-text="关闭" size="small")
       el-table-column(label="操作" width="100px")
         template(#default="{row}")
           .buttons
             el-button(type="info" size="small" @click="editVip(row)") 编辑
-            el-button(type="danger" size="small" @click="deleteDict(row)") 删除
+            el-button(type="danger" size="small" @click="deleteVip(row)") 删除
 
-    el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
-  EditMemberDrawer(v-model:show="showDrawer") 
+    //- el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
+  EditMemberDrawer(v-model:show="showDrawer" :id="currentId" @onClose="onCloseDrawer") 
   </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { bookList, changeSaleStatus as changeSaleStatusApi } from '/@/api/books/index.ts';
-import { editVipStatus,delVip} from '/@/api/member/index.ts';
+import { editVipStatus, delVip, vipList } from '/@/api/member/index.ts';
 import BaseFilter from '/@/components/form/BaseFilter.vue'
 import { ElMessage, ElMessageBox } from 'element-plus';
 import EditMemberDrawer from './component/EditMemberDrawer.vue'
 
 const showDrawer = ref(false);//弹框
-const currentId = ref(false);//当前id
+const currentId = ref(0);//当前id
 //修改状态
 const editStatus = async (row) => {
   try {
     await editVipStatus({
-      "biz_vip_id" : row.biz_vip_id,
+      "biz_vip_id": row.biz_vip_id,
       "status": row.status
     });
     ElMessage.success('修改成功');
@@ -55,7 +55,7 @@ const deleteVip = async (row) => {
       cancelButtonText: '取消',
       type: 'warning',
     })
-    await delVip(row.dict_code);
+    await delVip({ biz_vip_id: row.biz_vip_id });
     await getList();
   } catch (error) {
     ElMessage.info('已取消');
@@ -69,6 +69,10 @@ const editVip = (row) => {
   }
   showDrawer.value = true;
 };
+const onCloseDrawer = (refresh) => {
+  if (refresh) getList();
+}
+
 // todo
 
 const form = ref({
@@ -186,20 +190,13 @@ const changeSaleStatusAll = async (status) => {
   }
 }
 
-const statistics = ref();
-const getList = async (val) => {
-  if (!val) return;
-  console.log(form.value);
-  page.value = val;
-  const res = await bookList({ page: page.value, limit: limit.value, ...form.value });
-  console.log(res);
-  total.value = res.data.total;
+const getList = async () => {
+  const res = await vipList();
   list.value = res.data.items;
-  statistics.value = res.data.statistics;
 };
 
 onMounted(async () => {
-  getList(page.value);
+  getList();
 });
 </script>
 

@@ -1,7 +1,7 @@
 import request from '/@/utils/request';
 
 /**
- * 图文
+ * 图文 主题 品牌 特色
  */
 
 // 图片列表
@@ -62,6 +62,28 @@ export function bannerDetail(params: string) {
   return request({
     url: '/api/v1/system/banner/detail',
     method: 'get',
-    params:{ biz_banner_id: params },
+    params: { biz_banner_id: params },
   });
 }
+
+// // 主题推荐列表
+// export function themeList() {
+//   return request({
+//     url: '/api/v1/system/book/tag/list',
+//     method: 'get',
+//   });
+// }
+// // 特色人物列表
+// export function featureList() {
+//   return request({
+//     url: '/api/v1/system/feature/list',
+//     method: 'get',
+//   });
+// }
+// // 品牌专区列表
+// export function brandList() {
+//   return request({
+//     url: '/api/v1/system/brand/list',
+//     method: 'get',
+//   });
+// }

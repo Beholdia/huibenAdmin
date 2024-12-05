@@ -1,7 +1,6 @@
 <template lang="pug">
 .dict
-  el-radio-group(type="button" v-model="type" @change="changeCategory")
-    el-radio-button(:label="item.label" :value="item.value" v-for="item in types" size="default")
+  Tags(:biz_type="'column'")
   el-button(size="default" block class="editBtn" type="primary" @click="editColumn(null)") 添加
   el-table(:data="list")
     el-table-column(prop="biz_column_id" label="编号")
@@ -36,28 +35,9 @@ import { onMounted, ref } from 'vue';
 import { columnList, delColumn, editColumnSort, editColumnStatus } from '/@/api/xcx/column.ts';
 import { ElMessage, ElMessageBox } from 'element-plus';
 import EditColumnDetail from './component/EditColumnDialog.vue';
+import Tags from './component/Tags.vue'
 
 const editColumnVisible = ref(false);
-const type = ref("isbn_age_cate");// 默认为年龄分类
-const types = ref([{
-  label: "图片广告",
-  value: "isbn_age_cate"
-},
-{
-  label: "栏目设置",
-  value: "isbn_theme_tag"
-},
-{
-  label: "主题推荐",
-  value: "isbn_feature_tag"
-}, {
-  label: "品牌专区",
-  value: "isbn_series_cate"
-}, {
-  label: "特色人物",
-  value: "isbn_featured_character"
-},
-]);
 const list = ref([
 ]);
 const currentId = ref(0);

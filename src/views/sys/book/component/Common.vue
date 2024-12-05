@@ -10,7 +10,7 @@
     el-table-column(prop="dict_label" :label="label")
     el-table-column(prop="dict_label" label="人物图标" v-if="type === 'character'")
       template(#default="{row}")
-        el-image(:src="row.logo" :preview-src-list = " [ row.logo ] " :preview-teleported="true")
+        el-image(:src="row.logo" :preview-src-list = " [ row.logo ] " :preview-teleported="true" style="width: 100px; height: 100px")
     el-table-column(prop="count" label="书籍数量")
     el-table-column(prop="dict_sort" label="排序")
       template(#default="{row}")
@@ -35,6 +35,7 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import EditDicDetail from './EditDicDetailDialog.vue';
 import { useRouter } from 'vue-router';
 import Tags from './Tags.vue';
+import { sysBookTags } from '/@/dicts'
 
 const router = useRouter();
 const editDictVisible = ref(false);
@@ -51,43 +52,6 @@ const type = defineModel('type', {
 )
 const label = ref('');
 
-const types = ref([{
-  label: "年龄分类",
-  value: "isbn_age_cate",
-  route: 'age'
-},
-{
-  label: "主题标签",
-  value: "isbn_theme_tag",
-  route: 'theme'
-},
-{
-  label: "特色标签",
-  value: "isbn_feature_tag",
-  route: 'featuretag'
-}, {
-  label: "系列分类",
-  value: "isbn_series_cate",
-  route: 'series'
-}, {
-  label: "特色人物",
-  value: "isbn_featured_character",
-  route: 'character'
-}, {
-  label: "知名品牌",
-  value: "isbn_wellknow_brand",
-  route: 'brand'
-}, {
-  label: "书籍仓库",
-  value: "book_warehouse",
-  route: 'warehouse'
-},
-{
-  label: "书架号",
-  value: 'shelf',
-  route: 'shelf'
-}
-]);
 const list = ref([
 ]);
 const currentDictId = ref(0);
@@ -170,7 +134,7 @@ const changeCategory = (val) => {
 
 
 const getList = async () => {
-  const params = types.value.find(item => item.route === type.value).value;
+  const params = sysBookTags.find(item => item.route === type.value).value;
   const res = await bookTagList(params);
   list.value = res?.data?.items || [];
 }
@@ -178,7 +142,7 @@ const getList = async () => {
 onMounted(async () => {
   await getList();
   console.log(type.value);
-  label.value = types.value.find(item => item.route === type.value).label;
+  label.value = sysBookTags.find(item => item.route === type.value).label;
 })
 
 </script>

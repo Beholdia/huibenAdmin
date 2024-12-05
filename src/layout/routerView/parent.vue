@@ -1,6 +1,5 @@
 <template>
 	<div class="h100">
-		45
 		<router-view v-slot="{ Component }">
 			<transition :name="setTransitionName" mode="out-in">
 				<keep-alive :include="getKeepAliveNames">
