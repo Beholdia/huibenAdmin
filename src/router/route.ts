@@ -1311,6 +1311,36 @@ export const demoRoutes: Array<RouteRecordRaw> = [
 					roles: ['admin', 'common'],
 					// icon: 'iconfont icon-shouye',
 				},
+			},
+			{
+				path: '/sys/share',
+				name: 'sysshare',
+				component: () => import('../views/sys/Share/Index.vue'),
+				meta: {
+					title: '分享邀请设置',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					roles: ['admin', 'common'],
+					// icon: 'iconfont icon-shouye',
+				},
+			},
+			{
+				path: '/sys/rider',
+				name: 'sysrider',
+				component: () => import('../views/sys/Rider/Index.vue'),
+				meta: {
+					title: '配送设置',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					roles: ['admin', 'common'],
+					// icon: 'iconfont icon-shouye',
+				},
 			}
 		]
 	}

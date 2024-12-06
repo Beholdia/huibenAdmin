@@ -1,43 +1,45 @@
 <template lang="pug">
 .list
   .filter
+    BaseFilter(:filterList="filterList" @onFilter="onFilter" v-model:form="form")
     el-button(type="primary" @click="currentId=0;showDrawer = true") 添加
   .wrapper
     el-table(:data="list" style="width: 100%",@selection-change="handleSelectionChange")
       //- el-table-column(type="selection" width="55")
-      el-table-column(prop="biz_vip_id" label="编号")
-      el-table-column(prop="title" label="会员类别")
-      el-table-column(prop="valid_days" label="有效期（天）")
-      el-table-column(prop="original_price" label="原价")
-      el-table-column(prop="original_price" label="优惠价（元）")
-      el-table-column(prop="status" label="状态" )
+      el-table-column(prop="biz_rider_id" label="序号")
+      el-table-column(prop="name" label="姓名")
+      el-table-column(prop="phone" label="手机号")
+      el-table-column(prop="created_at" label="创建时间" width="200")
+      el-table-column(prop="pickup_times" label="取书次数")
+      el-table-column(prop="delivery_times" label="送书次数")
+      el-table-column(prop="status" label="状态" width="200" )
         template(#default="{row}")
-          el-switch(v-model="row.status" @change="editStatus(row)" :active-value="1" :inactive-value="0" inline-prompt active-text="启用" inactive-text="关闭" size="small")
+          el-switch(v-model="row.status" @change="editStatus(row)" :active-value="1" :inactive-value="0" active-text="正常营业" inactive-text="不营业" size="small")
       el-table-column(label="操作" width="100px")
         template(#default="{row}")
           .buttons
-            el-button(type="info" size="small" @click="editVip(row)") 编辑
-            el-button(type="danger" size="small" @click="deleteVip(row)") 删除
+            el-button(type="info" size="small" @click="editRider(row)") 编辑
+            el-button(type="danger" size="small" @click="deleteRider(row)") 删除
 
-    //- el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
-  EditMemberDrawer(v-model:show="showDrawer" :id="currentId" @onClose="onCloseDrawer") 
+    el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
+  EditRiderDrawer(v-model:show="showDrawer" :id="currentId" @onClose="onCloseDrawer") 
   </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
 import { bookList, changeSaleStatus as changeSaleStatusApi } from '/@/api/books/index.ts';
-import { editVipStatus, delVip, vipList } from '/@/api/member/index.ts';
+import { editRiderStatus, delRider, riderList } from '/@/api/xcx/rider.ts';
 import BaseFilter from '/@/components/form/BaseFilter.vue'
 import { ElMessage, ElMessageBox } from 'element-plus';
-import EditMemberDrawer from './component/EditMemberDrawer.vue'
+import EditRiderDrawer from './component/EditRiderDrawer.vue'
 
 const showDrawer = ref(false);//弹框
 const currentId = ref(0);//当前id
 //修改状态
 const editStatus = async (row) => {
   try {
-    await editVipStatus({
-      "biz_vip_id": row.biz_vip_id,
+    await editRiderStatus({
+      "biz_rider_id": row.biz_rider_id,
       "status": row.status
     });
     ElMessage.success('修改成功');
@@ -48,14 +50,14 @@ const editStatus = async (row) => {
 }
 
 // 删除
-const deleteVip = async (row) => {
+const deleteRider = async (row) => {
   try {
-    await ElMessageBox.confirm(`确定删除此分类吗？`, '提示', {
+    await ElMessageBox.confirm(`确定删除吗？`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
     })
-    await delVip({ biz_vip_id: row.biz_vip_id });
+    await delRider({ biz_rider_id: row.biz_rider_id });
     ElMessage.success('删除成功');
     await getList();
   } catch (error) {
@@ -63,10 +65,10 @@ const deleteVip = async (row) => {
   }
 }
 // 修改
-const editVip = (row) => {
+const editRider = (row) => {
   currentId.value = 0;
   if (row) {
-    currentId.value = row.biz_vip_id;
+    currentId.value = row.biz_rider_id;
   }
   showDrawer.value = true;
 };
@@ -74,61 +76,57 @@ const onCloseDrawer = (refresh) => {
   if (refresh) getList();
 }
 
-// // todo
+// todo
 
-// const form = ref({
-//   keyword: null,
-// });
+const form = ref({
+  keyword: null,
+});
 
 const list = ref([]);
-// const page = ref(1);
-// const total = ref(0);
-// const limit = ref(8);
-// const selectedId = ref(null);
-// const titleName = ref(null);
+const page = ref(1);
+const total = ref(0);
+const limit = ref(10);
+const selectedId = ref(null);
+const titleName = ref(null);
 
-// const filterList = [{
-//   label: '关键词',
-//   model: 'keyword',
-//   type: 'input',
-//   placeholder: '书名或ISBN'
-// },
-// {
-//   label: '借阅状态',
-//   model: 'borrow_status',
-//   type: 'select',
-//   options: [{
-//     label: '可借',
-//     value: 'available'
-//   },
-//   {
-//     label: '借出',
-//     value: 'borrowed'
-//   }
-//   ]
-// },
-// {
-//   label: '销售状态',
-//   model: 'sale_status',
-//   type: 'select',
-//   options: [{
-//     label: '可售',
-//     value: 'on_sale'
-//   },
-//   {
-//     label: '不可售',
-//     value: 'off_sale'
-//   }
-//   ]
-// }
-// ];
-
-// const filter = ref(null);
-
-// const onFilter = () => {
-//   page.value = 1;
-//   getList(page.value);
-// };
+const filterList = [{
+  label: '关键词',
+  model: 'keyword',
+  type: 'input',
+  placeholder: '手机号'
+},
+  // {
+  //   label: '借阅状态',
+  //   model: 'borrow_status',
+  //   type: 'select',
+  //   options: [{
+  //     label: '可借',
+  //     value: 'available'
+  //   },
+  //   {
+  //     label: '借出',
+  //     value: 'borrowed'
+  //   }
+  //   ]
+  // },
+  // {
+  //   label: '销售状态',
+  //   model: 'sale_status',
+  //   type: 'select',
+  //   options: [{
+  //     label: '可售',
+  //     value: 'on_sale'
+  //   },
+  //   {
+  //     label: '不可售',
+  //     value: 'off_sale'
+  //   }
+  //   ]
+  // }
+];
+const onFilter = () => {
+  getList(1);
+};
 // const goAdd = () => {
 //   selectedId.value = null;
 //   titleName.value = '创建内容';
@@ -191,8 +189,11 @@ const list = ref([]);
 //   }
 // }
 
-const getList = async () => {
-  const res = await vipList();
+const getList = async (pageNum) => {
+  if (pageNum) page.value = pageNum;
+  console.log(form.value);
+  const res = await riderList({ ...form.value, page: page.value, limit: limit.value });
+  // 分页
   list.value = res.data.items;
 };
 

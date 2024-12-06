@@ -1,7 +1,7 @@
 import request from '/@/utils/request';
 
 /**
- * 图文
+ * 栏目
  */
 
 // 图片列表
@@ -13,7 +13,7 @@ export function columnList() {
 }
 
 /**
- * 删除图文
+ * 删除栏目
  */
 export function delColumn(params: object) {
   return request({
@@ -24,7 +24,7 @@ export function delColumn(params: object) {
 }
 
 /**
- * 修改图文排序
+ * 修改栏目排序
  */
 export function editColumnSort(params: object) {
   return request({
@@ -33,7 +33,7 @@ export function editColumnSort(params: object) {
     data: params,
   });
 }
-// 修改图文状态
+// 修改栏目状态
 export function editColumnStatus(params: object) {
   return request({
     url: '/api/v1/system/column/edit/status',
@@ -41,7 +41,7 @@ export function editColumnStatus(params: object) {
     data: params,
   });
 }
-// 添加图文
+// 添加栏目
 export function storeColumn(params: object) {
   return request({
     url: '/api/v1/system/column/store',
@@ -49,7 +49,7 @@ export function storeColumn(params: object) {
     data: params,
   });
 }
-// 修改图文
+// 修改栏目
 export function editColumn(params: object) {
   return request({
     url: '/api/v1/system/column/edit',
@@ -57,7 +57,7 @@ export function editColumn(params: object) {
     data: params,
   });
 }
-// 获取图文详情
+// 获取栏目详情
 export function columnDetail(params: string) {
   return request({
     url: '/api/v1/system/column/detail',

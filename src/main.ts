@@ -7,6 +7,7 @@ import { i18n } from '/@/i18n/index';
 import other from '/@/utils/other';
 
 import ElementPlus from 'element-plus';
+import * as ElementPlusIconsVue from '@element-plus/icons-vue';
 
 import 'element-plus/dist/index.css';
 import '/@/theme/index.scss';
@@ -61,3 +62,6 @@ app.config.globalProperties = Object.assign(
     app.config.globalProperties,
     globalProperties
 );
+for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
+    app.component(key, component);
+}

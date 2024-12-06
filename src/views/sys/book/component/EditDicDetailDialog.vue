@@ -35,7 +35,6 @@ const form = reactive({
   dict_label: '', dict_code: '', dict_sort: 0, logo: '', remark: ''
 });
 onUpdated(async () => {
-  console.log(show.value);
   // form.dict_type = props.dictData.dict_type;
   if (show.value && props.id) {
     const {
@@ -48,7 +47,6 @@ onUpdated(async () => {
     form.remark = remark;
     form.logo = logo;
     form.dict_code = props.id;
-    console.log(form);
   }
 });
 const emit = defineEmits(['onClose']);
@@ -64,14 +62,15 @@ const onClose = (refreshList) => {
   emit('onClose', refreshList);
 };
 const onSave = async () => {
+  if (!form.dict_label) return ElMessage.info(`请输入${props.label}`);
   const {
-    dict_label, dict_sort, dict_code, logo, remark
+    dict_label, dict_sort, dict_code, remark
   } = form;
   if (props.id) {
     await editBookTag({
       dict_label: dict_label,
       dict_sort: dict_sort,
-      logo: imageUploader.value.fileList[0].url,
+      logo: imageUploader.value.fileList?.[0]?.url,
       remark,
       dict_code: dict_code
     });

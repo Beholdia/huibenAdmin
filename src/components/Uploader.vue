@@ -13,9 +13,12 @@ el-upload.uploader(
   :before-upload="onBeforeUpload",
   v-model:file-list="fileList",
 )
-  el-button(type="primary", v-if="canCtrl") 上传文件
-  template(#tip, v-if="canCtrl")
-    p(style="font-size:12px;color:#999;margin-top:5px;") 文件类型：jpg、png 文件大小：5MB以下
+  //- el-button(type="primary", v-if="canCtrl") 上传文件
+  //- template(#tip, v-if="canCtrl")
+  //-   p(style="font-size:12px;color:#999;margin-top:5px;") 文件类型：jpg、png 文件大小：5MB以下
+  img(v-if="fileList.length", :src="fileList[0].url", class="avatar")
+  el-icon(v-else class="avatar-uploader-icon")
+    Plus
 
 el-dialog(v-model="showPreview", style="text-align:center")
   img(:src="curFile.url", style="width: 100%", v-if="['png', 'jpeg', 'jpg'].includes(curFile.type)")
@@ -25,11 +28,11 @@ el-dialog(v-model="showPreview", style="text-align:center")
 <script setup>
 import { ElMessage } from 'element-plus';
 import {
-  reactive, ref, onUnmounted, readonly, onUpdated,computed,watch 
+  reactive, ref, onUnmounted, readonly, onUpdated, computed, watch
 } from 'vue';
 import { Session } from '/@/utils/storage';
 
-const uploadUrl = import.meta.env.VITE_API_URL+'/api/v1/system/file/upload';
+const uploadUrl = import.meta.env.VITE_API_URL + '/api/v1/system/file/upload';
 const props = defineProps({
   limit: {
     type: Number,
@@ -85,9 +88,9 @@ const onBeforeUpload = async (rawFile) => {
 const onSuccess = (res, file, files) => {
   console.log(res);
   if (!res.code) {
-    fileList.value[fileList.value.length -1]= {
-    name :res.data.file[0].new_name,
-    url: res.data.file[0].url,
+    fileList.value[fileList.value.length - 1] = {
+      name: res.data.file[0].new_name,
+      url: res.data.file[0].url,
     }
   } else ElMessage.error('上传失败，请重试');
 };
@@ -129,5 +132,36 @@ defineExpose({
 <style lang="less">
 .uploader .el-upload-list__item {
   line-height: 1.5;
+}
+</style>
+
+<style scoped>
+.avatar {
+  width: 178px;
+  /* height: 178px; */
+  display: block;
+}
+</style>
+
+<style>
+.uploader .el-upload {
+  border: 1px dashed var(--el-border-color);
+  border-radius: 6px;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  transition: var(--el-transition-duration-fast);
+}
+
+.uploader .el-upload:hover {
+  border-color: var(--el-color-primary);
+}
+
+.el-icon.avatar-uploader-icon {
+  font-size: 28px;
+  color: #8c939d;
+  width: 178px;
+  height: 178px;
+  text-align: center;
 }
 </style>

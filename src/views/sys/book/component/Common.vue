@@ -56,13 +56,11 @@ const list = ref([
 ]);
 const currentDictId = ref(0);
 const editDict = (row) => {
-  console.log(row);
   currentDictId.value = 0;
   if (row) {
     currentDictId.value = row.dict_code;
   }
   editDictVisible.value = true;
-  console.log(editDictVisible.value, currentDictId.value);
 };
 
 const closeEditDict = (refreshList) => {
@@ -71,9 +69,6 @@ const closeEditDict = (refreshList) => {
 };
 
 const editStatus = async (row) => {
-  console.log(row);
-  // todo
-
   try {
     await changeTagStatus({
       "dictCode": row.dict_code,
@@ -87,7 +82,6 @@ const editStatus = async (row) => {
   }
 }
 const editXcxStatus = async (row) => {
-  console.log(row);
 
   try {
     await editBookStatusTagXcx({
@@ -117,7 +111,6 @@ const deleteDict = async (row) => {
 }
 
 const editSort = async (row) => {
-  console.log(row);
   await editBookTagSort({
     "dict_code": row.dict_code,
     "sort": row.dict_sort
@@ -141,7 +134,6 @@ const getList = async () => {
 
 onMounted(async () => {
   await getList();
-  console.log(type.value);
   label.value = sysBookTags.find(item => item.route === type.value).label;
 })
 

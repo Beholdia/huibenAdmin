@@ -87,3 +87,19 @@ export function bannerDetail(params: string) {
 //     method: 'get',
 //   });
 // }
+// 分享邀请详情
+export function shareDetail(params: object) {
+  return request({
+    url: '/api/v1/system/share/config/detail',
+    method: 'get',
+    params: params,
+  });
+}
+// 修改分享邀请详情
+export function editShareDetail(params: object) {
+  return request({
+    url: '/api/v1/system/share/config/edit',
+    method: 'post',
+    data: params,
+  });
+}
