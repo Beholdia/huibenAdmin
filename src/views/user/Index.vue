@@ -42,7 +42,6 @@ import BaseFilter from '/@/components/form/BaseFilter.vue'
 import { vipList } from '/@/api/member/index.ts';
 
 const proxy = getCurrentInstance().proxy;
-const url = ref('');
 const form = ref({
   keyword: null,
 });
@@ -101,12 +100,12 @@ const onDel = async (val) => {
 
 const changeStatus = async (row) => {
   try {
-    await ElMessageBox.confirm(`确定${row.sale_status === 'on_sale' ? '下架' : '上架'}该书籍吗？`, '提示', {
+    await ElMessageBox.confirm(`确定${row.status == 1 ? '禁用' : '解封'}该用户吗？`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
     })
-    await changeStatusApi({ biz_user_ids: [row.biz_user_id], sale_status: row.sale_status === 'on_sale' ? 'off_sale' : 'on_sale' });
+    await changeStatus({ biz_user_id: row.biz_user_id, status: row.status == 1 ? 0 : 1 });
     getList(page.value);
   } catch (error) {
     console.log(error);
