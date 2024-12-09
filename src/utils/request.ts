@@ -1,7 +1,9 @@
 import axios, { AxiosInstance } from 'axios';
-import { ElMessage, ElMessageBox } from 'element-plus';
+import {ElLoading, ElMessage, ElMessageBox } from 'element-plus';
 import { Session } from '/@/utils/storage';
 import qs from 'qs';
+
+let loading = null;
 
 // 配置新建一个 axios 实例
 const service: AxiosInstance = axios.create({
@@ -18,6 +20,8 @@ const service: AxiosInstance = axios.create({
 // 添加请求拦截器
 service.interceptors.request.use(
 	(config) => {
+		
+		// loading = ElLoading.service();
 		// 在发送请求之前做些什么 token
 		if (Session.get('token')) {
 			config.headers!['Authorization'] = `Bearer ${Session.get('token')}`;
@@ -36,6 +40,7 @@ service.interceptors.response.use(
 		// 对响应数据做点什么
 		const res = response.data;
 		const code = response.data.code
+// loading.close();
 		if (code === 401) {
 			ElMessageBox.alert('登录状态已过期，请重新登录', '提示', { confirmButtonText: '确定' })
 				.then(() => {
@@ -53,6 +58,8 @@ service.interceptors.response.use(
 	},
 	(error) => {
 		console.log(error);
+		// loading.close();
+
 		// 对响应错误做点什么
 		if (error.message.indexOf('timeout') != -1) {
 			ElMessage.error('网络超时');

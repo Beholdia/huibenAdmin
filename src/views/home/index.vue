@@ -1,6 +1,6 @@
 <template lang="pug">
 .home
-	el-button( type="info" class="refresh" plain @click="refresh" style="border:none;position:absolute;right:100px;top:10px;") 刷新
+	el-button( type="info" class="refresh" plain @click="refresh" style="border:none;position:absolute;right:100px;top:0px;") 刷新
 		el-icon
 			Refresh
 	.row(v-for="i in 3")
@@ -14,7 +14,7 @@
 
 <style lang="less" scoped>
 .home {
-	padding: 100px;
+	padding: 50px;
 	position: relative;
 
 	.row {
@@ -25,7 +25,7 @@
 		margin-bottom: 40px;
 
 		.column {
-			font-size: 32px;
+			font-size: 28px;
 			width: 33.3%;
 			text-align: center;
 			padding: 40px;

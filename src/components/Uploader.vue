@@ -11,6 +11,7 @@ el-upload.uploader(
   :on-exceed="onExceed",
   :on-remove="onRemove",
   :before-upload="onBeforeUpload",
+  :disabled="disabled"
   v-model:file-list="fileList",
 )
   //- el-button(type="primary", v-if="canCtrl") 上传文件
@@ -56,6 +57,10 @@ const props = defineProps({
     type: Number,
     default: 5,
   },
+  disabled: {
+    type: Boolean,
+    default: false,
+  }
 });
 const headers = reactive({
   Authorization: '',

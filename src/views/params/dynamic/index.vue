@@ -72,7 +72,7 @@ export default defineComponent({
 			router.push({
 				name: 'paramsDynamicDetails',
 				params: {
-					t: '后台管理系统',
+					t: '绘本管理后台',
 					id: state.value,
 					tagsViewName: state.tagsViewName,
 				},

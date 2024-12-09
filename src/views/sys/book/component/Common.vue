@@ -4,7 +4,7 @@
   //- .group
     el-radio-group(type="button" v-model="type" @change="changeCategory")
       el-radio-button(:label="item.label" :value="item.route" v-for="item in types" size="default")
-  el-button(size="default" block class="editBtn" type="primary") 添加
+  //- el-button(size="default" block class="editBtn" type="primary") 添加
   el-table(:data="list")
     el-table-column(prop="dict_code" label="编号")
     el-table-column(prop="dict_label" :label="label")

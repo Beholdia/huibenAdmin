@@ -1,5 +1,5 @@
 <template lang="pug">
-el-drawer(:modelValue="show",:show-close="false" style="width: 50%;padding:20px" title="新书入库")
+el-drawer(:modelValue="show",:show-close="false" style="width: 50%;padding:20px" title="新书入库" @close="onClose(null)")
   el-form(label-width="120px" label-position="left" :model="form" style="margin-top:20px")
     el-form-item(label="书架号" required)
       //- el-input(v-model="form.biz_bookshelf_id" placeholder="请输入书架号")
@@ -22,9 +22,9 @@ el-drawer(:modelValue="show",:show-close="false" style="width: 50%;padding:20px"
         el-option(label="下架" value="off_sale")
   template(#footer)
     el-button(@click="onClose") 取消
-    el-popconfirm(title="确认提交？",@confirm="onSave")
-      template(#reference)
-        el-button(type="primary") 确认
+    //- el-popconfirm(title="确认提交？",@confirm="onSave")
+    //-   template(#reference)
+    el-button(type="primary" @click="onSave") 确认
   </template>
 
 <script setup>
@@ -32,9 +32,11 @@ import {
   onUpdated, reactive, ref, onMounted,
 } from 'vue';
 import { bookStore } from '/@/api/books/index.ts';
-import { ElMessage } from 'element-plus';
+import { ElMessage,ElLoading } from 'element-plus';
 import dayjs from 'dayjs';
 import { bookShelfList, bookTagList } from '/@/api/books/index.ts';
+
+let loading = ref(null);
 
 const show = defineModel('show', { type: Boolean });
 const props = defineProps({
@@ -46,18 +48,10 @@ const book_shelf_list = ref([]);// 书架
 const book_warehouse_list = ref([]);// 书库
 onUpdated(async () => {
   form.value = {};
+  form.value.warehouse_id=book_warehouse_list.value[0].dict_code;//默认选择第一个书库
+  form.value.borrow_status='available';//默认可借
+  form.value.sale_status='on_sale';//默认上架
   form.value.pubdate = dayjs().format('YYYY-MM-DD');
-  // form.value.dict_type = props.bookData.dict_type;
-  // if (props.show && props.bookData.id) {
-  //   const {
-  //     dict_label, dict_type, id, dict_value, dict_sort,
-  //   } = (await proxy.$api.system.data({ id: props.bookData.id })).dict;
-  //   form.value.dict_label = dict_label;
-  //   // form.dict_type = dict_type;
-  //   form.value.dict_value = dict_value;
-  //   form.value.dict_sort = dict_sort;
-  //   form.value.id = id;
-  // }
 });
 const emit = defineEmits(['onClose']);
 const onClose = (refreshList) => {
@@ -73,7 +67,9 @@ const onSave = async () => {
   if (!purchase_price || !pubdate || !warehouse_id || !borrow_status || !sale_status || !biz_bookshelf_id) {
     return ElMessage.error('请填写完整信息');
   }
-  const res = await bookStore({ isbn_id: props.isbn_id, purchase_price, pubdate, warehouse_id, borrow_status, sale_status, biz_bookshelf_id })
+  loading.value = ElLoading.service();
+  const res = await bookStore({ isbn_id: props.isbn_id, purchase_price, pubdate, warehouse_id, borrow_status, sale_status, biz_bookshelf_id });
+  loading.value.close();
   if (res.code === 0) ElMessage.success('新书入库成功');
   // if (form.value.id) {
   //   await proxy.$api.system.editbookData({
@@ -91,6 +87,15 @@ onMounted(async () => {
   book_shelf_list.value = bookShelfs?.data?.items || [];
   const bookWarehouses = await bookTagList('book_warehouse');
   book_warehouse_list.value = bookWarehouses?.data?.items || [];
+})
+
+defineExpose({
+  show,
+  form,
+  book_shelf_list,
+  book_warehouse_list,
+  onClose,
+  onSave,
 })
 </script>
 

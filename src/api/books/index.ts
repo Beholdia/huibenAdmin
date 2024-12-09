@@ -1,15 +1,19 @@
 import request from '/@/utils/request';
+import {ElLoading, ElMessage, ElMessageBox } from 'element-plus';
 
 /**
  * 书籍信息管理api接口集合
  */
+// let loading = null;
 
 // isbn查询信息
 export function searchIsbn(params: object) {
+		// loading = ElLoading.service();
   return request({
     url: '/api/v1/system/book/search/isbn',
     method: 'post',
     data: params,
+    needLoading:true
   });
 }
 

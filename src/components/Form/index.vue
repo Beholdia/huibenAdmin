@@ -9,8 +9,10 @@ el-form(:inline="true" label-width="100px" label-position="left" class="currentF
     el-select(v-model.trim="filter[ item.key ]" :placeholder="`请选择${item.label}`",clearable,v-if="item.type === 'select'" :multiple="item.multiple")
       el-option(:value="subItem[item.props?.value||'dict_code']" :label="subItem[item.props?.label||'dict_label']" v-for="subItem in item.options")
     el-divider(v-if="item.type === 'divider'")
+    el-date-picker(v-model.trim="filter[ item.key ]" :placeholder="`请选择${item.label}`" type="date" v-if="item.type === 'date'")
     el-cascader(v-model.trim="filter[ item.key ]" :options="item.options" :props="item.props" :placeholder="`请选择${item.label}`" clearable,v-if="item.type === 'cascader'")
     el-input(type="textarea" :autosize="{ minRows: 4, maxRows: 8 }" v-if="item.type === 'textarea'" v-model.trim="filter[ item.key ]" :placeholder="`请输入${item.label}`" clearable)
+    Uploader(v-if="item.type === 'uploader'" :files="[filter[ item.key ] ]" ref="imageUploader" :limit="1")
   el-form-item(style="width:90%")
     div
       el-button(type="primary", @click="submitForm(ruleFormRef)"  size="large") {{btnName}}
@@ -24,6 +26,8 @@ el-form(:inline="true" label-width="100px" label-position="left" class="currentF
 
 <script setup>
 import { reactive, ref } from 'vue';
+import Uploader from '/@/components/Uploader.vue';
+const imageUploader = ref(null);
 
 const props = defineProps({
   formList: Array,
@@ -38,6 +42,7 @@ const emit = defineEmits(['onSubmit', 'onAdd', 'onDelete']);
 
 const rules = reactive({
   isbn: { required: true, message: '请输入ISBN', trigger: 'blur' },
+  title: { required: true, message: '请输入正书名', trigger: 'blur' },
   isbn_language_cate_id: { required: true, message: '请选择语言分类', trigger: 'blur' }
 });
 // const ruleForm = reactive({ isbn: '' });
@@ -53,8 +58,7 @@ const submitForm = async (formEl) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
-      console.log('submit!');
-      emit('onSubmit', filter);
+      emit('onSubmit', filter,imageUploader?.value?.[0]?.fileList?.[0]?.url);
     } else {
       console.log('error submit!', fields)
     }
@@ -98,4 +102,9 @@ defineExpose({
 /* :deep(.el-select__wrapper) {
   width: 200px !important;
 } */
+:deep(.el-form-item__content) {
+  &>div {
+    width: 100% !important;
+  }
+}
 </style>
