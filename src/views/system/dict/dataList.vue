@@ -3,12 +3,12 @@
     <el-card shadow="hover">
       <div class="system-user-search mb15">
         <el-form :model="tableData.param" ref="queryRef" :inline="true" label-width="68px">
-          <el-form-item label="字典类型" prop="dictType">
-            <el-input v-model="tableData.param.dictType" placeholder="请输入字典类型" clearable size="default"
+          <el-form-item label="字典类型" prop="dict_type">
+            <el-input v-model="tableData.param.dict_type" placeholder="请输入字典类型" clearable size="default"
               @keyup.enter.native="dataList" />
           </el-form-item>
-          <el-form-item label="字典标签" prop="dictLabel">
-            <el-input v-model="tableData.param.dictLabel" placeholder="请输入字典标签" clearable size="default"
+          <el-form-item label="字典标签" prop="dict_label">
+            <el-input v-model="tableData.param.dict_label" placeholder="请输入字典标签" clearable size="default"
               @keyup.enter.native="dataList" />
           </el-form-item>
           <el-form-item label="状态" prop="status" style="width: 200px;">
@@ -48,12 +48,12 @@
       </div>
       <el-table :data="tableData.data" style="width: 100%" @selection-change="handleSelectionChange">
         <el-table-column type="selection" width="55" align="center" />
-        <el-table-column label="字典编码" align="center" prop="dictCode" />
-        <el-table-column label="字典标签" align="center" prop="dictLabel" />
-        <el-table-column label="字典键值" align="center" prop="dictValue" />
-        <el-table-column label="字典排序" align="center" prop="dictSort" />
+        <el-table-column label="字典编码" align="center" prop="dict_code" />
+        <el-table-column label="字典标签" align="center" prop="dict_label" />
+        <el-table-column label="字典键值" align="center" prop="dict_value" />
+        <el-table-column label="字典排序" align="center" prop="dict_sort" />
         <el-table-column label="备注" align="center" prop="remark" :show-overflow-tooltip="true" />
-        <el-table-column label="创建时间" align="center" prop="createdAt" width="180" />
+        <el-table-column label="创建时间" align="center" prop="created_at" width="180" />
         <el-table-column prop="status" label="字典状态" show-overflow-tooltip>
           <template #default="scope">
             <el-tag type="success" v-if="scope.row.status">启用</el-tag>
@@ -70,7 +70,7 @@
       <pagination v-show="tableData.total > 0" :total="tableData.total" v-model:page="tableData.param.page"
         v-model:limit="tableData.param.limit" @pagination="dataList" />
     </el-card>
-    <EditDic ref="editDicRef" @dataList="dataList" :dict-type="tableData.param.dictType" />
+    <EditDic ref="editDicRef" @dataList="dataList" :dict_type="tableData.param.dict_type" />
   </div>
 </template>
 
@@ -85,14 +85,14 @@ import { useRoute } from 'vue-router';
 
 // 定义接口来定义对象的类型
 interface TableDataRow {
-  dictCode: number;
-  dictSort: number;
-  dictLabel: string;
-  dictValue: string;
-  dictType: string;
+  dict_code: number;
+  dict_sort: number;
+  dict_label: string;
+  dict_value: string;
+  dict_type: string;
   status: number,
   remark: string;
-  createdAt: string
+  created_at: string
 }
 interface TableDataState {
   ids: number[];
@@ -103,8 +103,8 @@ interface TableDataState {
     param: {
       page: number;
       limit: number;
-      dictType: string;
-      dictLabel: string;
+      dict_type: string;
+      dict_label: string;
       status: string;
     };
   };
@@ -127,8 +127,8 @@ export default defineComponent({
         param: {
           page: 1,
           limit: 10,
-          dictLabel: '',
-          dictType: '',
+          dict_label: '',
+          dict_type: '',
           status: ''
         },
       },
@@ -145,7 +145,9 @@ export default defineComponent({
     };
     // 打开新增字典弹窗
     const onOpenAddDic = () => {
+      console.log(state.tableData.param.dict_type);
       editDicRef.value.openDialog();
+
     };
     // 打开修改字典弹窗
     const onOpenEditDic = (row: TableDataRow) => {
@@ -156,8 +158,8 @@ export default defineComponent({
       let msg = '你确定要删除所选数据？';
       let ids: number[] = [];
       if (row) {
-        msg = `此操作将永久删除用户：“${row.dictLabel}”，是否继续?`
-        ids = [row.dictCode]
+        msg = `此操作将永久删除用户：“${row.dict_label}”，是否继续?`
+        ids = [row.dict_code]
       } else {
         ids = state.ids
       }
@@ -180,8 +182,9 @@ export default defineComponent({
     };
     // 页面加载时
     onMounted(() => {
-      const dictType = route.params && route.params.dictType;
-      state.tableData.param.dictType = <string>dictType
+      const dict_type = route.params && route.params.dictType;
+      state.tableData.param.dict_type = <string>dict_type;
+      console.log(state.tableData.param.dict_type);
       initTableData();
     });
     /** 重置按钮操作 */
@@ -192,7 +195,7 @@ export default defineComponent({
     };
     // 多选框选中数据
     const handleSelectionChange = (selection: TableDataRow[]) => {
-      state.ids = selection.map(item => item.dictCode)
+      state.ids = selection.map(item => item.dict_code)
     };
     return {
       addDicRef,

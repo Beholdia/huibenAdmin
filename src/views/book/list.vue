@@ -6,6 +6,7 @@
         el-button(type="primary", @click="changeSaleStatusAll('on_sale')") 批量上架
         el-button(type="primary", @click="changeSaleStatusAll('off_sale')") 批量下架
   .wrapper
+    div(style="color:rgba(144,147,153)") 共有书籍{{statistics?.count_total}}本，借出{{statistics?.count_borrowed}}本，库存{{statistics?.count_available}}本
     el-table(:data="list" style="width: 100%",@selection-change="handleSelectionChange")
       el-table-column(type="selection" width="55")
       el-table-column(prop="biz_books_id" label="序号")

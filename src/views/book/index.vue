@@ -1,7 +1,7 @@
 <template lang="pug">
 .newbook
   .header
-    el-input(v-model="isbn" placeholder="请输入ISBN" @keyup.enter="onSearchIsbn")
+    el-input(v-model.trim="isbn" placeholder="请输入ISBN" @keyup.enter="onSearchIsbn" @input="changeIsbn" ref="myInput")
     el-button(type="primary" @click="onSearchIsbn" ) 确认
   .main
     BaseForm(:formList="formFields" ref="formRef" @onSubmit="storeIsbn" :btnName = "isbnBtnName")
@@ -18,12 +18,17 @@ import { ElMessage, ElMessageBox } from 'element-plus';
 import dayjs from 'dayjs';
 import { getDataListOption } from '/@/api/system/dict/data.ts';
 import NewBookDrawer from './component/newBookDrawer.vue';
+// import { nextTick } from 'process';
 
 const formRef = ref(null);
 const showDrawer = ref(false);
 // const showIsbnAdd = ref(false);
 const isbnBtnName = ref('添加isbn');
 const isbn_id = ref(0);
+const changeIsbn = () => {
+  console.log(isbn.value.trim().length);
+  if (isbn.value.trim().length === 13) onSearchIsbn();
+}
 const onSearchIsbn = async () => {
   try {
     // console.log(formRef.value.filter);
@@ -148,6 +153,8 @@ const formFields = ref([
   { label: "特色标签", key: "isbn_feature_tag_id", type: "tag", width: "calc(90% + 32px)", options: [], multiple: true, props: { label: 'dict_label', value: "dict_code" } },
   { label: "内容摘要", key: "summary", width: "calc(90% + 32px)", type: "textarea" },
 ]);
+
+const myInput = ref(null);
 onMounted(async () => {
 
   const dicts = ['isbn_language_cate', 'isbn_age_cate', 'isbn_featured_character', 'isbn_series_cate', 'isbn_wellknow_brand', 'isbn_theme_tag', 'isbn_feature_tag']
@@ -156,6 +163,10 @@ onMounted(async () => {
     const list = data.list || [];
     formFields.value.find(item => item.key === `${dict}_id`).options = list;
   }
+
+  // nextTick(() => {
+  myInput.value.focus();
+  // })
 })
 </script>
 
