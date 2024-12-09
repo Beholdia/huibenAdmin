@@ -9,32 +9,33 @@
               <div class="login-icon-group-title-text font25">{{ getThemeConfig.globalViceTitle }}</div>
             </div>
           </div>
-          <div v-if="!isScan">
+          <!-- <div v-if="!isScan"> -->
+          <div>
             <el-tabs v-model="tabsActiveName">
               <el-tab-pane :label="$t('message.label.one1')" name="account">
                 <Account />
               </el-tab-pane>
-              <el-tab-pane :label="$t('message.label.two2')" name="mobile">
+              <!-- <el-tab-pane :label="$t('message.label.two2')" name="mobile">
                 <Mobile />
-              </el-tab-pane>
+              </el-tab-pane> -->
             </el-tabs>
           </div>
-          <Scan v-if="isScan" />
-          <div class="login-content-main-sacn" @click="isScan = !isScan">
+          <!-- <Scan v-if="isScan" /> -->
+          <!-- <div class="login-content-main-sacn" @click="isScan = !isScan">
             <i class="iconfont" :class="isScan ? 'icon-diannao1' : 'icon-barcode-qr'"></i>
             <div class="login-content-main-sacn-delta"></div>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
-    <div class="login-footer">
+    <!-- <div class="login-footer">
       <div class="login-footer-content mt15">
         <div class="login-footer-content-warp">
           <div>Copyright © 2021-2023 g-fast.cn All Rights Reserved.</div>
           <div class="mt5">云南奇讯科技有限公司版权所有</div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
 </template>
 
