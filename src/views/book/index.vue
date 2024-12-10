@@ -14,31 +14,58 @@
 import { ref, reactive, onMounted } from 'vue';
 import { searchIsbn, isbnStore } from '/@/api/books/index.ts';
 import BaseForm from "/@/components/form/index.vue";
-import { ElMessage, ElMessageBox ,ElLoading} from 'element-plus';
+import { ElMessage, ElMessageBox, ElLoading } from 'element-plus';
 import dayjs from 'dayjs';
 import { getDataListOption } from '/@/api/system/dict/data.ts';
 import NewBookDrawer from './component/newBookDrawer.vue';
-// import { nextTick } from 'process';
 
-let loading = ref(null);
+// let loading = ref(null);
 
-const formRef = ref(null);
+const formRef = ref(null);//表单内容
 const showDrawer = ref(false);
-// const showIsbnAdd = ref(false);
 const isbnBtnName = ref('添加isbn');
+const isbn = ref('');
 const isbn_id = ref(0);
 const changeIsbn = () => {
-  // console.log(isbn.value.trim().length);
   if (isbn.value.trim().length === 13) onSearchIsbn();
+}
+
+const clearBase = (val) => {
+  formRef.value.filter.isbn = isbn.value;
+  formRef.value.filter.cip = null;
+  formRef.value.filter.title = null;
+  formRef.value.filter.series = null;
+  formRef.value.filter.publisher = null;
+  formRef.value.filter.pubplace = null;
+  formRef.value.filter.author = null;
+  formRef.value.filter.pubdate = null;
+  formRef.value.filter.volumeName = null;
+  formRef.value.filter.volumeNumber = null;
+  formRef.value.filter.price = null;
+  formRef.value.filter.page = null;
+  formRef.value.filter.language = null;
+  formRef.value.filter.class = null;
+  formRef.value.filter.keyword = null;
+  formRef.value.filter.binding = null;
+  formRef.value.filter.pubauthor = null;
+  formRef.value.filter.pic = null;
+  formRef.value.filter.summary = null;
+}
+const clearTag = (val) => {
+  formRef.value.filter.isbn_language_cate_id = null;
+  formRef.value.filter.isbn_age_cate_id = null;
+  formRef.value.filter.isbn_featured_character_id = null;
+  formRef.value.filter.isbn_series_cate_id = null;
+  formRef.value.filter.isbn_wellknow_brand_id = null;
+  formRef.value.filter.isbn_feature_tag_id = null;
+  formRef.value.filter.isbn_theme_tag_id = null;
 }
 const onSearchIsbn = async () => {
   try {
-    // formRef.value.filter={};
-    loading.value = ElLoading.service();
-    // console.log(formRef.value.filter);
-    // formRef.value.filter.isbn = 9999;
+    // loading.value = ElLoading.service();
+
     const { data, } = (await searchIsbn({ isbn: isbn.value }));
-    loading.value.close();
+    // loading.value.close();
     const { IsbnInfo, IsbnTagInfo } = data;
     formRef.value.filter.isbn = IsbnInfo.isbn;
     formRef.value.filter.cip = IsbnInfo.cip;
@@ -62,14 +89,7 @@ const onSearchIsbn = async () => {
 
     // isbn未入库
     if (!IsbnTagInfo || !IsbnTagInfo.isbn_language_cate_id) {
-      // showIsbnAdd.value = true;
-      formRef.value.filter.isbn_language_cate_id = null;
-    formRef.value.filter.isbn_age_cate_id = null;
-    formRef.value.filter.isbn_featured_character_id = null;
-    formRef.value.filter.isbn_series_cate_id = null;
-    formRef.value.filter.isbn_wellknow_brand_id = null;
-    formRef.value.filter.isbn_feature_tag_id = null;
-    formRef.value.filter.isbn_theme_tag_id = null;
+      clearTag();
       return ElMessage.warning('请手动填写剩余必填信息并提交');
     }
 
@@ -104,51 +124,25 @@ const onSearchIsbn = async () => {
 
   } catch (error) {
     console.log(error);
-    loading.value.close();
-
-    formRef.value.filter.isbn = isbn.value;
-    formRef.value.filter.cip = null;
-    formRef.value.filter.title = null;
-    formRef.value.filter.series = null;
-    formRef.value.filter.publisher = null;
-    formRef.value.filter.pubplace = null;
-    formRef.value.filter.author = null;
-    formRef.value.filter.pubdate = null;
-    formRef.value.filter.volumeName = null;
-    formRef.value.filter.volumeNumber = null;
-    formRef.value.filter.price = null;
-    formRef.value.filter.page = null;
-    formRef.value.filter.language = null;
-    formRef.value.filter.class = null;
-    formRef.value.filter.keyword = null;
-    formRef.value.filter.binding = null;
-    formRef.value.filter.pubauthor = null;
-    formRef.value.filter.pic = null;
-    formRef.value.filter.summary = null;
-    formRef.value.filter.isbn_language_cate_id = null;
-    formRef.value.filter.isbn_age_cate_id = null;
-    formRef.value.filter.isbn_featured_character_id = null;
-    formRef.value.filter.isbn_series_cate_id = null;
-    formRef.value.filter.isbn_wellknow_brand_id = null;
-    formRef.value.filter.isbn_feature_tag_id = null;
-    formRef.value.filter.isbn_theme_tag_id = null;
-
+    // loading.value.close();
+    clearBase();
+    clearTag();
     if (error.code === 68) ElMessage.error('请手动填写信息');
   }
 }
 
-const isbn = ref('');
-const storeIsbn = async (info,pic) => {
+
+const storeIsbn = async (info, pic) => {
   try {
     await ElMessageBox.confirm(`确定${isbnBtnName.value}信息吗？`, '提示', {
       confirmButtonText: '确定',
       cancelButtonText: '取消',
       type: 'warning',
     })
-    
+
     const isbn_theme_tag_id = formFields.value.find(item => item.key === 'isbn_theme_tag_id').options.filter(item => item.checked).map(item => item.dict_code)
     const isbn_feature_tag_id = formFields.value.find(item => item.key === 'isbn_feature_tag_id').options.filter(item => item.checked).map(item => item.dict_code)
-    loading.value = ElLoading.service();
+    // loading.value = ElLoading.service();
     const res = await isbnStore({
       ...info,
       isbn_theme_tag_id,
@@ -156,14 +150,14 @@ const storeIsbn = async (info,pic) => {
       pubdate: info.pubdate ? dayjs(info.pubdate).format('YYYY-MM-DD') : '',
       pic
     });
-    loading.value .close();
+    // loading.value.close();
     if (res.code === 0) {
       isbn_id.value = res.data.biz_isbn_id;
       showDrawer.value = true;
       ElMessage.success('添加成功');
     }
   } catch (error) {
-    loading.value .close();
+    // loading.value.close();
     console.log(error);
   }
 }
@@ -177,7 +171,7 @@ const formFields = ref([
   { label: "出版单位", key: "publisher" },
   { label: "出版地", key: "pubplace" },
   { label: "作者", key: "author" },
-  { label: "出版时间", key: "pubdate",type:"date" },
+  { label: "出版时间", key: "pubdate", type: "date" },
   { label: "分册名", key: "volumeName" },
   { label: "分册号", key: "volumeNumber" },
   { label: "定价", key: "price" },
@@ -187,7 +181,7 @@ const formFields = ref([
   { label: "主题词", key: "keyword" },
   { label: "出版作者", key: "pubauthor" },
   { label: "装帧方式", key: "binding" },
-  { label: "封面", key: "pic", type: "uploader", width: "calc(90% + 32px)",},
+  { label: "封面", key: "pic", type: "uploader", width: "calc(90% + 32px)", },
   { label: "", type: "divider", width: 'calc(90% + 32px)' },
   { label: "语言分类", key: "isbn_language_cate_id", type: 'select', options: [], props: { label: 'dict_label', value: "dict_code" } },
   { label: "年龄分类", key: "isbn_age_cate_id", type: 'select', },
@@ -209,9 +203,7 @@ onMounted(async () => {
     formFields.value.find(item => item.key === `${dict}_id`).options = list;
   }
 
-  // nextTick(() => {
   myInput.value.focus();
-  // })
 })
 </script>
 

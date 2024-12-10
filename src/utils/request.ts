@@ -1,5 +1,5 @@
 import axios, { AxiosInstance } from 'axios';
-import {ElLoading, ElMessage, ElMessageBox } from 'element-plus';
+import { ElLoading, ElMessage, ElMessageBox } from 'element-plus';
 import { Session } from '/@/utils/storage';
 import qs from 'qs';
 
@@ -20,12 +20,12 @@ const service: AxiosInstance = axios.create({
 // 添加请求拦截器
 service.interceptors.request.use(
 	(config) => {
-		
-		// loading = ElLoading.service();
+
 		// 在发送请求之前做些什么 token
 		if (Session.get('token')) {
 			config.headers!['Authorization'] = `Bearer ${Session.get('token')}`;
 		}
+		if (config.headers.needLoading) { loading = ElLoading.service(); }
 		return config;
 	},
 	(error) => {
@@ -40,7 +40,7 @@ service.interceptors.response.use(
 		// 对响应数据做点什么
 		const res = response.data;
 		const code = response.data.code
-// loading.close();
+		if (response.config.headers.needLoading) loading.close();
 		if (code === 401) {
 			ElMessageBox.alert('登录状态已过期，请重新登录', '提示', { confirmButtonText: '确定' })
 				.then(() => {
@@ -58,6 +58,7 @@ service.interceptors.response.use(
 	},
 	(error) => {
 		console.log(error);
+		if (error.config.headers.needLoading) loading.close();
 		// loading.close();
 
 		// 对响应错误做点什么

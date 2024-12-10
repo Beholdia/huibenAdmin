@@ -32,11 +32,11 @@ import {
   onUpdated, reactive, ref, onMounted,
 } from 'vue';
 import { bookStore } from '/@/api/books/index.ts';
-import { ElMessage,ElLoading } from 'element-plus';
+import { ElMessage, ElLoading } from 'element-plus';
 import dayjs from 'dayjs';
 import { bookShelfList, bookTagList } from '/@/api/books/index.ts';
 
-let loading = ref(null);
+// let loading = ref(null);
 
 const show = defineModel('show', { type: Boolean });
 const props = defineProps({
@@ -48,9 +48,9 @@ const book_shelf_list = ref([]);// 书架
 const book_warehouse_list = ref([]);// 书库
 onUpdated(async () => {
   form.value = {};
-  form.value.warehouse_id=book_warehouse_list.value[0].dict_code;//默认选择第一个书库
-  form.value.borrow_status='available';//默认可借
-  form.value.sale_status='on_sale';//默认上架
+  form.value.warehouse_id = book_warehouse_list.value[0].dict_code;//默认选择第一个书库
+  form.value.borrow_status = 'available';//默认可借
+  form.value.sale_status = 'on_sale';//默认上架
   form.value.pubdate = dayjs().format('YYYY-MM-DD');
 });
 const emit = defineEmits(['onClose']);
@@ -67,9 +67,9 @@ const onSave = async () => {
   if (!purchase_price || !pubdate || !warehouse_id || !borrow_status || !sale_status || !biz_bookshelf_id) {
     return ElMessage.error('请填写完整信息');
   }
-  loading.value = ElLoading.service();
+  // loading.value = ElLoading.service();
   const res = await bookStore({ isbn_id: props.isbn_id, purchase_price, pubdate, warehouse_id, borrow_status, sale_status, biz_bookshelf_id });
-  loading.value.close();
+  // loading.value.close();
   if (res.code === 0) ElMessage.success('新书入库成功');
   // if (form.value.id) {
   //   await proxy.$api.system.editbookData({

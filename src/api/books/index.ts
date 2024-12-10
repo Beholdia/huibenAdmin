@@ -1,5 +1,5 @@
 import request from '/@/utils/request';
-import {ElLoading, ElMessage, ElMessageBox } from 'element-plus';
+import { ElLoading, ElMessage, ElMessageBox } from 'element-plus';
 
 /**
  * 书籍信息管理api接口集合
@@ -8,12 +8,12 @@ import {ElLoading, ElMessage, ElMessageBox } from 'element-plus';
 
 // isbn查询信息
 export function searchIsbn(params: object) {
-		// loading = ElLoading.service();
+  // loading = ElLoading.service();
   return request({
     url: '/api/v1/system/book/search/isbn',
     method: 'post',
     data: params,
-    needLoading:true
+    headers: { needLoading: true }
   });
 }
 
@@ -25,6 +25,8 @@ export function isbnStore(params: object) {
     url: "/api/v1/system/book/isbn/store",
     method: "post",
     data: params,
+    headers: { needLoading: true }
+
   })
 }
 
@@ -36,6 +38,7 @@ export function bookStore(params: object) {
     url: '/api/v1/system/book/store',
     method: 'post',
     data: params,
+    headers: { needLoading: true }
   });
 }
 
