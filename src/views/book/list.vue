@@ -166,10 +166,8 @@ const changeSaleStatusAll = async (status) => {
 const statistics = ref();
 const getList = async (val) => {
   if (!val) return;
-  console.log(form.value);
   page.value = val;
   const res = await bookList({ page: page.value, limit: limit.value, ...form.value });
-  console.log(res);
   total.value = res.data.total;
   list.value = res.data.items;
   statistics.value = res.data.statistics;
@@ -178,7 +176,6 @@ const getList = async (val) => {
 onMounted(async () => {
   getList(page.value);
   url.value = import.meta.env.VITE_API_URL;
-  console.log(url.value);
 });
 </script>
 

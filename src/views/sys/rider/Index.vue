@@ -4,7 +4,7 @@
     BaseFilter(:filterList="filterList" @onFilter="onFilter" v-model:form="form")
     el-button(type="primary" @click="currentId=0;showDrawer = true") 添加
   .wrapper
-    el-table(:data="list" style="width: 100%",@selection-change="handleSelectionChange")
+    el-table(:data="list" style="width: 100%", )
       //- el-table-column(type="selection" width="55")
       el-table-column(prop="biz_rider_id" label="序号")
       el-table-column(prop="name" label="姓名")
@@ -191,7 +191,6 @@ const onFilter = () => {
 
 const getList = async (pageNum) => {
   if (pageNum) page.value = pageNum;
-  console.log(form.value);
   const res = await riderList({ ...form.value, page: page.value, limit: limit.value });
   // 分页
   list.value = res.data.items;

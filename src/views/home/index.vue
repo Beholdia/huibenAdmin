@@ -10,6 +10,9 @@
 </template>
 
 <script setup>
+const refresh = () => {
+	console.log("刷新");
+}
 </script>
 
 <style lang="less" scoped>

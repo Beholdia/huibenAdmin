@@ -3,7 +3,7 @@
   .filter
     el-button(type="primary" @click="currentId=0;showDrawer = true") 添加
   .wrapper
-    el-table(:data="list" style="width: 100%",@selection-change="handleSelectionChange")
+    el-table(:data="list" style="width: 100%")
       //- el-table-column(type="selection" width="55")
       el-table-column(prop="biz_vip_id" label="编号")
       el-table-column(prop="main_title" label="会员类别")
