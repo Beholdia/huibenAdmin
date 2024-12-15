@@ -37,7 +37,7 @@ const uploadUrl = import.meta.env.VITE_API_URL + '/api/v1/system/file/upload';
 const props = defineProps({
   limit: {
     type: Number,
-    default: 3,
+    default: 1,
   },
   accept: {
     type: String,

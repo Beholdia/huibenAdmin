@@ -167,3 +167,46 @@ export function addBookShelf(params: object) {
     data: params,
   })
 }
+
+// 获取字典选择框列表
+export function optionSelect() {
+  return request({
+    url: "/api/v1/system/dict/type/optionSelect",
+    method: "get",
+  })
+}
+// 批量数据列表
+export function batchList(params) {
+  return request({
+    url: "/api/v1/system/dict/data/many",
+    method: "post",
+    data:params
+  })
+}
+// 增加库存
+export function addBookCount(params) {
+  return request({
+    url: "/api/v1/system/book/add/stock",
+    method: "post",
+    data: params,
+    headers: { needLoading: true }
+  })
+}
+
+export function bookDetail(params) {
+  return request({
+    url: "/api/v1/system/book/detail",
+    method: "get",
+    params: { biz_books_id: params },
+    headers: { needLoading: true }
+  })
+}
+
+// 修改书本
+export function editBook(params) {
+  return request({
+    url: "/api/v1/system/book/edit",
+    method: "post",
+    data: params,
+  })
+}
