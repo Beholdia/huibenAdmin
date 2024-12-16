@@ -13,6 +13,8 @@ el-drawer(:modelValue="show",:show-close="false" style="padding:20px" title="新
       el-date-picker(v-model="form.pubdate" placeholder="请输入购书日期" type="date")
     el-form-item(label="书名",required)
       el-input(v-model="form.name" placeholder="请输入书籍名称")
+    el-form-item(label="书库位置",)
+      el-input(v-model="shukuweizhi" disabled)
     //- el-form-item(label="所在书库",required)
       el-select(v-model="form.warehouse_id" placeholder="请选择所在书库")
         el-option(v-for="item in book_warehouse_list" :key="item.dict_code" :label="item.dict_label" :value="item.dict_code")
@@ -52,12 +54,10 @@ import { bookShelfList, bookTagList } from '/@/api/books/index.ts';
 import Editor from '/@/components/Editor.vue';
 import Uploader from '/@/components/Uploader.vue';
 
-// let loading = ref(null);
 const imageUploader = ref(null);
 const editorRef = ref(null);
 const show = defineModel('show', { type: Boolean });
 const props = defineProps({
-  // bookData: Object,
   isbn_id: { type: Number },
   detail: Object,
   pic: String,
@@ -67,7 +67,10 @@ const props = defineProps({
 const form = ref({ isbn_tags: [] });
 const book_shelf_list = ref([]);// 书架
 const book_warehouse_list = ref([]);// 书库
-const tagSelects = ref([]);
+const tagSelects = ref([]);// 渲染标签checkbox列表\
+
+const shukuweizhi = ref('嘉兴凯米');
+
 onUpdated(async () => {
   if (show.value) {
     // form.value = {};
@@ -80,6 +83,7 @@ onUpdated(async () => {
     // form.value.summary = "<p><strong>A??AA</strong></p>";
     // form.value.isbn_tags = [];
     if (!props?.detail?.biz_books_id) {
+      // setTimeout用来解决summary渲染不出来的问题
       setTimeout(() => {
         form.value = {
           name: props.title, pic: props.pic, summary: props.summary, sale_status: 'on_sale', isbn_tags: []
@@ -89,15 +93,16 @@ onUpdated(async () => {
     if (props?.detail?.biz_books_id) {
       const res = await bookDetail(props.detail.biz_books_id);
       const { name, pic, summary, isbn_tags, borrow_status, sale_status } = res.data.item;
+
       let tags = [];
-      if (isbn_tags) tags = isbn_tags.map(item => item?.tag_id);
+      if (isbn_tags) tags = isbn_tags.map(item => item?.tag_id);// 获取所有tag id
 
       // 单选
       let tagSelected = [];
       tagSelects.value.forEach(item => {
         if (item.children) {
           item.children.forEach(sub => {
-            if (tags.indexOf(sub.dict_code) != -1) {
+            if (tags.indexOf(sub.dict_code) != -1) {// 如果sub.dict_code在tags中 则说明被选中 ，绑定到item.dict_id中v-model用
               if (!tagSelected[item.dict_id]) tagSelected[item.dict_id] = [];
               tagSelected[item.dict_id].push(sub.dict_code)
             }
@@ -111,13 +116,14 @@ onUpdated(async () => {
 });
 const emit = defineEmits(['onClose']);
 const onClose = (refreshList) => {
-  // form.value = {};
+  // form.value = {};// 不注释掉会导致checkbox标签绑定报错
   show.value = false;
   emit('onClose', refreshList, props.isbn_id);
 };
 const onSave = async () => {
   // console.log(form.value.isbn_tags.flat())
-  const tagsSelected = form.value.isbn_tags.flat();
+  const tagsSelected = form.value.isbn_tags.flat();// 获取所有被选中的tag id
+
   const { name, sale_status } = form.value;
   const pics = imageUploader.value.fileList;
   const summary = editorRef.value.getHtml();
@@ -132,7 +138,7 @@ const onSave = async () => {
     const res = await bookStore({ biz_isbn_id: props.isbn_id, name, pic: pics[0].url, summary, isbn_tags: tagsSelected, sale_status });
     if (res.code === 0) ElMessage.success('新书入库成功');
   } else {
-    const res = await editBook({ biz_isbn_id: props.isbn_id, biz_books_id: props.detail.biz_books_id, name, pic: pics[0].url, summary, isbn_tags: tagsSelected, sale_status });
+    const res = await editBook({ biz_books_id: props.detail.biz_books_id, name, pic: pics[0].url, summary, isbn_tags: tagsSelected, sale_status });
     if (res.code === 0) ElMessage.success('修改成功');
 
   }

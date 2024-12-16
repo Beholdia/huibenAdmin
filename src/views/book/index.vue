@@ -12,6 +12,9 @@
       el-table-column(prop="biz_books_id" label="序号" width="150")
       el-table-column(prop="count" label="库存数量")
       el-table-column(prop="name" label="书名")
+      el-table-column(label="书库位置")
+        template(#default)
+          | 嘉兴凯米
       el-table-column(label="封面")
         template(#default="{row}")
           el-image(:src="row.pic" :preview-src-list = " [ row.pic ] " :preview-teleported="true" style="width: 50px; height: 50px")
