@@ -9,15 +9,16 @@
     div(style="color:rgba(144,147,153)") 共有书籍{{statistics?.count_total}}本，借出{{statistics?.count_borrowed}}本，库存{{statistics?.count_available}}本
     el-table(:data="list" style="width: 100%",@selection-change="handleSelectionChange")
       el-table-column(type="selection" width="55")
-      el-table-column(prop="biz_books_id" label="序号")
+      el-table-column(prop="biz_books_id" label="序号" width="100")
       el-table-column( label="封面" width="100")
         template(#default="{row}")
           //- img.cover(:src="url+row.pic")
-          img.cover(:src="row.pic")
-      el-table-column(prop="title" label="正书名"  width="100")
-      el-table-column(prop="isbn" label="ISBN号" width="200px")
-      el-table-column(prop="collection_no" label="馆藏书号" width="200px")
-      el-table-column(prop="book_shelf.name" label="书架号")
+          img.cover(:src="row.pic" v-if="row.pic")
+          p(v-else) 暂无封面
+      el-table-column(prop="title" label="正书名" )
+      el-table-column(prop="isbn" label="ISBN号")
+      el-table-column(prop="collection_no" label="馆藏书号")
+      //- el-table-column(prop="book_shelf.name" label="书架号")
       el-table-column( label="借阅记录" width="100")
         template(#default="{row}")
           el-button(link disabled v-if="row.borrow_times == 0" )  {{row.borrow_times}}
@@ -80,15 +81,15 @@ const filterList = [{
   ]
 },
 {
-  label: '销售状态',
+  label: '上架状态',
   model: 'sale_status',
   type: 'select',
   options: [{
-    label: '可售',
+    label: '上架',
     value: 'on_sale'
   },
   {
-    label: '不可售',
+    label: '下架',
     value: 'off_sale'
   }
   ]
