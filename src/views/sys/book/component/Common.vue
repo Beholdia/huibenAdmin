@@ -127,7 +127,7 @@ const changeCategory = (val) => {
 
 
 const getList = async () => {
-  const params = sysBookTags.find(item => item.route === type.value).value;
+  const params = sysBookTags.find(item => item.route === type.value).label;
   const res = await bookTagList(params);
   list.value = res?.data?.items || [];
 }

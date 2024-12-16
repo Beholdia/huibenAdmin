@@ -84,11 +84,11 @@ onUpdated(async () => {
     // form.value.isbn_tags = [];
     if (!props?.detail?.biz_books_id) {
       // setTimeout用来解决summary渲染不出来的问题
-      // setTimeout(() => {
+      setTimeout(() => {
       form.value = {
-        name: props.title, pic: props.pic, summary: '', sale_status: 'on_sale', isbn_tags: []
+        name: props.title, pic: props.pic, summary: props.summary, sale_status: 'on_sale', isbn_tags: []
       };
-      // }, 1000)
+      }, 500)
     }
     if (props?.detail?.biz_books_id) {
       const res = await bookDetail(props.detail.biz_books_id);

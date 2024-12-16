@@ -55,7 +55,7 @@ const props = defineProps({
   },
   size: {
     type: Number,
-    default: 5,
+    default: 50,
   },
   disabled: {
     type: Boolean,
@@ -66,7 +66,7 @@ const headers = reactive({
   Authorization: '',
 });
 const params = ref({
-  max_size: 888888,
+  max_size: 50*1024*1024,
   allowed_types: JSON.stringify(['jpg', 'jpeg', 'png'])
 });
 const fileList = ref([]);
