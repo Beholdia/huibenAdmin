@@ -91,37 +91,52 @@ onUpdated(async () => {
       const { name, pic, summary, isbn_tags, borrow_status, sale_status } = res.data.item;
       let tags = [];
       if (isbn_tags) tags = isbn_tags.map(item => item?.tag_id);
-      form.value = { name, pic, summary, borrow_status, sale_status, isbn_tags: tags };
+
+      // 单选
+      let tagSelected = [];
+      tagSelects.value.forEach(item => {
+        if (item.children) {
+          item.children.forEach(sub => {
+            if (tags.indexOf(sub.dict_code) != -1) {
+              if (!tagSelected[item.dict_id]) tagSelected[item.dict_id] = [];
+              tagSelected[item.dict_id].push(sub.dict_code)
+            }
+          })
+        }
+      })
+
+      form.value = { name, pic, summary, borrow_status, sale_status, isbn_tags: tagSelected };
     }
   }
 });
 const emit = defineEmits(['onClose']);
 const onClose = (refreshList) => {
-  form.value = {};
+  // form.value = {};
   show.value = false;
   emit('onClose', refreshList, props.isbn_id);
 };
 const onSave = async () => {
-  console.log(form.value.isbn_tags.flat())
-  // const { name, sale_status, isbn_tags } = form.value;
-  // const pics = imageUploader.value.fileList;
-  // const summary = editorRef.value.getHtml();
-  // // const {
-  // //   purchase_price, pubdate, warehouse_id, borrow_status, sale_status, biz_bookshelf_id
-  // // } = form.value;
-  // if (!pics?.length || !name || !summary || !props.isbn_id) {
-  //   return ElMessage.error('请填写完整信息');
-  // }
-  // // const res = await bookStore({ isbn_id: props.isbn_id, purchase_price, pubdate, warehouse_id, borrow_status, sale_status, biz_bookshelf_id });
-  // if (!props?.detail?.biz_books_id) {
-  //   const res = await bookStore({ biz_isbn_id: props.isbn_id, name, pic: pics[0].url, summary, isbn_tags, sale_status });
-  //   if (res.code === 0) ElMessage.success('新书入库成功');
-  // } else {
-  //   const res = await editBook({ biz_isbn_id: props.isbn_id, biz_books_id: props.detail.biz_books_id, name, pic: pics[0].url, summary, isbn_tags, sale_status });
-  //   if (res.code === 0) ElMessage.success('修改成功');
+  // console.log(form.value.isbn_tags.flat())
+  const tagsSelected = form.value.isbn_tags.flat();
+  const { name, sale_status } = form.value;
+  const pics = imageUploader.value.fileList;
+  const summary = editorRef.value.getHtml();
+  // const {
+  //   purchase_price, pubdate, warehouse_id, borrow_status, sale_status, biz_bookshelf_id
+  // } = form.value;
+  if (!pics?.length || !name || !summary || !props.isbn_id) {
+    return ElMessage.error('请填写完整信息');
+  }
+  // const res = await bookStore({ isbn_id: props.isbn_id, purchase_price, pubdate, warehouse_id, borrow_status, sale_status, biz_bookshelf_id });
+  if (!props?.detail?.biz_books_id) {
+    const res = await bookStore({ biz_isbn_id: props.isbn_id, name, pic: pics[0].url, summary, isbn_tags: tagsSelected, sale_status });
+    if (res.code === 0) ElMessage.success('新书入库成功');
+  } else {
+    const res = await editBook({ biz_isbn_id: props.isbn_id, biz_books_id: props.detail.biz_books_id, name, pic: pics[0].url, summary, isbn_tags: tagsSelected, sale_status });
+    if (res.code === 0) ElMessage.success('修改成功');
 
-  // }
-  // onClose(true);
+  }
+  onClose(true);
 };
 onMounted(async () => {
   // const bookShelfs = await bookShelfList();
@@ -138,7 +153,6 @@ onMounted(async () => {
   tags.forEach((item) => {
     item.children = options[item.dict_name];
   })
-  // console.log(tags);
   tagSelects.value = tags;
 
 })
