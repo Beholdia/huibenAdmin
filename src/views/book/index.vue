@@ -20,12 +20,12 @@
           el-button(@click="onEdit(row)" size="small" ) 编辑
           el-button(@click="addCount(row)" size="small") 增加库存
     el-button(@click="addBook" type="primary" size="large" ) 添加书本
-  NewBookDrawer(v-model:show="showDrawer" :isbn_id="isbn_id" @onClose="onCloseBookDrawer" :detail="currentBook" :pic="pic" :title="title")
+  NewBookDrawer(v-model:show="showDrawer" :isbn_id="isbn_id" @onClose="onCloseBookDrawer" :detail="currentBook" :pic="pic" :title="title" :summary="summary")
 </template>
 
 <script setup>
 import { ref, reactive, onMounted } from 'vue';
-import { searchIsbn, isbnStore,addBookCount } from '/@/api/books/index.ts';
+import { searchIsbn, isbnStore, addBookCount } from '/@/api/books/index.ts';
 import BaseForm from "/@/components/form/index.vue";
 import { ElMessage, ElMessageBox } from 'element-plus';
 import dayjs from 'dayjs';
@@ -39,10 +39,11 @@ const isbnBtnName = ref('添加isbn');
 const isbn = ref('');
 const isbn_id = ref(0);
 const bookList = ref([]);
-const pic= ref(null);
-const title = ref(null);
+const pic = ref(null);//带过去用的封面
+const title = ref(null);//带过去用的标题
+const summary = ref(null);//带过去用的简介
 const currentBook = ref(null);
-const isbn_refer= ref(false);
+const isbn_refer = ref(false);
 const changeIsbn = () => {
   if (isbn.value.trim().length === 13) onSearchIsbn();
 }
@@ -81,7 +82,7 @@ const onSearchIsbn = async () => {
   try {
     const { data, } = (await searchIsbn({ isbn: isbn.value }));
     const { IsbnInfo, books } = data;
-    if(data.isbn_refer) isbn_refer.value=true;
+    if (data.isbn_refer) isbn_refer.value = true;
     isbn_id.value = IsbnInfo.biz_isbn_id;
     formRef.value.filter.isbn = IsbnInfo.isbn;
     formRef.value.filter.cip = IsbnInfo.cip;
@@ -101,7 +102,8 @@ const onSearchIsbn = async () => {
     // formRef.value.filter.binding = IsbnInfo.binding;
     // formRef.value.filter.pubauthor = IsbnInfo.pubauthor;
     formRef.value.filter.pic = IsbnInfo.pic;
-    pic.value= IsbnInfo.pic;
+    pic.value = IsbnInfo.pic;
+    summary.value = IsbnInfo.summary;
     title.value = IsbnInfo.title;
     // formRef.value.filter.summary = IsbnInfo.summary;
 
@@ -149,8 +151,8 @@ const onSearchIsbn = async () => {
     // loading.value.close();
     clearBase();
     clearTag();
-    isbnBtnName.value='添加isbn';
-    isbn_refer.value= false;
+    isbnBtnName.value = '添加isbn';
+    isbn_refer.value = false;
     if (error.code === 68) ElMessage.error('请手动填写信息');
   }
 }
@@ -172,14 +174,14 @@ const addCount = async (row) => {
       confirmButtonText: '确认',
       cancelButtonText: '取消',
     })
-    if(!res.value) return;
+    if (!res.value) return;
     await addBookCount(
       {
         "biz_books_id": row.biz_books_id, // 书本id
         "count": Number(res.value) // 增加库存数量
       }
     )
-   await onSearchIsbn();
+    await onSearchIsbn();
   } catch (error) {
     console.log(error);
   }
@@ -207,15 +209,18 @@ const storeIsbn = async (info, logo) => {
       // isbn_theme_tag_id,
       // isbn_feature_tag_id,
       // pubdate: info.pubdate ? dayjs(info.pubdate).format('YYYY-MM-DD') : '',
-      pic:logo,
+      pic: logo,
     });
     if (res.code === 0) {
       isbn_id.value = res.data.biz_isbn_id;
       // showDrawer.value = true;
       isbnBtnName.value = '修改isbn';
       isbn_refer.value = true;
+
       pic.value = logo;
       title.value = info.title;
+      summary.value = IsbnInfo.summary;
+
       await onSearchIsbn();//刷新书籍列表
       ElMessage.success('添加成功');
     }
@@ -306,13 +311,15 @@ onMounted(async () => {
   display: inline-block;
 }
 
-.book-list{
-  padding:20px;
-  button{
-    margin-top:22px;
+.book-list {
+  padding: 20px;
+
+  button {
+    margin-top: 22px;
   }
 }
-:deep(.avatar){
+
+:deep(.avatar) {
   width: 100px !important;
 }
 </style>
