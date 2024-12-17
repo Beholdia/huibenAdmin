@@ -23,7 +23,7 @@
           el-button(@click="onEdit(row)" size="small" ) 编辑
           el-button(@click="addCount(row)" size="small") 增加库存
     el-button(@click="addBook" type="primary" size="large" ) 添加书本
-  NewBookDrawer(v-model:show="showDrawer" :isbn_id="isbn_id" @onClose="onCloseBookDrawer" :detail="currentBook" :pic="pic" :title="title" :summary="summary")
+  NewBookDrawer(v-model:show="showDrawer" :isbn_id="isbn_id" @onClose="onCloseBookDrawer" :detail="currentBook" :pic="pic" :title="title" :summary="summary" :price="price")
 </template>
 
 <script setup>
@@ -45,6 +45,7 @@ const bookList = ref([]);
 const pic = ref(null);//带过去用的封面
 const title = ref(null);//带过去用的标题
 const summary = ref(null);//带过去用的简介
+const price= ref(0);//带过去用的价格
 const currentBook = ref(null);
 const isbn_refer = ref(false);
 const changeIsbn = () => {
@@ -108,6 +109,8 @@ const onSearchIsbn = async () => {
     pic.value = IsbnInfo.pic;
     summary.value = IsbnInfo.summary;
     title.value = IsbnInfo.title;
+    price.value = IsbnInfo.price;
+    console.log(IsbnInfo.price);
     // formRef.value.filter.summary = IsbnInfo.summary;
 
     // 非首次入库，展示书籍列表
@@ -223,6 +226,7 @@ const storeIsbn = async (info, logo) => {
       pic.value = logo;
       title.value = info.title;
       summary.value = IsbnInfo.summary;
+      price.value = IsbnInfo.price;
 
       await onSearchIsbn();//刷新书籍列表
       ElMessage.success('添加成功');

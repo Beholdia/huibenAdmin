@@ -13,6 +13,8 @@ el-drawer(:modelValue="show",:show-close="false" style="padding:20px" title="新
       el-date-picker(v-model="form.pubdate" placeholder="请输入购书日期" type="date")
     el-form-item(label="书名",required)
       el-input(v-model="form.name" placeholder="请输入书籍名称")
+    el-form-item(label="价格",required)
+      el-input-number(v-model="form.price" placeholder="请输入价格")
     el-form-item(label="书库位置",)
       el-input(v-model="shukuweizhi" disabled)
     //- el-form-item(label="所在书库",required)
@@ -63,6 +65,7 @@ const props = defineProps({
   pic: String,
   title: String,
   summary: String,
+  price:Number
 });
 const form = ref({ isbn_tags: [] });
 const book_shelf_list = ref([]);// 书架
@@ -86,13 +89,13 @@ onUpdated(async () => {
       // setTimeout用来解决summary渲染不出来的问题
       setTimeout(() => {
       form.value = {
-        name: props.title, pic: props.pic, summary: props.summary, sale_status: 'on_sale', isbn_tags: []
+        name: props.title, pic: props.pic, summary: props.summary, sale_status: 'on_sale', isbn_tags: [],price:props.price
       };
       }, 500)
     }
     if (props?.detail?.biz_books_id) {
       const res = await bookDetail(props.detail.biz_books_id);
-      const { name, pic, summary, isbn_tags, borrow_status, sale_status } = res.data.item;
+      const { name, pic, summary, isbn_tags, borrow_status, sale_status,price } = res.data.item;
 
       let tags = [];
       if (isbn_tags) tags = isbn_tags.map(item => item?.tag_id);// 获取所有tag id
@@ -110,7 +113,7 @@ onUpdated(async () => {
         }
       })
 
-      form.value = { name, pic, summary, borrow_status, sale_status, isbn_tags: tagSelected };
+      form.value = { name, pic, summary, borrow_status, sale_status, isbn_tags: tagSelected,price };
     }
   }
 });
@@ -124,7 +127,7 @@ const onSave = async () => {
   // console.log(form.value.isbn_tags.flat())
   const tagsSelected = form.value.isbn_tags.flat();// 获取所有被选中的tag id
 
-  const { name, sale_status } = form.value;
+  const { name, sale_status,price } = form.value;
   const pics = imageUploader.value.fileList;
   const summary = editorRef.value.getHtml();
   // const {
@@ -135,10 +138,10 @@ const onSave = async () => {
   }
   // const res = await bookStore({ isbn_id: props.isbn_id, purchase_price, pubdate, warehouse_id, borrow_status, sale_status, biz_bookshelf_id });
   if (!props?.detail?.biz_books_id) {
-    const res = await bookStore({ biz_isbn_id: props.isbn_id, name, pic: pics[0].url, summary, isbn_tags: tagsSelected, sale_status });
+    const res = await bookStore({ biz_isbn_id: props.isbn_id, name, pic: pics[0].url, summary, isbn_tags: tagsSelected, sale_status,price });
     if (res.code === 0) ElMessage.success('新书入库成功');
   } else {
-    const res = await editBook({ biz_books_id: props.detail.biz_books_id, name, pic: pics[0].url, summary, isbn_tags: tagsSelected, sale_status });
+    const res = await editBook({ biz_books_id: props.detail.biz_books_id, name, pic: pics[0].url, summary, isbn_tags: tagsSelected, sale_status,price });
     if (res.code === 0) ElMessage.success('修改成功');
 
   }
