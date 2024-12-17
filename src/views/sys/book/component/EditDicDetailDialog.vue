@@ -47,6 +47,12 @@ onUpdated(async () => {
     form.remark = remark;
     form.logo = logo;
     form.dict_code = props.id;
+  } else {
+    form.dict_label = '';
+    form.dict_sort = 0;
+    form.logo = '';
+    form.remark = '';
+    form.dict_code = '';
   }
 });
 const emit = defineEmits(['onClose']);

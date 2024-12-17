@@ -66,13 +66,14 @@ export function bannerDetail(params: string) {
   });
 }
 
-// // 主题推荐列表
-// export function themeList() {
-//   return request({
-//     url: '/api/v1/system/book/tag/list',
-//     method: 'get',
-//   });
-// }
+// 主题推荐列表
+export function themeList(params: object) {
+  return request({
+    url: '/api/v1/system//book/tag/theme/list',
+    method: 'get',
+    params
+  });
+}
 // // 特色人物列表
 // export function featureList() {
 //   return request({

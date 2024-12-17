@@ -66,7 +66,7 @@ const headers = reactive({
   Authorization: '',
 });
 const params = ref({
-  max_size: 50*1024*1024,
+  max_size: 50 * 1024 * 1024,
   allowed_types: JSON.stringify(['jpg', 'jpeg', 'png'])
 });
 const fileList = ref([]);
@@ -91,7 +91,7 @@ const onBeforeUpload = async (rawFile) => {
 };
 
 const onSuccess = (res, file, files) => {
-  console.log(res);
+  // console.log(res);
   if (!res.code) {
     fileList.value[fileList.value.length - 1] = {
       name: res.data.file[0].new_name,
@@ -101,8 +101,8 @@ const onSuccess = (res, file, files) => {
 };
 
 const onRemove = (file, files) => {
-  console.log(file);
-  console.log(files);
+  // console.log(file);
+  // console.log(files);
 };
 
 const onPreview = (file) => {
@@ -120,6 +120,7 @@ const onError = (err) => {
 };
 
 watch(() => props.files, (val) => {
+  console.log(val);
   if (val.length) {
     fileList.value = val.flatMap((file) => (file ? ({
       url: `${file}`,

@@ -1139,7 +1139,7 @@ export const demoRoutes: Array<RouteRecordRaw> = [
 						name: 'sysbooktheme',
 						component: () => import('/@/views/sys/book/Theme.vue'),
 						meta: {
-							title: '主题标签',
+							title: '主题推荐',
 							isLink: '',
 							isHide: false,
 							isKeepAlive: true,
