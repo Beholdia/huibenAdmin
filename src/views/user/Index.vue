@@ -13,7 +13,7 @@
           el-avatar.cover(src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" v-else)
       el-table-column(prop="nickname" label="昵称" width="200px")
         template(#default="{row}")
-          div(@click="goDetail(row.biz_user_id)" style="cursor: pointer") {{ row.nickname }}用户名
+          div(@click="goDetail(row.biz_user_id)" style="cursor: pointer") {{ row.nickname }}
       //- el-table-column(prop="collection_no" label="用户ID" width="200px")
       el-table-column(prop="phone" label="手机号" width="200px")
       el-table-column(prop="reg_time" label="注册时间" width="180px")
@@ -33,8 +33,8 @@
         template(#default="{row}")
           .buttons
             //- el-button(type="info" size="small") 编辑
-            el-button(type="primary" size="small" v-if="row.status==1 " @click="changeStatus(row)") 禁
-            el-button(type="danger" size="small" v-else @click="changeStatus(row)") 解封
+            el-button(type="danger" size="small" v-if="row.status==1 " @click="changeStatus(row)") 禁
+            el-button(type="primary" size="small" v-else @click="changeStatus(row)") 解封
     el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
   Detail(v-model:show="showDetail" :id="selectedId")
   </template>
