@@ -156,7 +156,7 @@ onMounted(async () => {
   let tags = (await optionSelect()).data.dictType;// 所有label的对象list
 
   // const dictLabels = tags.map(item=>item.dict_name);//所有label的中文list
-  const dictLabels = ["语言分类", "年龄分类", "特色人物", "知名品牌", "出版地区", "获奖绘本", "生活习惯养成", "生活场景认知", "社会角色认知", "自然现象认知", "情绪情感", "益智培养", "品德教育", "文学故事", "自然科学", "人文科学", "权威推荐", "绘本大师", "有声绘本"]
+  const dictLabels = ["语言分类", "年龄分类", "特色人物", "知名品牌", "出版地区", "获奖绘本", "生活习惯养成", "生活场景认知", "社会角色认知", "自然现象认知", "情绪情感", "益智培养", "品德教育", "文学故事", "自然科学", "人文科学", "权威推荐", "绘本大师", "有声绘本","合集推荐"]
 
   const options = (await batchList({ dictType: dictLabels })).data.list//所有label下面的options的list
   tags.forEach((item) => {
