@@ -1,5 +1,6 @@
 <template lang="pug">
-el-drawer(:modelValue="show",:show-close="false" style="padding:20px" title="新书入库" @close="onClose(null)" size="50%")
+//- el-drawer(:modelValue="show",:show-close="false" style="padding:20px" title="新书入库" @close="onClose(null)" size="50%")
+el-drawer(:modelValue="show",:show-close="false" style="padding:20px" title="新书入库" :close-on-press-escape="false" size="50%" :close-on-click-modal="false")
   el-form(label-width="120px" label-position="left" :model="form" style="margin-top:20px")
     el-form-item(label="封面")
       Uploader(:files="[form.pic ]" ref="imageUploader" )
@@ -65,7 +66,7 @@ const props = defineProps({
   pic: String,
   title: String,
   summary: String,
-  price:Number
+  price: Number
 });
 const form = ref({ isbn_tags: [] });
 const book_shelf_list = ref([]);// 书架
@@ -88,14 +89,14 @@ onUpdated(async () => {
     if (!props?.detail?.biz_books_id) {
       // setTimeout用来解决summary渲染不出来的问题
       setTimeout(() => {
-      form.value = {
-        name: props.title, pic: props.pic, summary: props.summary, sale_status: 'on_sale', isbn_tags: [],price:props.price
-      };
+        form.value = {
+          name: props.title, pic: props.pic, summary: props.summary, sale_status: 'on_sale', isbn_tags: [], price: props.price
+        };
       }, 500)
     }
     if (props?.detail?.biz_books_id) {
       const res = await bookDetail(props.detail.biz_books_id);
-      const { name, pic, summary, isbn_tags, borrow_status, sale_status,price } = res.data.item;
+      const { name, pic, summary, isbn_tags, borrow_status, sale_status, price } = res.data.item;
 
       let tags = [];
       if (isbn_tags) tags = isbn_tags.map(item => item?.tag_id);// 获取所有tag id
@@ -113,7 +114,7 @@ onUpdated(async () => {
         }
       })
 
-      form.value = { name, pic, summary, borrow_status, sale_status, isbn_tags: tagSelected,price };
+      form.value = { name, pic, summary, borrow_status, sale_status, isbn_tags: tagSelected, price };
     }
   }
 });
@@ -127,21 +128,21 @@ const onSave = async () => {
   // console.log(form.value.isbn_tags.flat())
   const tagsSelected = form.value.isbn_tags.flat();// 获取所有被选中的tag id
 
-  const { name, sale_status,price } = form.value;
+  const { name, sale_status, price } = form.value;
   const pics = imageUploader.value.fileList;
   const summary = editorRef.value.getHtml();
   // const {
   //   purchase_price, pubdate, warehouse_id, borrow_status, sale_status, biz_bookshelf_id
   // } = form.value;
-  if (!pics?.length || !name || !summary || !props.isbn_id) {
+  if (!name || !summary) {
     return ElMessage.error('请填写完整信息');
   }
   // const res = await bookStore({ isbn_id: props.isbn_id, purchase_price, pubdate, warehouse_id, borrow_status, sale_status, biz_bookshelf_id });
   if (!props?.detail?.biz_books_id) {
-    const res = await bookStore({ biz_isbn_id: props.isbn_id, name, pic: pics[0].url, summary, isbn_tags: tagsSelected, sale_status,price });
+    const res = await bookStore({ biz_isbn_id: props.isbn_id, name, pic: pics?.[0]?.url, summary, isbn_tags: tagsSelected, sale_status, price });
     if (res.code === 0) ElMessage.success('新书入库成功');
   } else {
-    const res = await editBook({ biz_books_id: props.detail.biz_books_id, name, pic: pics[0].url, summary, isbn_tags: tagsSelected, sale_status,price });
+    const res = await editBook({ biz_books_id: props.detail.biz_books_id, name, pic: pics?.[0]?.url, summary, isbn_tags: tagsSelected, sale_status, price });
     if (res.code === 0) ElMessage.success('修改成功');
 
   }
@@ -156,7 +157,7 @@ onMounted(async () => {
   let tags = (await optionSelect()).data.dictType;// 所有label的对象list
 
   // const dictLabels = tags.map(item=>item.dict_name);//所有label的中文list
-  const dictLabels = ["语言分类", "年龄分类", "特色人物", "知名品牌", "出版地区", "获奖绘本", "生活习惯养成", "生活场景认知", "社会角色认知", "自然现象认知", "情绪情感", "益智培养", "品德教育", "文学故事", "自然科学", "人文科学", "权威推荐", "绘本大师", "有声绘本","合集推荐"]
+  const dictLabels = ["语言分类", "年龄分类", "特色人物", "知名品牌", "出版地区", "获奖绘本", "生活习惯养成", "生活场景认知", "社会角色认知", "自然现象认知", "情绪情感", "益智培养", "品德教育", "文学故事", "自然科学", "人文科学", "权威推荐", "绘本大师", "有声绘本", "合集推荐"]
 
   const options = (await batchList({ dictType: dictLabels })).data.list//所有label下面的options的list
   tags.forEach((item) => {

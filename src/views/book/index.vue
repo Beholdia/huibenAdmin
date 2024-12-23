@@ -45,7 +45,7 @@ const bookList = ref([]);
 const pic = ref(null);//带过去用的封面
 const title = ref(null);//带过去用的标题
 const summary = ref(null);//带过去用的简介
-const price= ref(0);//带过去用的价格
+const price = ref(0);//带过去用的价格
 const currentBook = ref(null);
 const isbn_refer = ref(false);
 const changeIsbn = () => {
@@ -194,10 +194,11 @@ const addCount = async (row) => {
 
 }
 //刷新书籍列表
-const onCloseBookDrawer = (refresh, id) => {
+const onCloseBookDrawer = async (refresh, id) => {
+  console.log(refresh);
   if (refresh) {
     isbn_id.value = id;
-    onSearchIsbn()
+    await onSearchIsbn()
   }
 }
 const storeIsbn = async (info, logo) => {

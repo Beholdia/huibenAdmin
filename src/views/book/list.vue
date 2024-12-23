@@ -36,10 +36,11 @@
       el-table-column(label="操作" width="100px")
         template(#default="{row}")
           .buttons
-            el-button(type="info" size="small") 编辑
+            el-button(type="info" size="small" @click="onEdit(row)") 编辑
             el-button(type="primary" size="small" v-if="row.sale_status=== 'off_sale'" @click="changeSaleStatus(row)") 上架
             el-button(type="warning" size="small" v-else @click="changeSaleStatus(row)") 下架
     el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
+    NewBookDrawer(v-model:show="showBookDrawer"  @onClose="onCloseBookDrawer" :detail="currentDetail")
 </template>
 
 <script setup>
@@ -47,6 +48,7 @@ import { ref, onMounted } from 'vue';
 import { bookList, changeSaleStatus as changeSaleStatusApi } from '/@/api/books/index.ts';
 import BaseFilter from '/@/components/form/BaseFilter.vue'
 import { ElMessage, ElMessageBox } from 'element-plus';
+import NewBookDrawer from './component/newBookDrawer.vue';
 
 const url = ref('');
 const form = ref({
@@ -59,6 +61,14 @@ const total = ref(0);
 const limit = ref(8);
 const selectedId = ref(null);
 const titleName = ref(null);
+
+const showBookDrawer = ref(false)
+const currentDetail = ref(null);
+
+const onEdit = (row) => {
+  currentDetail.value = row;
+  showBookDrawer.value = true;
+}
 
 const filterList = [{
   label: '关键词',
@@ -173,6 +183,13 @@ const getList = async (val) => {
   list.value = res.data.items;
   statistics.value = res.data.statistics;
 };
+
+// 关闭编辑
+const onCloseBookDrawer = async (refresh, id) => {
+  if (refresh) {
+    await getList(page.value);
+  }
+}
 
 onMounted(async () => {
   getList(page.value);
