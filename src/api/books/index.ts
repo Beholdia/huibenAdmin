@@ -180,7 +180,7 @@ export function batchList(params) {
   return request({
     url: "/api/v1/system/dict/data/many",
     method: "post",
-    data:params
+    data: params
   })
 }
 // 增加库存
@@ -208,5 +208,14 @@ export function editBook(params) {
     url: "/api/v1/system/book/edit",
     method: "post",
     data: params,
+  })
+}
+
+// 主题类型
+
+export function themeTypeList() {
+  return request({
+    url: "/api/v1/system/book/tag/theme/type/list",
+    method: "get",
   })
 }
