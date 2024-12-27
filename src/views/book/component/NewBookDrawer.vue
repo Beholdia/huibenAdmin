@@ -90,13 +90,13 @@ onUpdated(async () => {
       // setTimeout用来解决summary渲染不出来的问题
       setTimeout(() => {
         form.value = {
-          name: props.title, pic: props.pic, summary: props.summary, sale_status: 'on_sale', isbn_tags: [], price: props.price
+          name: props.title, pic: props.pic, summary: props.summary, sale_status: 'on_sale', isbn_tags: [], price: props.price // 单位为元
         };
       }, 500)
     }
     if (props?.detail?.biz_books_id) {
       const res = await bookDetail(props.detail.biz_books_id);
-      const { name, pic, summary, isbn_tags, borrow_status, sale_status, price } = res.data.item;
+      const { name, pic, summary, isbn_tags, borrow_status, sale_status, price } = res.data.item;// 单位为分
 
       let tags = [];
       if (isbn_tags) tags = isbn_tags.map(item => item?.tag_id);// 获取所有tag id
@@ -114,7 +114,7 @@ onUpdated(async () => {
         }
       })
 
-      form.value = { name, pic, summary, borrow_status, sale_status, isbn_tags: tagSelected, price };
+      form.value = { name, pic, summary, borrow_status, sale_status, isbn_tags: tagSelected, price: price / 100 };// 单位为元 /100
     }
   }
 });
@@ -128,7 +128,7 @@ const onSave = async () => {
   // console.log(form.value.isbn_tags.flat())
   const tagsSelected = form.value.isbn_tags.flat();// 获取所有被选中的tag id
 
-  const { name, sale_status, price } = form.value;
+  const { name, sale_status, price } = form.value;// 单位为元
   const pics = imageUploader.value.fileList;
   const summary = editorRef.value.getHtml();
   // const {
@@ -139,10 +139,10 @@ const onSave = async () => {
   }
   // const res = await bookStore({ isbn_id: props.isbn_id, purchase_price, pubdate, warehouse_id, borrow_status, sale_status, biz_bookshelf_id });
   if (!props?.detail?.biz_books_id) {
-    const res = await bookStore({ biz_isbn_id: props.isbn_id, name, pic: pics?.[0]?.url, summary, isbn_tags: tagsSelected, sale_status, price });
+    const res = await bookStore({ biz_isbn_id: props.isbn_id, name, pic: pics?.[0]?.url, summary, isbn_tags: tagsSelected, sale_status, price: price * 100 });
     if (res.code === 0) ElMessage.success('新书入库成功');
   } else {
-    const res = await editBook({ biz_books_id: props.detail.biz_books_id, name, pic: pics?.[0]?.url, summary, isbn_tags: tagsSelected, sale_status, price });
+    const res = await editBook({ biz_books_id: props.detail.biz_books_id, name, pic: pics?.[0]?.url, summary, isbn_tags: tagsSelected, sale_status, price: price * 100 });
     if (res.code === 0) ElMessage.success('修改成功');
 
   }

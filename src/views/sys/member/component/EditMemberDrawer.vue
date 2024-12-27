@@ -68,8 +68,8 @@ onUpdated(async () => {
       valid_days, original_price, special_price, borrow_books_limit, desc, main_title, once_borrow_books_limit, share_reward_cash_back_times, style, sub_title, summary, tiny_app_enable,
     } = (await vipDetail(props.id)).data.item;
     form.valid_days = valid_days;
-    form.original_price = original_price;
-    form.special_price = special_price;
+    form.original_price = original_price / 100;
+    form.special_price = special_price / 100;
     form.borrow_books_limit = borrow_books_limit;
     form.desc = desc;
     form.main_title = main_title;
@@ -104,7 +104,7 @@ const onSave = async () => {
   } = form;
   if (props.id) {
     await editVip({
-      biz_vip_id: props.id, valid_days, original_price, special_price,
+      biz_vip_id: props.id, valid_days, original_price: original_price * 100, special_price: special_price * 100,
       borrow_books_limit,// 不可修改
       once_borrow_books_limit,// 不可修改
       tiny_app_enable,// 不可修改
@@ -114,7 +114,7 @@ const onSave = async () => {
     });
   } else {
 
-    await storeVip({ valid_days, original_price, special_price, borrow_books_limit, desc, main_title, once_borrow_books_limit, share_reward_cash_back_times, style, sub_title, summary, tiny_app_enable, })
+    await storeVip({ valid_days, original_price: original_price * 100, special_price: special_price * 100, borrow_books_limit, desc, main_title, once_borrow_books_limit, share_reward_cash_back_times, style, sub_title, summary, tiny_app_enable, })
   }
   onClose(true);
 };

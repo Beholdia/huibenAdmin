@@ -9,8 +9,12 @@
       el-table-column(prop="main_title" label="会员类别")
       el-table-column(prop="sub_title" label="子类别")
       el-table-column(prop="valid_days" label="有效期（天）")
-      el-table-column(prop="original_price" label="原价")
-      el-table-column(prop="original_price" label="优惠价（元）")
+      el-table-column(label="原价")
+        template(#default="{row}")
+          p {{ row.original_price/100 }}
+      el-table-column(label="优惠价（元）")
+        template(#default="{row}")
+          p {{ row.special_price/100 }}
       el-table-column(prop="status" label="状态" )
         template(#default="{row}")
           el-switch(v-model="row.status" @change="editStatus(row)" :active-value="1" :inactive-value="0" inline-prompt active-text="启用" inactive-text="关闭" size="small")
