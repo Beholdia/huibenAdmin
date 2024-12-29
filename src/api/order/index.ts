@@ -40,9 +40,9 @@ export function confirmWithdrawal(params: object) {
   });
 }
 // 打包订单
-export function packlist(params: object) {
+export function orderlist(params: object) {
   return request({
-    url: '/api/v1/system/order/pack/list',
+    url: '/api/v1/system/book/order/list',
     method: 'get',
     params,
   });

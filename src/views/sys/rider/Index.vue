@@ -76,8 +76,6 @@ const onCloseDrawer = (refresh) => {
   if (refresh) getList();
 }
 
-// todo
-
 const form = ref({
   keyword: null,
 });
@@ -95,99 +93,10 @@ const filterList = [{
   type: 'input',
   placeholder: '手机号'
 },
-  // {
-  //   label: '借阅状态',
-  //   model: 'borrow_status',
-  //   type: 'select',
-  //   options: [{
-  //     label: '可借',
-  //     value: 'available'
-  //   },
-  //   {
-  //     label: '借出',
-  //     value: 'borrowed'
-  //   }
-  //   ]
-  // },
-  // {
-  //   label: '销售状态',
-  //   model: 'sale_status',
-  //   type: 'select',
-  //   options: [{
-  //     label: '可售',
-  //     value: 'on_sale'
-  //   },
-  //   {
-  //     label: '不可售',
-  //     value: 'off_sale'
-  //   }
-  //   ]
-  // }
 ];
 const onFilter = () => {
   getList(1);
 };
-// const goAdd = () => {
-//   selectedId.value = null;
-//   titleName.value = '创建内容';
-//   serviceDrawer.show = true;
-// };
-
-// const goDetail = (id) => {
-//   titleName.value = '服务管理详情';
-//   selectedId.value = id;
-//   serviceDrawer.show = true;
-// };
-
-// const goEdit = (id) => {
-// };
-// const refreshList = () => {
-//   getList(page.value);
-// };
-
-// const onDel = async (val) => {
-//   await proxy.$api.yellow_service.del({ id: val });
-//   getList(page.value);
-// };
-
-// const changeSaleStatus = async (row) => {
-//   try {
-//     await ElMessageBox.confirm(`确定${row.sale_status === 'on_sale' ? '下架' : '上架'}该书籍吗？`, '提示', {
-//       confirmButtonText: '确定',
-//       cancelButtonText: '取消',
-//       type: 'warning',
-//     })
-//     await changeSaleStatusApi({ biz_books_ids: [row.biz_books_id], sale_status: row.sale_status === 'on_sale' ? 'off_sale' : 'on_sale' });
-//     getList(page.value);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
-// const multipleSelection = ref([]);
-// const handleSelectionChange = (val) => {
-//   multipleSelection.value = val;
-//   console.log(multipleSelection.value);
-// };
-// const changeSaleStatusAll = async (status) => {
-//   try {
-//     if (!multipleSelection.value.length) {
-//       ElMessage({
-//         message: '请选择书籍',
-//         type: 'warning',
-//       });
-//       return;
-//     }
-//     await ElMessageBox.confirm(`确定批量处理吗？`, '提示', {
-//       confirmButtonText: '确定',
-//       cancelButtonText: '取消',
-//       type: 'warning',
-//     })
-//     await changeSaleStatusApi({ biz_books_ids: multipleSelection.value.map((item) => item.biz_books_id), sale_status: status });
-//     getList(page.value);
-//   } catch (error) {
-//     console.log(error);
-//   }
-// }
 
 const getList = async (pageNum) => {
   if (pageNum) page.value = pageNum;

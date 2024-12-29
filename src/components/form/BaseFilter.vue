@@ -105,8 +105,16 @@ defineExpose({
   // grid-template-columns: 1fr 1fr 1fr;
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
 }
+
 .el-form-item {
-    width: 285px;
+  width: 285px;
+  margin-bottom: 0 !important;
+}
+
+.el-form.el-form--inline .el-form-item--large.el-form-item:last-of-type {
+  margin-bottom: 0px !important;
 }
 </style>

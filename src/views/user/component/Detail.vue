@@ -36,18 +36,21 @@ el-drawer(:modelValue="show",:show-close="false" style="padding:20px" title="用
         p 会员等级：{{ form.item?.biz_vip?.main_title }}
         p 会员到期时间：{{ form.item?.biz_vip_expired_at }}
     el-tab-pane(label="邀请记录" name="invite")
-      el-table(:data="form.biz_invite")
-        el-table-column(label="被邀请人" prop="invitee_user.nickname")
-        el-table-column(label="被邀请用户ID" prop="invitee_user_id")
-        el-table-column(label="时间" prop="created_at")
-        el-table-column(label="会员等级" prop="vip_detail")
-        el-table-column(label="返现金额" prop="cashback_amount")
-    //- el-tab-pane(label="订单记录" name="order")
-  
+      InviteList(:biz_user_id="props.id")
+      //- el-table(:data="form.biz_invite")
+      //-   el-table-column(label="被邀请人" prop="invitee_user.nickname")
+      //-   el-table-column(label="被邀请用户ID" prop="invitee_user_id")
+      //-   el-table-column(label="时间" prop="created_at")
+      //-   el-table-column(label="会员等级" prop="vip_detail")
+      //-   el-table-column(label="返现金额" prop="cashback_amount")
+    el-tab-pane(label="订单记录" name="order")
+      BorrowList(:biz_user_id="props.id")
     </template>
 
 <script setup>
 import { userDetail } from '/@/api/user/index.ts';
+import BorrowList from './BorrowList.vue';
+import InviteList from './InviteList.vue';
 
 
 const show = defineModel('show', { type: Boolean });

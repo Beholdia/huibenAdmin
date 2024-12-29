@@ -219,3 +219,11 @@ export function themeTypeList() {
     method: "get",
   })
 }
+// 书籍借阅记录
+export function borrowRecord(params) {
+  return request({
+    url: "/api/v1/system/book/borrow/record",
+    method: "get",
+    params: params,
+  })
+}

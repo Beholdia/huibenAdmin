@@ -1,29 +1,35 @@
 <template lang="pug">
 .dict
+  .huibenStatistic 今日新增付费会员： {{ new_vip_count }} 人，总计有效会员：{{statics.totalVip}}人，其中黄金会员：{{statics.goldVip}}人，尊享会员：{{statics.blackVip}}人
   el-table(:data="list")
     //- el-table-column(prop="biz_order_id" label="序号")
-    el-table-column( label="头像" width="140px")
+    el-table-column( label="头像" width="100px")
       template(#default="{row}")
-        el-avatar(:src="row.avatar" :preview-src-list = " [ row.avatar ] " :preview-teleported="true" style="width: 100px; height: 100px")
+        el-avatar(:src="row.avatar" :preview-src-list = " [ row.avatar ] " :preview-teleported="true" style="width: 50px; height: 50px")
     el-table-column(prop="biz_user_id" label="用户ID")
-    el-table-column(prop="biz_order_id" label="订单编号")
-    el-table-column(prop="out_trade_no" label="订单编号")
-    el-table-column(prop="notify_at" label="支付时间")
-    el-table-column(prop="goods_detail.main_title" label="会员等级")
+    el-table-column(prop="biz_order_id" label="订单编号" width="100px")
+    el-table-column(prop="out_trade_no" label="支付编号" width="200px")
+    el-table-column(prop="notify_at" label="支付时间" width="200px")
+    el-table-column(prop="goods_detail.main_title" label="会员等级" width="100px")
       template(#default="{row}")
         p {{ row.goods_detail.main_title }}{{ row.goods_detail.sub_title }}
-    el-table-column(prop="vip_price" label="会员金额")
+    el-table-column(prop="vip_price" label="会员金额" width="100px")
       template(#default="{row}")
-        | {{ row.vip_price*100 }} 元
-    el-table-column(prop="deposit_price" label="书籍押金")
+        div(v-if="row.vip_status==='not_return' ") {{ row.vip_price/100 }} 元
+        div(v-else)
+          div(style = " text-decoration :  line-through " ) {{ row.deposit_price/100 }} 元
+          div(style="color:red") 已退款
+    el-table-column(prop="deposit_price" label="书籍押金" width="100px")
       template(#default="{row}")
-        div(style = " text-decoration :  line-through " ) {{ row.deposit_price*100 }} 元
-        div(style="color:red") 已退款
+        div(v-if="row.deposit_status==='not_return' ") {{ row.deposit_price/100 }} 元
+        div(v-else)
+          div(style = " text-decoration :  line-through " ) {{ row.deposit_price/100 }} 元
+          div(style="color:red") 已退款
     el-table-column(prop="" label="操作" width="200px")
       template(#default="{row}")
-        el-button(type="primary" size="small" @click="selectRefund(row)") 退款
+        el-button(type="primary" size="small" @click="selectRefund(row)" :disabled="row.vip_status==='returned' && row.deposit_status==='returned' ") 退款
   el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
-  SelectRefund(v-model:show="showSelectRefund" :detail="currentRefund")
+  SelectRefund(v-model:show="showSelectRefund" :detail="currentRefund" @onClose="onCloseRefund")
     </template>
 
 <script setup>
@@ -49,11 +55,12 @@ const total = ref(0);
 const showSelectRefund = ref(false);
 const currentRefund = ref({});
 const selectRefund = (row) => {
-  //todo 判断一下是否退款，不能退款的按钮禁用
   currentRefund.value = row;
   showSelectRefund.value = true;
 }
-
+const onCloseRefund = (refresh) => {
+  if (refresh) getList();
+}
 
 const currentDictId = ref(0);
 const editDict = (row) => {
@@ -126,10 +133,26 @@ const changeCategory = (val) => {
   router.push({ name: 'sysbook' + val })
 }
 
-
+const statics = ref({});
+const new_vip_count = ref(0);
 const getList = async (pageNum) => {
   if (pageNum) page.value = pageNum;
   const res = await paylist({ page: page.value, limit: limit.value });
+  let goldVip = 0;
+  let blackVip = 0;
+  res.data.statitics.forEach((item) => {
+    if (item.main_title == '黄金会员') {
+      goldVip += item.count;
+    } else if (item.main_title == '尊享会员') {
+      blackVip += item.count;
+    }
+  })
+  statics.value = {
+    goldVip,
+    blackVip,
+    totalVip: goldVip + blackVip
+  }
+  new_vip_count.value = res?.data?.new_vip_count;
   list.value = res?.data?.items || [];
   total.value = res?.data?.total || 0;
 }

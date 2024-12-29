@@ -5,6 +5,8 @@ el-drawer(:modelValue="show",:show-close="false" style="width: 50%;padding:20px"
       el-input(v-model="form.name" placeholder="请输入姓名")
     el-form-item(label="电话",required)
       el-input(v-model="form.phone" placeholder="请输入电话")
+    el-form-item(label="密码" required)
+      el-input(v-model="form.password" placeholder="请输入密码" type="password")
   template(#footer)
     el-button(@click="onClose") 取消
     el-popconfirm(title="确认提交？",@confirm="onSave")
@@ -30,14 +32,16 @@ const props = defineProps({
 const form = reactive({
   name: '',
   phone: '',
+  password: '',
 });
 onUpdated(async () => {
   if (show.value && props.id) {
     const {
-      name, phone
+      name, phone, password
     } = (await riderDetail(props.id)).data.item;
     form.name = name;
     form.phone = phone;
+    form.password = password;
   }
 });
 const emit = defineEmits(['onClose']);
@@ -49,17 +53,18 @@ const onClose = (refreshList) => {
 };
 const onSave = async () => {
   const {
-    name, phone
+    name, phone, password
   } = form;
   if (!name) return ElMessage.error('请填写姓名');
   if (!checkMobile(phone)) return ElMessage.info('请输入正确的手机号');
+  if (!password) return ElMessage.error('请填写密码');
   if (props.id) {
     await editRider({
-      biz_rider_id: props.id, name, phone
+      biz_rider_id: props.id, name, phone, password
     });
   } else {
 
-    await storeRider({ name, phone })
+    await storeRider({ name, phone, password });
 
   }
   onClose(true);

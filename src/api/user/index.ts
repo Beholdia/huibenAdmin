@@ -66,3 +66,29 @@ export function userDetail(params: string) {
     params: { biz_user_id: params },
   });
 }
+// 设置体验会员
+export function setUserTrial(params: object) {
+  return request({
+    url: '/api/v1/system/user/set/trial',
+    method: 'post',
+    data: params,
+  });
+}
+
+// 借阅记录
+export function borrowList(params: object) {
+  return request({
+    url: '/api/v1/system/user/borrow/list',
+    method: 'get',
+    params
+  });
+}
+// 邀请记录
+
+export function inviteList(params: object) {
+  return request({
+    url: '/api/v1/system/user/invite/list',
+    method: 'get',
+    params
+  });
+}

@@ -6,10 +6,10 @@
         el-button(type="primary", @click="changeSaleStatusAll('on_sale')") 批量上架
         el-button(type="primary", @click="changeSaleStatusAll('off_sale')") 批量下架
   .wrapper
-    div(style="color:rgba(144,147,153)") 共有书籍{{statistics?.count_total}}本，借出{{statistics?.count_borrowed}}本，可借{{statistics?.count_available}}本
+    .huibenStatistic 共有书籍{{statistics?.count_total}}本，借出{{statistics?.count_borrowed}}本，可借{{statistics?.count_available}}本
     el-table(:data="list" style="width: 100%",@selection-change="handleSelectionChange")
       el-table-column(type="selection" width="55")
-      el-table-column(prop="biz_books_id" label="序号" width="100")
+      el-table-column(prop="id" label="序号" width="100")
       el-table-column( label="封面" width="100")
         template(#default="{row}")
           //- img.cover(:src="url+row.pic")
@@ -22,7 +22,7 @@
       el-table-column( label="借阅记录" width="100")
         template(#default="{row}")
           el-button(link disabled v-if="row.borrow_times == 0" )  {{row.borrow_times}}
-          el-button(link type="primary" v-else) {{row.borrow_times}}
+          el-button(link type="primary" v-else @click="showBorrowRecord(row)") {{row.borrow_times}}
       el-table-column( label="借阅状态"  width="100")
         template(#default="{row}")
           p(v-if="row.borrow_status=== 'available'") 可借
@@ -41,6 +41,7 @@
             el-button(type="warning" size="small" v-else @click="changeSaleStatus(row)") 下架
     el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
     NewBookDrawer(v-model:show="showBookDrawer"  @onClose="onCloseBookDrawer" :detail="currentDetail")
+  BorrowList(:id="borrowId" v-model:show="borrowRecordVisible" )
 </template>
 
 <script setup>
@@ -49,6 +50,7 @@ import { bookList, changeSaleStatus as changeSaleStatusApi } from '/@/api/books/
 import BaseFilter from '/@/components/form/BaseFilter.vue'
 import { ElMessage, ElMessageBox } from 'element-plus';
 import NewBookDrawer from './component/newBookDrawer.vue';
+import BorrowList from './component/BorrowList.vue';
 
 const url = ref('');
 const form = ref({
@@ -58,10 +60,22 @@ const form = ref({
 const list = ref([]);
 const page = ref(1);
 const total = ref(0);
-const limit = ref(8);
+const limit = ref(10);
 const selectedId = ref(null);
 const titleName = ref(null);
 
+// 借阅记录的弹窗
+const borrowId = ref(null)
+const borrowRecordVisible = ref(false)
+const showBorrowRecord = (row) => {
+  borrowId.value = row.id;
+  borrowRecordVisible.value = true
+}
+// const onCloseBorrowRecord = () => {
+//   console.log(22)
+//   borrowRecordVisible.value = false
+// }
+// 新书入库的抽屉
 const showBookDrawer = ref(false)
 const currentDetail = ref(null);
 

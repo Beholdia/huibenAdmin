@@ -1119,6 +1119,24 @@ export const demoRoutes: Array<RouteRecordRaw> = [
 				children: [
 
 				],
+			},
+			{
+				path: '/order/order',
+				name: 'orderorder',
+				component: () => import('/@/views/order/Order.vue'),
+				meta: {
+					title: '借还订单',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					roles: ['admin'],
+					icon: 'iconfont icon-xitongshezhi',
+				},
+				children: [
+
+				],
 			}
 		],
 

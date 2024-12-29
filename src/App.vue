@@ -98,7 +98,7 @@ export default defineComponent({
 .filter {
 	background-color: #fff;
 	box-sizing: border-box;
-	padding: 20px 30px 10px 20px;
+	padding: 20px;
 	margin-bottom: 10px;
 	display: flex;
 	align-items: center;
@@ -111,28 +111,33 @@ export default defineComponent({
 	box-sizing: border-box;
 }
 
+.huibenStatistic {
+	color: rgba(144, 147, 153);
+	margin-bottom: 10px;
+}
+
 * {
-  &::-webkit-scrollbar {
-    width: 6px;
-    height: 6px;
-    border-radius: 14px;
-  }
+	&::-webkit-scrollbar {
+		width: 6px;
+		height: 6px;
+		border-radius: 14px;
+	}
 
-  &::-webkit-scrollbar-track {
-    border-radius: 14px;
-    background: #f1f1f1;
-    /* 设置滚动条轨道的背景颜色 */
-  }
+	&::-webkit-scrollbar-track {
+		border-radius: 14px;
+		background: #f1f1f1;
+		/* 设置滚动条轨道的背景颜色 */
+	}
 
-  &::-webkit-scrollbar-thumb {
-    border-radius: 14px;
-    background: #ccc;
-    /* 设置滚动条实际可拖动部分的颜色 */
-  }
+	&::-webkit-scrollbar-thumb {
+		border-radius: 14px;
+		background: #ccc;
+		/* 设置滚动条实际可拖动部分的颜色 */
+	}
 
-  &::-webkit-scrollbar-thumb:hover {
-    background: #bbb;
-    /* 鼠标悬浮时滚动条的颜色 */
-  }
+	&::-webkit-scrollbar-thumb:hover {
+		background: #bbb;
+		/* 鼠标悬浮时滚动条的颜色 */
+	}
 }
 </style>

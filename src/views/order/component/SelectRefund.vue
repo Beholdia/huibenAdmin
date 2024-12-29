@@ -4,8 +4,8 @@ el-dialog(title="选择退款方式" v-model="show" width="30%" :close-on-click-
     el-form-item(label="退款方式")
       //- el-checkbox-group(v-model="refundType") todo这里禁用要判断
       div
-        el-checkbox(label="1" border :disabled="false" v-model="vip_status") 会员费{{ detail.vip_price*100 }}
-        el-checkbox(label="2" border v-model="deposit_status") 书籍押金 {{ detail.deposit_price*100 }}
+        el-checkbox(label="1" border :disabled="detail.vip_status == 'returned'" v-model="vip_status") 会员费{{ detail.vip_price/100 }}
+        el-checkbox(label="2" border v-model="deposit_status" disabled="detail.depoit_status == 'returned'") 书籍押金 {{ detail.deposit_price/100 }}
   template(#footer)
     el-button(@click="show = false") 取消
     el-button(type="primary" @click="submit") 确定
@@ -22,6 +22,7 @@ const props = defineProps({
   }
 })
 const show = defineModel('show', { type: Boolean, default: false })
+const emit = defineEmits(['onClose'])
 
 const detail = ref({});
 const deposit_status = ref(false);
@@ -34,11 +35,15 @@ const submit = async () => {
     "vip_status": vip_status.value ? "returned" : "not_return" // 已退款，未退款 returned,not_return
   })
 }
-
+const onClose = (refresh) => {
+  show.value = false;
+  emit('onClose', refresh);
+}
 onUpdated(() => {
   if (show.value) {
     detail.value = props.detail;
-    console.log(detail.value);
+    if (detail.value.vip_status == 'returned') vip_status.value = true;
+    if (detail.value.deposit_status == 'returned') deposit_status.value = true;
   }
 })
 </script>

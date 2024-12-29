@@ -3,7 +3,7 @@
   .filter
     BaseFilter(:filterList="filterList" @onFilter="onFilter" v-model:form="form" ref="filter")
   .wrapper
-    div(style="color:rgba(144,147,153)") 共有注册用户{{statistics?.count_total}}人，体验会员{{statistics?.count_borrowed}}人，黄金会员{{statistics?.count_available}}人，尊享会员600人
+    div(style="color:rgba(144,147,153)") 共有注册用户{{total_reg_user}}人，体验会员{{statistics?.experienceVip}}人，黄金会员{{statistics?.goldVip}}人，尊享会员{{statistics?.blackVip}}人
     el-table(:data="list" style="width: 100%",@selection-change="handleSelectionChange")
       //- el-table-column(type="selection" width="55")
       el-table-column(prop="biz_user_id" label="序号")
@@ -16,34 +16,41 @@
           div(@click="goDetail(row.biz_user_id)" style="cursor: pointer") {{ row.nickname }}
       //- el-table-column(prop="collection_no" label="用户ID" width="200px")
       el-table-column(prop="phone" label="手机号" width="200px")
-      el-table-column(prop="reg_time" label="注册时间" width="180px")
+      el-table-column(prop="created_at" label="注册时间" width="180px")
       el-table-column(prop="biz_vip_expired_at" label="会员有效期" width="180px")
       el-table-column(prop="biz_vip.main_title" label="会员等级" width="150px")
+          template(#default="{row}")
+            p {{ row.biz_vip?.main_title }}{{ row.biz_vip?.sub_title }}
       el-table-column(prop="total_cost_amount" label="消费金额")
+        template(#default="{row}")
+          p {{ row.total_cost_amount/100 }}
       el-table-column( label="借阅记录" width="100")
         template(#default="{row}")
           el-button(link disabled v-if="row.total_borrow_times == 0" )  {{row.total_borrow_times}}
           el-button(link type="primary" v-else) {{row.total_borrow_times}}
       el-table-column( label="借阅状态"  width="100")
         template(#default="{row}")
-          //- el-switch(v-model="row.status" @change="editStatus(row)" :active-value="1" :inactive-value="0" inline-prompt active-text="正常" inactive-text="禁用" size="small")
           p(v-if="row.status== 1") 正常
           p(v-else) 禁用
-      el-table-column(label="操作" width="100px")
+      //- el-table-column(label="是否体验会员")
+      //-   template(#default="{row}")
+      //-     el-switch(v-model="row.status" @change="editStatus(row)" :active-value="1" :inactive-value="0" inline-prompt active-text="正常" inactive-text="禁用" size="small")
+      el-table-column(label="操作" width="160px" fixed="right")
         template(#default="{row}")
           .buttons
-            //- el-button(type="info" size="small") 编辑
             el-button(type="danger" size="small" v-if="row.status==1 " @click="changeStatus(row)") 禁
             el-button(type="primary" size="small" v-else @click="changeStatus(row)") 解封
+            el-button(size="small" :disabled="row.biz_vip" @click="setTrial(row.biz_user_id)") 成为体验会员
     el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
   Detail(v-model:show="showDetail" :id="selectedId")
   </template>
 
 <script setup>
-import { userList, editUserStatus } from '/@/api/user/index.ts';
+import { userList, editUserStatus, setUserTrial } from '/@/api/user/index.ts';
 import BaseFilter from '/@/components/form/BaseFilter.vue'
 import { vipList } from '/@/api/member/index.ts';
 import Detail from './component/Detail.vue';
+import { ElMessage } from 'element-plus';
 
 const proxy = getCurrentInstance().proxy;
 const form = ref({
@@ -119,14 +126,53 @@ const changeStatusAll = async (status) => {
   }
 }
 
+// 设置体验会员
+const setTrial = async (biz_user_id) => {
+  try {
+    await ElMessageBox.confirm(`确定设置该用户为体验会员吗？`, '提示', {
+      confirmButtonText: '确定',
+      cancelButtonText: '取消',
+      type: 'warning',
+    })
+    await setUserTrial({ biz_user_id });
+    await getList(page.value);
+    ElMessage({
+      message: '设置成功',
+      type: 'success',
+    });
+  } catch (error) {
+    // console.log(error);
+  }
+}
 const statistics = ref();
+const total_reg_user = ref(0);
 const getList = async (val) => {
   if (!val) return;
   page.value = val;
   const res = await userList({ page: page.value, limit: limit.value, ...form.value });
   total.value = res.data.total;
   list.value = res.data.items;
-  statistics.value = res.data.statistics;
+  // statistics.value = res.data.statistics;
+  total_reg_user.value = res.data.total_reg_user;
+
+  let goldVip = 0;
+  let blackVip = 0;
+  let experienceVip = 0;
+  res.data.statitics.forEach((item) => {
+    if (item.main_title == '黄金会员') {
+      goldVip += item.count;
+    } else if (item.main_title == '尊享会员') {
+      blackVip += item.count;
+    } else if (item.main_title == '体验会员') {
+      experienceVip += item.count;
+    }
+  })
+  statistics.value = {
+    goldVip,
+    blackVip,
+    experienceVip,
+    totalVip: goldVip + blackVip
+  }
 };
 
 onMounted(async () => {
@@ -140,7 +186,12 @@ onMounted(async () => {
 
 <style lang="less" scoped>
 :deep(.el-button--small) {
-  margin-left: 0px !important;
+  /* margin-left: 0px !important; */
   margin-bottom: 6px;
+}
+
+.buttons {
+  display: flex;
+  justify-content: space-between;
 }
 </style>
