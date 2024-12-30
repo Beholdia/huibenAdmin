@@ -9,8 +9,13 @@
         .ruku(v-if="status == 'picked_up'")
             el-input(v-model="form.keyword" placeholder="输入馆藏id" style="width: 300px;" size="default" @keyup.enter="confirmRuku" ref="myInput")
             el-button(type="primary" @click="confirmRuku" size="default") 确认入库
-    .filter
-        BaseFilter(:filterList="filterList" @onFilter="onFilter" v-model:form="form")
+    .search
+        //- BaseFilter(:filterList="filterList" @onFilter="onFilter" v-model:form="form")
+        el-input(placeholder="订单编号" v-model="form.keyword" style="width: 200px;" clearable)
+        el-select( v-model="form.is_canceled" style="width: 200px;margin:20px 30px" )
+            el-option(value="" label="正常订单")
+            el-option(value="Y" label="已取消订单")
+        el-button(type="primary" @click="onFilter") 查询
     .list
         .empty(v-if="!list.length") 暂无数据
         .item(v-for="item in list" :key="item.biz_books_order_id")
@@ -26,6 +31,7 @@
                 .right(v-show="status=='wait_to_delivery' ")
                     el-button(type="primary" size="small" v-if="!item.packed_at" @click="packed(item)") 完成打包
                     el-button(color="gray" size="small" v-if="item.packed_at") 已打包
+                    el-button(type="info" size="small") 订单已取消
                     el-button(color="black" size="small") 打印标签
             .content
                 .info
@@ -72,15 +78,28 @@ const page = ref(1);
 const limit = ref(10);
 const total = ref(0);
 
-const filterList = [{
-    label: '关键词',
-    model: 'keyword',
-    type: 'input',
-    placeholder: '借书订单号/馆藏id'
-},
+const filterList = [
+    {
+        label: '关键词',
+        model: 'keyword',
+        type: 'input',
+        placeholder: '借书订单号/馆藏id'
+    },
+    {
+        label: '订单类型',
+        model: 'is canceled',
+        type: 'select',
+        options: [
+            { label: '正常订单', value: '' },
+            { label: '已取消订单', value: 'Y' },
+        ],
+        hidden: status.value != 'wait_to_delivery'
+
+    },
 ];
 const form = ref({
     keyword: null,
+    is_canceled: ''
 });
 const onFilter = () => {
     page.value = 1;
@@ -112,6 +131,10 @@ const packed = async (item) => {
 
 const changeStatus = (val) => {
     status.value = val;
+    form.value.keyword = null;
+    form.value.is_canceled = '';
+    page.value = 1;
+    total.value = 1;
     getList();
 }
 // 确认入库
@@ -121,7 +144,7 @@ const confirmRuku = async () => {
 const getList = async (pageNum, returnObj = {}) => {
     if (pageNum) page.value = pageNum
 
-    const res = await orderlist({ order_status: status.value, page: page.value, limit: limit.value, ...form.value, ...returnObj })
+    const res = await orderlist({ order_status: status.value, page: page.value, limit: limit.value, keyword: form.value.keyword, is_canceled: form.value.is_canceled, ...returnObj })
     list.value = res.data.items || []
     delivery_statictics.value = res.data.delivery_statictics
     picked_up_statictics.value = res.data.picked_up_statictics

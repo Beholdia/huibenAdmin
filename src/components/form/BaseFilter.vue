@@ -4,7 +4,7 @@ el-form(inline)
     v-for="item, index in props.filterList"
     :label="item.label"
     label-width="80px"
-    label-position="left"
+    label-position="left",
   )
     el-input(
       v-model.trim="form[ item.model ]"
