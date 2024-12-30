@@ -19,8 +19,8 @@
       el-table-column(prop="created_at" label="注册时间" width="180px")
       el-table-column(prop="biz_vip_expired_at" label="会员有效期" width="180px")
       el-table-column(prop="biz_vip.main_title" label="会员等级" width="150px")
-          template(#default="{row}")
-            p {{ row.biz_vip?.main_title }}{{ row.biz_vip?.sub_title }}
+        template(#default="{row}")
+          p {{ row.biz_vip?.main_title }}{{ row.biz_vip?.sub_title }}
       el-table-column(prop="total_cost_amount" label="消费金额")
         template(#default="{row}")
           p {{ row.total_cost_amount/100 }}
@@ -176,7 +176,7 @@ const getList = async (val) => {
 };
 
 onMounted(async () => {
-  getList(page.value);
+  await getList(page.value);
 
   // 会员选择
   const res = await vipList();

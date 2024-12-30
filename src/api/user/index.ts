@@ -9,7 +9,10 @@ export function userList(params: object) {
   return request({
     url: '/api/v1/system/user/list',
     method: 'get',
-    params
+    params,
+    headers: {
+      needLoading: true
+    }
   });
 }
 
@@ -64,6 +67,9 @@ export function userDetail(params: string) {
     url: '/api/v1/system/user/detail',
     method: 'get',
     params: { biz_user_id: params },
+    headers: {
+      needLoading: true
+    }
   });
 }
 // 设置体验会员
@@ -90,5 +96,13 @@ export function inviteList(params: object) {
     url: '/api/v1/system/user/invite/list',
     method: 'get',
     params
+  });
+}
+// 设置书箱
+export function setUserBox(params: object) {
+  return request({
+    url: '/api/v1/system/user/set/box',
+    method: 'post',
+    data: params,
   });
 }

@@ -56,6 +56,9 @@ export function changeSaleStatus(params: object) {
     url: "/api/v1/system/book/sale_status/change",
     method: "post",
     data: params,
+    headers: {
+      needLoading: true
+    }
   })
 }
 // 书架字典列表

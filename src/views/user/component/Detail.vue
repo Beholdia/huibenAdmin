@@ -12,29 +12,30 @@ el-drawer(:modelValue="show",:show-close="false" style="padding:20px" title="用
           el-form-item(label="小区")
             el-input(v-model="form.item.community" disabled)
           el-form-item(label="书箱装否")
-            el-select(v-model="form.item.book_box"  )
+            el-select(v-model="form.item.book_box")
               el-option(label="是" :value="1")
               el-option(label="否" :value="0")
+        el-button(type="primary" style="margin-left:auto;width:100px;display:block" @click="setBox") 保存
         //- p 昵称：{{form.item.nickname}}
         //- p 手机号：{{form.item.mobile}}
         //- p 小区 {{ form.item.community }}
         //- p 书箱装否 {{ form.item.book_box }}
         .address
-          .sub_title 邮寄地址
+          .sub_title(v-if="form?.biz_address?.length") 邮寄地址
           .address_item(v-for="i in form.biz_address")
             p {{ i.province.province_name }}{{ i.city.city_name }}{{ i.county.county_name }}{{ i.detaild_address}}
             p 昵称：{{i.name}}
             p 手机号：{{i.phone}}
         .kid
-          .sub_title 孩子信息
+          .sub_title(v-if="form?.biz_kid?.length") 孩子信息
           .kid_item(v-for="i in form.biz_kid")
             p 姓名：{{i.name}}
             p 出生年月： {{ i.birth }}
             p 性别： {{ i.gender=='M'?'男':'女' }}
 
-        .sub_title 会员信息
-        p 会员等级：{{ form.item?.biz_vip?.main_title }}
-        p 会员到期时间：{{ form.item?.biz_vip_expired_at }}
+        .sub_title(v-if="form?.item?.biz_vip") 会员信息
+          p 会员等级：{{ form.item?.biz_vip?.main_title }}
+          p 会员到期时间：{{ form.item?.biz_vip_expired_at }}
     el-tab-pane(label="邀请记录" name="invite")
       InviteList(:biz_user_id="props.id")
       //- el-table(:data="form.biz_invite")
@@ -48,9 +49,10 @@ el-drawer(:modelValue="show",:show-close="false" style="padding:20px" title="用
     </template>
 
 <script setup>
-import { userDetail } from '/@/api/user/index.ts';
+import { userDetail, setUserBox } from '/@/api/user/index.ts';
 import BorrowList from './BorrowList.vue';
 import InviteList from './InviteList.vue';
+import { ElMessage } from 'element-plus';
 
 
 const show = defineModel('show', { type: Boolean });
@@ -61,9 +63,23 @@ const emit = defineEmits(['onClose']);
 const activeName = ref('user');
 const form = ref({ item: {} });
 
+const setBox = async () => {
+  // console.log(form.value.item.book_box);
+  await setUserBox(
+    {
+      "biz_user_id": props.id,
+      "book_box": form.value.item.book_box
+    }
+  )
+  ElMessage.success('修改成功');
+}
+
 onUpdated(async () => {
-  const { data } = await userDetail(props.id);
-  form.value = data;
+  if (show.value) {
+    const { data } = await userDetail(props.id);
+    form.value = data;
+    activeName.value = 'user';
+  }
 
 });
 
@@ -88,6 +104,10 @@ const onClose = (refreshList) => {
     text-align: center;
     font-size: 16px;
     margin-bottom: 20px;
+
+    p {
+      text-align: left;
+    }
   }
 
   .address {

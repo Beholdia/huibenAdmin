@@ -156,8 +156,9 @@ const changeSaleStatus = async (row) => {
       cancelButtonText: '取消',
       type: 'warning',
     })
-    await changeSaleStatusApi({ biz_books_ids: [row.biz_books_id], sale_status: row.sale_status === 'on_sale' ? 'off_sale' : 'on_sale' });
-    getList(page.value);
+    await changeSaleStatusApi({ biz_books_entity_ids: [row.biz_books_id], sale_status: row.sale_status === 'on_sale' ? 'off_sale' : 'on_sale' });
+    ElMessage.success('操作成功');
+    await getList(page.value);
   } catch (error) {
     console.log(error);
   }

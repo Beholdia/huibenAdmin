@@ -6,10 +6,9 @@
                 div(v-for="item in tabs")
                     el-badge(:value="statics[item.value]" :hidden="!statics[item.value]")
                         el-radio-button(:label="item.label" :value="item.value"  size="large")
-        //- .ruku(v-if="status == 'picked_up'")
-        .ruku()
+        .ruku(v-if="status == 'picked_up'")
             el-input(v-model="form.keyword" placeholder="输入馆藏id" style="width: 300px;" size="default" @keyup.enter="confirmRuku" ref="myInput")
-            el-button(type="primary" @click="confirmRuku" size="default") 确认
+            el-button(type="primary" @click="confirmRuku" size="default") 确认入库
     .filter
         BaseFilter(:filterList="filterList" @onFilter="onFilter" v-model:form="form")
     .list

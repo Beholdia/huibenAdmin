@@ -45,6 +45,9 @@ export function orderlist(params: object) {
     url: '/api/v1/system/book/order/list',
     method: 'get',
     params,
+    headers: {
+      needLoading: true
+    }
   });
 }
 // 确认打包

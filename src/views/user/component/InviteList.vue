@@ -80,7 +80,7 @@ const clear = () => {
     limit.value = 10;
 }
 const getList = async () => {
-    const res = await inviteList({ page: page.value, limit: limit.value, keyword: biz_user_id.value });
+    const res = await inviteList({ page: page.value, limit: limit.value, keyword: keyword.value });
     detail.value = res.data;
     list.value = res.data.items || [];
     total.alue = res.data.total || 0;
