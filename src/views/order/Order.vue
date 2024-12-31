@@ -29,10 +29,11 @@
                     p(v-if="status == 'in_delivery'") 提书时间：{{item.delivery_grab_at}}
                     p(v-if="status == 'delivered'") 送达时间：{{item.delivery_complete_at}}
                 .right(v-show="status=='wait_to_delivery' ")
-                    el-button(type="primary" size="small" v-if="!item.packed_at" @click="packed(item)") 完成打包
-                    el-button(color="gray" size="small" v-if="item.packed_at") 已打包
-                    el-button(type="info" size="small") 订单已取消
-                    el-button(color="black" size="small") 打印标签
+                    template(v-if="item.user_order_status != 'canceled'")
+                        el-button(type="primary" size="small" v-if="!item.packed_at" @click="packed(item)") 完成打包
+                        el-button(color="gray" size="small" v-if="item.packed_at") 已打包
+                        el-button(color="black" size="small") 打印标签
+                    el-button(type="info" size="small" v-if="item.user_order_status == 'canceled'") 订单已取消
             .content
                 .info
                     el-avatar(:src="item.biz_user.avatar" :preview-src-list = " [ item.biz_user.avatar ] " :preview-teleported="true" style="width: 50px; height: 50px")
