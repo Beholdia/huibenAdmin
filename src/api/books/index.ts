@@ -230,3 +230,10 @@ export function borrowRecord(params) {
     params: params,
   })
 }
+// 首页数据
+export function homesStatistics() {
+  return request({
+    url: "/api/v1/system/home/statictics",
+    method: "get",
+  })
+}

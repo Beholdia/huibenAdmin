@@ -6,14 +6,14 @@
                 div(v-for="item in tabs")
                     el-badge(:value="statics[item.value]" :hidden="!statics[item.value]")
                         el-radio-button(:label="item.label" :value="item.value"  size="large")
-        .ruku(v-if="status == 'picked_up'")
+        .ruku(v-if="status == 'picked_up' || status == 'in_stock' ")
             el-input(v-model="form.keyword" placeholder="输入馆藏id" style="width: 300px;" size="default" @keyup.enter="confirmRuku" ref="myInput")
             el-button(type="primary" @click="confirmRuku" size="default") 确认入库
     .search
         //- BaseFilter(:filterList="filterList" @onFilter="onFilter" v-model:form="form")
         el-input(placeholder="订单编号" v-model="form.keyword" style="width: 200px;" clearable)
         el-select( v-model="form.is_canceled" style="width: 200px;margin:20px 30px" )
-            el-option(value="" label="正常订单")
+            el-option(value=" " label="正常订单")
             el-option(value="Y" label="已取消订单")
         el-button(type="primary" @click="onFilter") 查询
     .list
@@ -91,7 +91,7 @@ const filterList = [
         model: 'is canceled',
         type: 'select',
         options: [
-            { label: '正常订单', value: '' },
+            { label: '正常订单', value: ' ' },
             { label: '已取消订单', value: 'Y' },
         ],
         hidden: status.value != 'wait_to_delivery'
