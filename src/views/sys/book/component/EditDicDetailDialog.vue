@@ -8,9 +8,9 @@ el-drawer(:modelValue="show",:show-close="false" style="width: 50%;padding:20px"
     el-form-item(label="一句话介绍",)
       el-input(v-model="form.remark" placeholder="一句话介绍" type="textarea" :rows="4")
     el-form-item(label="logo",)
-      Uploader(:files="[form.logo ]" ref="imageUploader" :limit="1")
+      Uploader(:files="[form.logo ]" ref="imageUploader" :limit="1" :id="props.id||0")
   template(#footer)
-    el-button(@click="onClose") 取消
+    el-button(@click="onClose(null)") 取消
     el-popconfirm(title="确认提交？",@confirm="onSave")
       template(#reference)
         el-button(type="primary") 确认

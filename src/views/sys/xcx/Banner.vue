@@ -9,7 +9,7 @@
     el-table-column(prop="biz_banner_id" label="编号")
     el-table-column(label="图片" width="200px")
       template(#default="{row}")
-        el-image(:src="row.pic" style="width: 100px; height: 100px" :preview-src-list="[ row.pic ]" :preview-teleported="true")
+        el-image(:src="row.pic" style="width: 100px; height: auto" :preview-src-list="[ row.pic ]" :preview-teleported="true")
 
     el-table-column(prop="position" label="位置")
       template(#default="{row}")

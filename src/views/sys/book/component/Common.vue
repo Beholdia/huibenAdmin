@@ -1,16 +1,12 @@
 <template lang="pug">
 .dict
   Tags(:biz_type="type" )
-  //- .group
-    el-radio-group(type="button" v-model="type" @change="changeCategory")
-      el-radio-button(:label="item.label" :value="item.route" v-for="item in types" size="default")
-  //- el-button(size="default" block class="editBtn" type="primary") 添加
   el-table(:data="list")
     el-table-column(prop="dict_code" label="编号")
     el-table-column(prop="dict_label" :label="label")
     el-table-column(prop="dict_label" label="人物图标" v-if="type === 'character'")
       template(#default="{row}")
-        el-image(:src="row.logo" :preview-src-list = " [ row.logo ] " :preview-teleported="true" style="width: 100px; height: 100px")
+        el-image(:src="row.logo" :preview-src-list = " [ row.logo ] " :preview-teleported="true" style="width: 100px; height: auto")
     el-table-column(prop="count" label="书籍数量")
     el-table-column(prop="dict_sort" label="排序")
       template(#default="{row}")
@@ -65,7 +61,6 @@ const editDict = (row) => {
 
 const closeEditDict = (refreshList) => {
   if (refreshList) getList();
-  editDictVisible.value = false;
 };
 
 const editStatus = async (row) => {

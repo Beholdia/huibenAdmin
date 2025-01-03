@@ -6,8 +6,7 @@
     el-table-column(prop="biz_column_id" label="编号")
     el-table-column(label="图片" width="200px")
       template(#default="{row}")
-        el-image(:src="row.logo" style="width: 100px; height: 100px" :preview-src-list="[ row.logo ]" :preview-teleported="true")
-
+        el-image(:src="row.logo" style="width: 100px; height: auto" :preview-src-list="[ row.logo ]" :preview-teleported="true")
     el-table-column(prop="title" label="名称")
     el-table-column( label="类型")
       template(#default="{row}")

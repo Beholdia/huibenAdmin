@@ -20,7 +20,6 @@ el-upload.uploader(
   img(v-if="fileList.length", :src="fileList[0].url", class="avatar")
   el-icon(v-else class="avatar-uploader-icon")
     Plus
-
 el-dialog(v-model="showPreview", style="text-align:center")
   img(:src="curFile.url", style="width: 100%", v-if="['png', 'jpeg', 'jpg'].includes(curFile.type)")
   iframe(v-else, frameborder="no" border="0" marginwidth="0" marginheight="0" scrolling="no" allowtransparency="yes", :src="curFile.url", style="width:100%;height: 100%;")
@@ -60,6 +59,9 @@ const props = defineProps({
   disabled: {
     type: Boolean,
     default: false,
+  },
+  id: {
+    type: Number
   }
 });
 const headers = reactive({
@@ -119,10 +121,9 @@ const onError = (err) => {
   ElMessage.warning(err);
 };
 
-watch(() => props.files, (val) => {
-  console.log(val);
-  if (val.length) {
-    fileList.value = val.flatMap((file) => (file ? ({
+watch(() => [props.files, props.id], (val) => {
+  if (props.files.length) {
+    fileList.value = props.files.flatMap((file) => (file ? ({
       url: `${file}`,
       name: file.split('/').at(-1),
       folder: file.split('/').at(-2),
