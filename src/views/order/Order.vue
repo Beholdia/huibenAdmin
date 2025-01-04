@@ -7,7 +7,7 @@
                     el-badge(:value="statics[item.value]" :hidden="!statics[item.value]")
                         el-radio-button(:label="item.label" :value="item.value"  size="large")
         .ruku(v-if="status == 'picked_up' || status == 'in_stock' ")
-            el-input(v-model="form.keyword" placeholder="输入馆藏id" style="width: 300px;" size="default" @keyup.enter="confirmRuku" ref="myInput")
+            el-input(v-model="collection_no" placeholder="输入馆藏id" style="width: 300px;" size="default" @keyup.enter="confirmRuku" ref="myInput")
             el-button(type="primary" @click="confirmRuku" size="default") 确认入库
     .search
         //- BaseFilter(:filterList="filterList" @onFilter="onFilter" v-model:form="form")
@@ -73,6 +73,8 @@ const tabs = [
 const delivery_statictics = ref({})
 const picked_up_statictics = ref({})
 const statics = ref({});
+
+const collection_no = ref(null);
 
 const list = ref([]);
 const page = ref(1);
@@ -140,7 +142,7 @@ const changeStatus = (val) => {
 }
 // 确认入库
 const confirmRuku = async () => {
-    await getList(null, { book_warehousing: 'Y' })
+    await getList(null, { book_warehousing: 'Y', keyword: collection_no.value })
 }
 const getList = async (pageNum, returnObj = {}) => {
     if (pageNum) page.value = pageNum
