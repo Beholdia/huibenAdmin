@@ -3,6 +3,9 @@
 	el-button( type="info" class="refresh" plain @click="getList" style="border:none;position:absolute;right:100px;top:0px;") 刷新
 		el-icon
 			Refresh
+	el-button( type="info" class="clear" plain @click="clearData" style="border:none;position:absolute;right:0px;top:0px;") 清空
+		//- el-icon
+			Refresh
 	.row()
 		.column()
 			.title 书籍总量
@@ -36,13 +39,17 @@
 </template>
 
 <script setup>
-import { homesStatistics } from "/@/api/books/index"
+import { homesStatistics, clear } from "/@/api/books/index"
 import { onMounted } from "vue";
 
 const detail = ref({})
 const getList = async () => {
 	const res = await homesStatistics()
 	detail.value = res.data
+}
+const clearData = async () => {
+	const res = await clear()
+	await getList();
 }
 onMounted(async () => {
 	await getList()

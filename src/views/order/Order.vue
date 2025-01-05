@@ -66,6 +66,7 @@ const tabs = [
     { label: '待配送', value: 'wait_to_delivery' },
     { label: '配送中', value: 'in_delivery' },
     { label: '送达', value: 'delivered' },
+    { label: '取书新单', value: 'wait_to_grap' },
     { label: '待取书', value: 'wait_to_pickup' },
     { label: '已取书', value: 'picked_up' },
     { label: '入库', value: 'in_stock' }]

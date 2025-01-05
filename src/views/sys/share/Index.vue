@@ -7,71 +7,99 @@
       .header
         el-switch(v-model="expired_day" @change="changeActiveType")
         p 增加会员有效时长
-        el-input-Number(v-model="detail.reward_vip_expired_day_amount")
+        el-input-Number(v-model="reward_vip_expired_day_amount")
         p 天
       .pics
         .pics_item
           p 活动图片
-          Uploader(:files=" [detail.reward_vip_expired_act_pic ] " ref="reward_vip_expired_act_pic" :limit="1")
+          Uploader(:files="reward_vip_expired_act_pic_files" ref="reward_vip_expired_act_pic_ref" :limit="1")
         .pics_item
           p 分享海报
-          Uploader(:files=" [detail.reward_vip_expired_share_poster ] " ref="reward_vip_expired_share_poster" :limit="1")
+          Uploader(:files="reward_vip_expired_share_poster_files" ref="reward_vip_expired_share_poster_ref" :limit="1")
     .share_item
       .header
         el-switch(v-model="cash_back"  @change="changeActiveType")
         p 现金返现
-        el-input-Number(v-model="detail.cash_back_amount")
+        el-input-Number(v-model="cash_back_amount")
         p 元
       .pics
         .pics_item
           p 活动图片
-          Uploader(:files=" [detail.cash_back_act_pic ] " ref="cash_back_act_pic" :limit="1")
+          Uploader(:files="cash_back_act_pic_files" ref="cash_back_act_pic_ref" :limit="1")
         .pics_item
           p 分享海报
-          Uploader(:files=" [detail.cash_back_share_poster ] " ref="cash_back_share_poster" :limit="1")
+          Uploader(:files="cash_back_share_poster_files" ref="cash_back_share_poster_ref" :limit="1")
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, ref, shallowRef as sref, computed } from 'vue';
 import Uploader from '/@/components/Uploader.vue';
 import { shareDetail, editShareDetail } from '/@/api/xcx';
 
-const detail = ref({});
+// 使用 shallowRef 而不是 ref 来存储图片 URL
+const reward_vip_expired_act_pic = sref('');
+const reward_vip_expired_share_poster = sref('');
+const cash_back_act_pic = sref('');
+const cash_back_share_poster = sref('');
+
+// 其他数值类型的数据仍然使用普通的 ref
+const active_type = ref('');
+const reward_vip_expired_day_amount = ref('');
+const cash_back_amount = ref('');
+
 const expired_day = ref(false);
 const cash_back = ref(false);
-// 四张海报
-const reward_vip_expired_act_pic = ref(null);
-const reward_vip_expired_share_poster = ref(null);
-const cash_back_act_pic = ref(null);
-const cash_back_share_poster = ref(null);
+
+// 上传组件的 refs
+const reward_vip_expired_act_pic_ref = ref(null);
+const reward_vip_expired_share_poster_ref = ref(null);
+const cash_back_act_pic_ref = ref(null);
+const cash_back_share_poster_ref = ref(null);
+
+// 为每个上传组件创建计算属性
+const reward_vip_expired_act_pic_files = computed(() =>
+  reward_vip_expired_act_pic.value ? [reward_vip_expired_act_pic.value] : []
+);
+
+const reward_vip_expired_share_poster_files = computed(() =>
+  reward_vip_expired_share_poster.value ? [reward_vip_expired_share_poster.value] : []
+);
+
+const cash_back_act_pic_files = computed(() =>
+  cash_back_act_pic.value ? [cash_back_act_pic.value] : []
+);
+
+const cash_back_share_poster_files = computed(() =>
+  cash_back_share_poster.value ? [cash_back_share_poster.value] : []
+);
 
 const changeActiveType = async () => {
-  detail.value.active_type = detail.value.active_type === 'cash_back' ? 'expired_day' : 'cash_back';
-  expired_day.value = detail.value.active_type === 'cash_back' ? false : true;
-  cash_back.value = detail.value.active_type === 'cash_back' ? true : false;
+  active_type.value = active_type.value === 'cash_back' ? 'expired_day' : 'cash_back';
+  expired_day.value = active_type.value === 'cash_back' ? false : true;
+  cash_back.value = active_type.value === 'cash_back' ? true : false;
 }
 
-// 
 const save = async () => {
   try {
-    const { active_type, reward_vip_expired_day_amount, cash_back_amount } = detail.value;
-    const reward_vip_expired_act_pic_url = reward_vip_expired_act_pic.value.fileList?.[0]?.url;
-    const reward_vip_expired_share_poster_url = reward_vip_expired_share_poster.value.fileList?.[0]?.url;
-    const cash_back_act_pic_url = cash_back_act_pic.value.fileList?.[0]?.url;
-    const cash_back_share_poster_url = cash_back_share_poster.value.fileList?.[0]?.url;
-    console.log(active_type);
-    if (active_type === 'expired_day') {
-      console.log(1);
-      if (!reward_vip_expired_day_amount) return ElMessage.error('请输入增加会员有效时长');
+    const reward_vip_expired_act_pic_url = reward_vip_expired_act_pic_ref.value.fileList?.[0]?.url || reward_vip_expired_act_pic.value;
+    const reward_vip_expired_share_poster_url = reward_vip_expired_share_poster_ref.value.fileList?.[0]?.url || reward_vip_expired_share_poster.value;
+    const cash_back_act_pic_url = cash_back_act_pic_ref.value.fileList?.[0]?.url || cash_back_act_pic.value;
+    const cash_back_share_poster_url = cash_back_share_poster_ref.value.fileList?.[0]?.url || cash_back_share_poster.value;
+
+    if (active_type.value === 'expired_day') {
+      if (!reward_vip_expired_day_amount.value) return ElMessage.error('请输入增加会员有效时长');
       if (!reward_vip_expired_act_pic_url) return ElMessage.error('请上传活动图片');
       if (!reward_vip_expired_share_poster_url) return ElMessage.error('请上传分享海报');
     } else {
-      if (!cash_back_amount) return ElMessage.error('请输入现金返现');
+      if (!cash_back_amount.value) return ElMessage.error('请输入现金返现');
       if (!cash_back_act_pic_url) return ElMessage.error('请上传活动图片');
       if (!cash_back_share_poster_url) return ElMessage.error('请上传分享海报');
     }
+
     let data = {
-      active_type, reward_vip_expired_day_amount, cash_back_amount,
+      active_type: active_type.value,
+      reward_vip_expired_day_amount: reward_vip_expired_day_amount.value,
+      cash_back_amount: cash_back_amount.value * 100,
       reward_vip_expired_act_pic: reward_vip_expired_act_pic_url,
       reward_vip_expired_share_poster: reward_vip_expired_share_poster_url,
       cash_back_act_pic: cash_back_act_pic_url,
@@ -85,8 +113,17 @@ const save = async () => {
 }
 
 onMounted(async () => {
-  detail.value = (await shareDetail()).data.item;
-  if (detail.value.active_type === 'cash_back') {
+  const response = (await shareDetail()).data.item;
+  // 分别设置每个值
+  active_type.value = response.active_type;
+  reward_vip_expired_day_amount.value = response.reward_vip_expired_day_amount;
+  cash_back_amount.value = response.cash_back_amount / 100;
+  reward_vip_expired_act_pic.value = response.reward_vip_expired_act_pic;
+  reward_vip_expired_share_poster.value = response.reward_vip_expired_share_poster;
+  cash_back_act_pic.value = response.cash_back_act_pic;
+  cash_back_share_poster.value = response.cash_back_share_poster;
+
+  if (active_type.value === 'cash_back') {
     cash_back.value = true;
   } else {
     expired_day.value = true;

@@ -237,3 +237,10 @@ export function homesStatistics() {
     method: "get",
   })
 }
+
+export function clear() {
+  return request({
+    url: "/api/v1/system/home/clear",
+    method: "get",
+  })
+}
