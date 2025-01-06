@@ -29,6 +29,7 @@
                     p 配送员：{{item.biz_delivery_rider?.name}}
                     p(v-if="status == 'in_delivery'") 提书时间：{{item.delivery_grab_at}}
                     p(v-if="status == 'delivered'") 送达时间：{{item.delivery_complete_at}}
+                    p(v-if="item.return_started_at") 归还时间： {{item.return_started_at}}
                 .right(v-show="status=='wait_to_delivery' ")
                     template(v-if="item.user_order_status != 'canceled'")
                         el-button(type="primary" size="small" v-if="!item.packed_at" @click="packed(item)") 完成打包
