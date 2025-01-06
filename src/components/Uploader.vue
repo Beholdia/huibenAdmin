@@ -61,7 +61,8 @@ const props = defineProps({
     default: false,
   },
   id: {
-    type: Number
+    type: Number,
+    detault: 1,
   }
 });
 const headers = reactive({
@@ -121,7 +122,7 @@ const onError = (err) => {
   ElMessage.warning(err);
 };
 
-watch(() => [props.files, props.id], (val) => {
+watch(() => [props.files], (val) => {
   if (props.files.length) {
     fileList.value = props.files.flatMap((file) => (file ? ({
       url: `${file}`,
@@ -129,6 +130,10 @@ watch(() => [props.files, props.id], (val) => {
       folder: file.split('/').at(-2),
     }) : []));
   } else fileList.value = [];
+});
+
+watch(() => [props.id], (val) => {
+  if (!props.files.length) fileList.value = [];
 });
 
 defineExpose({

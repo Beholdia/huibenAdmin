@@ -42,9 +42,6 @@ import {
 } from 'vue';
 import { storeVip, editVip, vipDetail } from '/@/api/member/index.ts';
 import { ElMessage } from 'element-plus';
-import Uploader from '/@/components/Uploader.vue';
-
-const imageUploader = ref(null);
 
 const show = defineModel('show', { type: Boolean, default: false })
 const props = defineProps({

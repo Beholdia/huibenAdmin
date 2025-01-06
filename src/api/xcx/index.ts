@@ -104,3 +104,14 @@ export function editShareDetail(params: object) {
     data: params,
   });
 }
+// 修改分享返现类型
+export function editShareType(params: object) {
+  return request({
+    url: '/api/v1/system/share/config/edit/active_type',
+    method: 'post',
+    data: params,
+    headers: {
+      needLoading: true
+    }
+  });
+}

@@ -21,9 +21,6 @@ import {
 import { storeRider, editRider, riderDetail } from '/@/api/xcx/rider.ts';
 import { ElMessage } from 'element-plus';
 import { checkMobile } from '/@/utils/index.js';
-import Uploader from '/@/components/Uploader.vue';
-
-const imageUploader = ref(null);
 
 const show = defineModel('show', { type: Boolean, default: false })
 const props = defineProps({
