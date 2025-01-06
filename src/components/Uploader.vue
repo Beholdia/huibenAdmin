@@ -123,6 +123,7 @@ const onError = (err) => {
 };
 
 watch(() => [props.files], (val) => {
+  console.log(val)
   if (props.files.length) {
     fileList.value = props.files.flatMap((file) => (file ? ({
       url: `${file}`,
@@ -133,6 +134,7 @@ watch(() => [props.files], (val) => {
 });
 
 watch(() => [props.id], (val) => {
+  console.log(val)
   if (!props.files.length) fileList.value = [];
 });
 

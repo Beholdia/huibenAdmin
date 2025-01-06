@@ -16,7 +16,6 @@
             el-option(value=" " label="正常订单")
             el-option(value="Y" label="已取消订单")
         el-button(type="primary" @click="onFilter") 查询
-        el-button(color="black" @click="openPrinterDrawer" v-show="status == 'wait_to_delivery'") 打印设置
     .list
         .empty(v-if="!list.length") 暂无数据
         .item(v-for="item in list" :key="item.biz_books_order_id")
@@ -33,8 +32,7 @@
                     template(v-if="item.user_order_status != 'canceled'")
                         el-button(type="primary" size="small" v-if="!item.packed_at" @click="packed(item)") 完成打包
                         el-button(color="gray" size="small" v-if="item.packed_at") 已打包
-                        
-                        el-button(color="black" size="small" @click="printLabel(item)" :disabled="!printerReady") 打印标签
+                        el-button(color="black" size="small" @click="printLabel(item)") 打印标签
                     el-button(type="info" size="small" v-if="item.user_order_status == 'canceled'") 订单已取消
             .content
                 .info
@@ -52,7 +50,6 @@
                         p {{book.book_info?.name}}
                         p {{book.book_info?.collection_no}}
     el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
-    PrinterDrawer(v-model="showPrinterDrawer" @printer-ready="onPrinterReady " )
 
 </template>
 
@@ -65,7 +62,6 @@ import BaseFilter from '/@/components/form/BaseFilter.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import Socket from '../../utils/Socket'
 import NMPrintSocket from '../../utils/Print'
-import PrinterDrawer from '/@/components/PrinterDrawer.vue'
 
 const status = ref('wait_to_delivery')
 const tabs = [
@@ -175,56 +171,52 @@ watch(() => [status.value, myInput.value], () => {
     }
 })
 
+const printSocketOpen = ref(false)
+const nMPrintSocket = ref(null)
+const initBool = ref(false)
 
 onMounted(async () => {
-    await getList();
+    await getList()
+
     const socketData = new Socket("ws://127.0.0.1:37989")
-    // socketData.open(
-    //     (openBool) => {
-    //         console.log(11111111111111,openBool,)
-    //         printSocketOpen.value = openBool
-    //         if (openBool) {
-    //             initPrinter()
-    //         }
-    //     },
-    //     (msg) => {
-    //         console.log('打印机消息:', msg)
-    //     }
-    // )
+
+    socketData.open(
+        (openBool) => {
+            printSocketOpen.value = openBool
+            if (openBool) {
+                initPrinter()
+            }
+        },
+        (msg) => {
+            console.log('打印机消息:', msg)
+        }
+    )
+
+    nMPrintSocket.value = new NMPrintSocket(socketData)
 })
 
-const showPrinterDrawer = ref(false)
-
-const nMPrintSocket = ref(null)
-const printerReady = ref(false)
-const printSettings = ref(null)
-
-const openPrinterDrawer = () => {
-    showPrinterDrawer.value = true
-}
-
-const onPrinterReady = ({ nMPrintSocket: printer, settings }) => {
-    nMPrintSocket.value = printer
-    printSettings.value = settings
-    printerReady.value = true
-    ElMessage.success('打印机已就绪')
+const initPrinter = async () => {
+    if (!printSocketOpen.value) return
+    try {
+        const res = await nMPrintSocket.value.initSdk({ fontDir: "" })
+        if (res.resultAck.errorCode == 0) {
+            initBool.value = true
+            console.log('打印机初始化成功')
+        }
+    } catch (err) {
+        console.error('打印机初始化失败:', err)
+    }
 }
 
 const printLabel = async (item) => {
-    if (!printerReady.value) {
-        ElMessage.error('请先完成打印机设置')
+    if (!printSocketOpen.value || !initBool.value) {
+        ElMessage.error('打印服务未就绪')
         return
     }
 
     try {
         // 开始打印任务
-        const startRes = await nMPrintSocket.value.startJob(
-            printSettings.value.density,
-            printSettings.value.label_type,
-            printSettings.value.print_mode,
-            1
-        )
-
+        const startRes = await nMPrintSocket.value.startJob(3, 1, 1, 1)
         if (startRes.resultAck.errorCode !== 0) {
             throw new Error('开始打印任务失败')
         }
