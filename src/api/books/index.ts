@@ -47,7 +47,10 @@ export function bookList(params: object) {
   return request({
     url: "/api/v1/system/book/list",
     method: "get",
-    params
+    params,
+    headers:{
+      needLoading: true
+    }
   })
 }
 // 下架下架书籍

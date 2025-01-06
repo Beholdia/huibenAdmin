@@ -1,18 +1,8 @@
 <template>
   <div style="border: 1px solid #ccc;width:100%;">
-    <Toolbar
-      style="border-bottom: 1px solid #ccc"
-      :editor="editorRef"
-      :defaultConfig="toolbarConfig"
-      mode="simple"
-    />
-    <Editor
-      style="height: 500px; overflow-y: hidden"
-      v-model="valueHtml"
-      :defaultConfig="editorConfig"
-      mode="simple"
-      @onCreated="handleCreated"
-    />
+    <Toolbar style="border-bottom: 1px solid #ccc" :editor="editorRef" :defaultConfig="toolbarConfig" mode="simple" />
+    <Editor style="height: 500px; overflow-y: hidden" v-model="valueHtml" :defaultConfig="editorConfig" mode="simple"
+      @onCreated="handleCreated" />
   </div>
 </template>
 
@@ -33,7 +23,7 @@ const props = defineProps({
 });
 
 const params = ref({
-  max_size: 50*1024*1024,
+  max_size: 50 * 1024 * 1024,
   allowed_types: JSON.stringify(['jpg', 'jpeg', 'png'])
 });
 
@@ -43,9 +33,15 @@ const editorRef = shallowRef();
 // 内容 HTML
 const valueHtml = ref('');
 
-watch(() => props.content, (newVal) => {
-  valueHtml.value = newVal;
-});
+// watch(() => props.content, (newVal) => {
+//   console.log('~~~~~~~~~~~', newVal);
+//   valueHtml.value = newVal;
+// });
+onUpdated(() => {
+  if (props.content) {
+    valueHtml.value = props.content;
+  }
+})
 
 const toolbarConfig = {};
 const editorConfig = ref({
@@ -62,7 +58,7 @@ const editorConfig = ref({
       allowedFileTypes: ['image/*'],
       headers: {
       },
-      meta:params.value,
+      meta: params.value,
       // 跨域是否传递 cookie ，默认为 false
       withCredentials: false,
       // 超时时间，默认为 10 秒
