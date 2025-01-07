@@ -10,8 +10,11 @@
         el-table-column(label="昵称" prop="nickname")
         el-table-column(label="用户ID" prop="biz_user_id")
         el-table-column(label="手机号" prop="phone")
+        el-table-column(label="用户余额" )
+            template(#default="{row}")
+                p {{ row.money/100 }}
         el-table-column(label="被邀请用户ID" prop="invitees" )
-        el-table-column(label="注册时间" prop="created_at")
+        el-table-column(label="注册时间" prop="reg_time")
         el-table-column(label="会员等级" )  
             template(#default="{row}")
                 span {{row.main_title}}{{row.sub_title}}
@@ -20,6 +23,8 @@
                 span(v-if="row.type == 'expired_day'") 会员天数
                 span(v-if="row.type == 'cash_back'") 返现金额
         el-table-column(label="返现金额" prop="vip_increased_money")
+            template(#default="{row}")
+                p {{ row.vip_increased_money/100 }}
         el-table-column(label="增长天数" prop="vip_increased_day")
     el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
 </template>
