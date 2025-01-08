@@ -53,7 +53,7 @@
                         p {{book.book_info?.name}}
                         p {{book.book_info?.collection_no}}
     el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
-    PrinterDrawer(v-model="showPrinterDrawer" @printer-ready="onPrinterReady " )
+    PrinterDrawer(v-model="showPrinterDrawer" @printer-ready="onPrinterReady" )
 
 </template>
 
@@ -64,8 +64,6 @@ import Widthdrawal from './Widthdrawal.vue'
 import { onMounted } from 'vue'
 import BaseFilter from '/@/components/form/BaseFilter.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import Socket from '../../utils/Socket'
-import NMPrintSocket from '../../utils/Print'
 import PrinterDrawer from '/@/components/PrinterDrawer.vue'
 
 const status = ref('wait_to_delivery')
@@ -179,19 +177,6 @@ watch(() => [status.value, myInput.value], () => {
 
 onMounted(async () => {
     await getList();
-    const socketData = new Socket("ws://127.0.0.1:37989")
-    // socketData.open(
-    //     (openBool) => {
-    //         console.log(11111111111111,openBool,)
-    //         printSocketOpen.value = openBool
-    //         if (openBool) {
-    //             initPrinter()
-    //         }
-    //     },
-    //     (msg) => {
-    //         console.log('打印机消息:', msg)
-    //     }
-    // )
 })
 
 const showPrinterDrawer = ref(false)
@@ -232,8 +217,8 @@ const printLabel = async (item) => {
 
         // 初始化画板(50mm x 30mm)
         await nMPrintSocket.value.InitDrawingBoard({
-            width: 50,
-            height: 30,
+            width: 40,
+            height: 60,
             rotate: 0
         })
 

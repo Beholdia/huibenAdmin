@@ -47,23 +47,23 @@
         <el-form :model="printSettings" label-width="120px">
           <el-form-item label="打印浓度">
             <el-select v-model="printSettings.density">
-              <el-option v-for="item in 15" :key="item" :label="item" :value="item"/>
+              <el-option v-for="item in 15" :key="item" :label="item" :value="item" />
             </el-select>
           </el-form-item>
           <el-form-item label="纸张类型">
             <el-select v-model="printSettings.label_type">
-              <el-option :value="1" label="间隙纸"/>
-              <el-option :value="2" label="黑标纸"/>
-              <el-option :value="3" label="连续纸"/>
-              <el-option :value="4" label="过孔纸"/>
-              <el-option :value="5" label="透明纸"/>
-              <el-option :value="6" label="标牌"/>
+              <el-option :value="1" label="间隙纸" />
+              <el-option :value="2" label="黑标纸" />
+              <el-option :value="3" label="连续纸" />
+              <el-option :value="4" label="过孔纸" />
+              <el-option :value="5" label="透明纸" />
+              <el-option :value="6" label="标牌" />
             </el-select>
           </el-form-item>
           <el-form-item label="打印模式">
             <el-select v-model="printSettings.print_mode">
-              <el-option :value="1" label="热敏模式"/>
-              <el-option :value="2" label="热转印模式"/>
+              <el-option :value="1" label="热敏模式" />
+              <el-option :value="2" label="热转印模式" />
             </el-select>
           </el-form-item>
         </el-form>
@@ -105,11 +105,11 @@ const printSettings = ref({
 // 初始化打印服务
 onMounted(() => {
   const socketData = new Socket("ws://127.0.0.1:37989")
-  
+
   socketData.open(
     (openBool) => {
       printSocketOpen.value = openBool
-      if(!openBool) {
+      if (!openBool) {
         ElMessage.warning('打印服务未连接')
       }
     },
@@ -119,15 +119,15 @@ onMounted(() => {
   )
 
   nMPrintSocket.value = new NMPrintSocket(socketData);
-  setTimeout(async()=>{
-   try {
+  setTimeout(async () => {
+    try {
       await getPrinters();
       await selectOnLineUsbPrinter();
       await init();
-   } catch (error) {
-    console.log(error)
-   }
-  },1000)
+    } catch (error) {
+      console.log(error)
+    }
+  }, 1000)
 })
 
 // 获取打印机列表
@@ -140,7 +140,7 @@ const getPrinters = async () => {
     if (res.resultAck.errorCode === 0) {
       const allPrinters = JSON.parse(res.resultAck.info)
       usbPrinters.value = { ...allPrinters }
-      usbSelectPrinter.value = Object.keys(usbPrinters.value)[1]
+      usbSelectPrinter.value = Object.keys(usbPrinters.value)[0]
     } else {
       ElMessage.warning("没有在线的打印机")
     }
@@ -212,7 +212,9 @@ const init = async () => {
   border-radius: 4px;
 }
 
-.select_usb, .connect_usb, .init {
+.select_usb,
+.connect_usb,
+.init {
   margin: 20px 0;
 }
-</style> 
+</style>

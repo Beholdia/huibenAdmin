@@ -5,6 +5,7 @@
       template(#button)
         el-button(type="primary", @click="changeSaleStatusAll('on_sale')") 批量上架
         el-button(type="primary", @click="changeSaleStatusAll('off_sale')") 批量下架
+      template(#button2)
         el-button(type="primary", @click="startBatchPrintJobTest()" :disabled="!printerReady") 批量打印
         el-button(type="primary", @click="openPrinterDrawer") 打印设置
   .wrapper
@@ -43,7 +44,7 @@
     el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
     NewBookDrawer(v-model:show="showBookDrawer"  @onClose="onCloseBookDrawer" :detail="currentDetail")
   BorrowList(:id="borrowId" v-model:show="borrowRecordVisible" )
-  PrinterDrawer(v-model:show="showPrinterDrawer" @onClose="onClosePrinterDrawer" :nMPrintSocket="nMPrintSocket" :printerReady="printerReady" :printSettings="printSettings")
+  PrinterDrawer(v-model="showPrinterDrawer" @printer-ready="onPrinterReady")
 </template>
 
 <script setup>
@@ -162,7 +163,7 @@ const changeSaleStatus = async (row) => {
 const multipleSelection = ref([]);
 const handleSelectionChange = (val) => {
   multipleSelection.value = val;
-  console.log(multipleSelection.value);
+  // console.log(multipleSelection.value);
 };
 const changeSaleStatusAll = async (status) => {
   try {
@@ -241,31 +242,118 @@ const startBatchPrintJobTest = async () => {
 
     // 逐个打印选中的书籍
     for (let book of multipleSelection.value) {
-      // 初始化画板(40mm x 20mm)
+      // 初始化画板
       await nMPrintSocket.value.InitDrawingBoard({
         width: 40,
-        height: 20,
-        rotate: 0
+        height: 30,
+        rotate: 0,
+        path: "ZT001.ttf",
+        verticalShift: 0,
+        HorizontalShift: 0,
       })
 
-      // 打印书名
       await nMPrintSocket.value.DrawLableText({
-        x: 2,
-        y: 2,
-        width: 36,
-        height: 6,
-        value: book.name,
-        fontSize: 3,
+        x: 0,
+        y: 0.9,
+        width: 40,
+        height: 2.5,
+        value: '嘉兴棒棒糖绘本乐园',
+        fontSize: 1.9,
+        lineMode: 6
+      })
+      await nMPrintSocket.value.DrawLableText({
+        x: 3,
+        y: 3.5,
+        width: 13,
+        height: 4.2,
+        value: '馆藏ID',
+        fontSize: 3.2,
+        lineMode: 6
+      })
+      await nMPrintSocket.value.DrawLableText({
+        x: 3,
+        y: 3.5,
+        width: 13,
+        height: 4.2,
+        value: '馆藏ID',
+        fontSize: 3.2,
         lineMode: 6
       })
 
-      // 打印馆藏号
+      // 馆藏id
       await nMPrintSocket.value.DrawLableText({
-        x: 2,
-        y: 10,
-        width: 36,
-        height: 6,
-        value: `馆藏号: ${book.collection_no}`,
+        x: 16,
+        y: 3.8,
+        width: 30,
+        height: 4.2,
+        value: book.collection_no,
+        fontSize: 3.2,
+        lineMode: 6
+      })
+      await nMPrintSocket.value.DrawLableText({
+        x: 3,
+        y: 8.5,
+        width: 9,
+        height: 3.5,
+        value: '书名',
+        fontSize: 2.6,
+        lineMode: 6
+      })
+
+      // 书名
+      await nMPrintSocket.value.DrawLableText({
+        x: 10.4,
+        y: 8.9,
+        width: 30,
+        height: 3.1,
+        value: book.name,
+        fontSize: 2.3,
+        lineMode: 6
+      })
+
+      await nMPrintSocket.value.DrawLableText({
+        x: 3,
+        y: 12.4,
+        width: 8.6,
+        height: 3.5,
+        value: '书仓',
+        fontSize: 2.6,
+        lineMode: 6
+      })
+      await nMPrintSocket.value.DrawLableText({
+        x: 10.4,
+        y: 12.4,
+        width: 30,
+        height: 3.5,
+        value: '嘉兴凯米',
+        fontSize: 2.6,
+        lineMode: 6
+      })
+      await nMPrintSocket.value.DrawLableText({
+        x: 3,
+        y: 16.1,
+        width: 7.8,
+        height: 3.5,
+        value: '年龄',
+        fontSize: 2.6,
+        lineMode: 6
+      })
+      await nMPrintSocket.value.DrawLableText({
+        x: 10.4,
+        y: 16.4,
+        width: 30,
+        height: 3.1,
+        value: '3-4岁',
+        fontSize: 2.3,
+        lineMode: 6
+      })
+
+      await nMPrintSocket.value.DrawLableQrCode({
+        x: 7.6,
+        y: 21.9,
+        width: 25,
+        height: 8,
+        value: book.collection_no,
         fontSize: 3,
         lineMode: 6
       })
