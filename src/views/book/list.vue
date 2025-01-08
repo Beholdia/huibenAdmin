@@ -5,6 +5,8 @@
       template(#button)
         el-button(type="primary", @click="changeSaleStatusAll('on_sale')") 批量上架
         el-button(type="primary", @click="changeSaleStatusAll('off_sale')") 批量下架
+        el-button(type="primary", @click="startBatchPrintJobTest()" :disabled="!printerReady") 批量打印
+        el-button(type="primary", @click="openPrinterDrawer") 打印设置
   .wrapper
     .huibenStatistic 共有书籍{{statistics?.count_total}}本，借出{{statistics?.count_borrowed}}本，可借{{statistics?.count_available}}本
     el-table(:data="list" style="width: 100%",@selection-change="handleSelectionChange")
@@ -12,7 +14,6 @@
       el-table-column(prop="id" label="序号" width="100")
       el-table-column( label="封面" width="100")
         template(#default="{row}")
-          //- img.cover(:src="url+row.pic")
           img.cover(:src="row.pic" v-if="row.pic")
           p(v-else) 暂无封面
       el-table-column(prop="name" label="书名" )
@@ -42,6 +43,7 @@
     el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
     NewBookDrawer(v-model:show="showBookDrawer"  @onClose="onCloseBookDrawer" :detail="currentDetail")
   BorrowList(:id="borrowId" v-model:show="borrowRecordVisible" )
+  PrinterDrawer(v-model:show="showPrinterDrawer" @onClose="onClosePrinterDrawer" :nMPrintSocket="nMPrintSocket" :printerReady="printerReady" :printSettings="printSettings")
 </template>
 
 <script setup>
@@ -51,8 +53,8 @@ import BaseFilter from '/@/components/form/BaseFilter.vue'
 import { ElMessage, ElMessageBox } from 'element-plus';
 import NewBookDrawer from './component/newBookDrawer.vue';
 import BorrowList from './component/BorrowList.vue';
+import PrinterDrawer from '/@/components/PrinterDrawer.vue'
 
-const url = ref('');
 const form = ref({
   keyword: null,
 });
@@ -71,10 +73,6 @@ const showBorrowRecord = (row) => {
   borrowId.value = row.id;
   borrowRecordVisible.value = true
 }
-// const onCloseBorrowRecord = () => {
-//   console.log(22)
-//   borrowRecordVisible.value = false
-// }
 // 新书入库的抽屉
 const showBookDrawer = ref(false)
 const currentDetail = ref(null);
@@ -119,8 +117,6 @@ const filterList = [{
   ]
 }
 ];
-
-const filter = ref(null);
 
 const onFilter = () => {
   page.value = 1;
@@ -199,6 +195,99 @@ const getList = async (val) => {
   statistics.value = res.data.statistics;
 };
 
+// 添加打印相关的响应式变量
+const showPrinterDrawer = ref(false)
+const nMPrintSocket = ref(null)
+const printerReady = ref(false)
+const printSettings = ref(null)
+
+// 打开打印机设置抽屉
+const openPrinterDrawer = () => {
+  showPrinterDrawer.value = true
+}
+
+// 打印机就绪回调
+const onPrinterReady = ({ nMPrintSocket: printer, settings }) => {
+  nMPrintSocket.value = printer
+  printSettings.value = settings
+  printerReady.value = true
+  ElMessage.success('打印机已就绪')
+}
+
+// 实现批量打印功能
+const startBatchPrintJobTest = async () => {
+  if (!multipleSelection.value.length) {
+    ElMessage.warning('请选择要打印的书籍')
+    return
+  }
+
+  if (!printerReady.value) {
+    ElMessage.error('请先完成打印机设置')
+    return
+  }
+
+  try {
+    // 开始打印任务
+    const startRes = await nMPrintSocket.value.startJob(
+      printSettings.value.density,
+      printSettings.value.label_type,
+      printSettings.value.print_mode,
+      multipleSelection.value.length
+    )
+
+    if (startRes.resultAck.errorCode !== 0) {
+      throw new Error('开始打印任务失败')
+    }
+
+    // 逐个打印选中的书籍
+    for (let book of multipleSelection.value) {
+      // 初始化画板(40mm x 20mm)
+      await nMPrintSocket.value.InitDrawingBoard({
+        width: 40,
+        height: 20,
+        rotate: 0
+      })
+
+      // 打印书名
+      await nMPrintSocket.value.DrawLableText({
+        x: 2,
+        y: 2,
+        width: 36,
+        height: 6,
+        value: book.name,
+        fontSize: 3,
+        lineMode: 6
+      })
+
+      // 打印馆藏号
+      await nMPrintSocket.value.DrawLableText({
+        x: 2,
+        y: 10,
+        width: 36,
+        height: 6,
+        value: `馆藏号: ${book.collection_no}`,
+        fontSize: 3,
+        lineMode: 6
+      })
+
+      // 提交打印
+      await nMPrintSocket.value.commitJob(null, JSON.stringify({
+        printerImageProcessingInfo: {
+          printQuantity: 1
+        }
+      }))
+    }
+
+    // 结束打印任务
+    await nMPrintSocket.value.endJob()
+    ElMessage.success('打印完成')
+
+  } catch (err) {
+    console.error('打印失败:', err)
+    ElMessage.error('打印失败')
+  }
+}
+
 // 关闭编辑
 const onCloseBookDrawer = async (refresh, id) => {
   if (refresh) {
@@ -208,7 +297,6 @@ const onCloseBookDrawer = async (refresh, id) => {
 
 onMounted(async () => {
   getList(page.value);
-  url.value = import.meta.env.VITE_API_URL;
 });
 </script>
 

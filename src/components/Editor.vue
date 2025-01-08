@@ -34,14 +34,19 @@ const editorRef = shallowRef();
 const valueHtml = ref('');
 
 // watch(() => props.content, (newVal) => {
-//   console.log('~~~~~~~~~~~', newVal);
 //   valueHtml.value = newVal;
 // });
-onUpdated(() => {
-  if (props.content) {
-    valueHtml.value = props.content;
-  }
-})
+watch(
+  () => props.content,
+  (newVal) => {
+    if (newVal) {
+      valueHtml.value = newVal;
+    } else {
+      valueHtml.value = '';
+    }
+  },
+  { immediate: true } // 立即执行一次
+);
 
 const toolbarConfig = {};
 const editorConfig = ref({

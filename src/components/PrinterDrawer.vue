@@ -118,7 +118,16 @@ onMounted(() => {
     }
   )
 
-  nMPrintSocket.value = new NMPrintSocket(socketData)
+  nMPrintSocket.value = new NMPrintSocket(socketData);
+  setTimeout(async()=>{
+   try {
+      await getPrinters();
+      await selectOnLineUsbPrinter();
+      await init();
+   } catch (error) {
+    console.log(error)
+   }
+  },1000)
 })
 
 // 获取打印机列表
@@ -131,7 +140,7 @@ const getPrinters = async () => {
     if (res.resultAck.errorCode === 0) {
       const allPrinters = JSON.parse(res.resultAck.info)
       usbPrinters.value = { ...allPrinters }
-      usbSelectPrinter.value = Object.keys(usbPrinters.value)[0]
+      usbSelectPrinter.value = Object.keys(usbPrinters.value)[1]
     } else {
       ElMessage.warning("没有在线的打印机")
     }
