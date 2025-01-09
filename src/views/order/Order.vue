@@ -217,23 +217,48 @@ const printLabel = async (item) => {
 
         // 初始化画板(50mm x 30mm)
         await nMPrintSocket.value.InitDrawingBoard({
-            width: 40,
-            height: 60,
+            width: 60,
+            height: 80,
             rotate: 0
         })
 
         // 构建打印数据
         const printElements = [
+            {
+                type: "text",
+                json: {
+                    x: 4.8,
+                    y: 3.0,
+                    width: 49,
+                    height: 4.2,
+                    value: '嘉兴棒棒糖绘本乐园-配送单',
+                    fontSize: 3.2,
+                    lineMode: 6,
+                    textAlignHorizonral: 1
+                }
+            },
             // 订单号
             {
                 type: "text",
                 json: {
-                    x: 2,
-                    y: 2,
-                    width: 46,
-                    height: 4,
-                    value: `订单号:${item.biz_books_order_no}`,
-                    fontSize: 2.5,
+                    x: 3.0,
+                    y: 8.9,
+                    width: 52.3,
+                    height: 3.5,
+                    value: `订单号`,
+                    fontSize: 2.6,
+                    lineMode: 6
+                }
+            },
+            {
+                type: "text",
+                json: {
+                    x: 3.3,
+                    y: 12.9,
+                    width: 52.2,
+                    height: 4.2,
+                    value: `${item.biz_books_order_no}`,
+                    fontSize: 3.2,
                     lineMode: 6
                 }
             },
@@ -241,12 +266,24 @@ const printLabel = async (item) => {
             {
                 type: "text",
                 json: {
-                    x: 2,
-                    y: 6,
-                    width: 46,
-                    height: 3,
-                    value: `创建时间:${item.created_at}`,
-                    fontSize: 2,
+                    x: 3.0,
+                    y: 18.6,
+                    width: 16.7,
+                    height: 3.5,
+                    value: `创建时间`,
+                    fontSize: 2.6,
+                    lineMode: 6
+                }
+            },
+            {
+                type: "text",
+                json: {
+                    x: 17,
+                    y: 18.6,
+                    width: 30,
+                    height: 3.5,
+                    value: `${item.created_at}`,
+                    fontSize: 2.6,
                     lineMode: 6
                 }
             },
@@ -254,12 +291,12 @@ const printLabel = async (item) => {
             {
                 type: "text",
                 json: {
-                    x: 2,
-                    y: 9,
-                    width: 46,
-                    height: 3,
-                    value: `${item.biz_user.nickname} ${item.biz_user.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}`,
-                    fontSize: 2,
+                    x: 3,
+                    y: 24.3,
+                    width: 35,
+                    height: 4.2,
+                    value: `${item.biz_user.nickname}  ${item.biz_user.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}`,
+                    fontSize: 3.2,
                     lineMode: 6
                 }
             },
@@ -267,33 +304,70 @@ const printLabel = async (item) => {
             {
                 type: "text",
                 json: {
-                    x: 2,
-                    y: 12,
-                    width: 46,
-                    height: 8,
+                    x: 3,
+                    y: 29.5,
+                    width: 52.7,
+                    height: 3.5,
                     value: `${item.biz_address_json.province.province_name}${item.biz_address_json.city.city_name}${item.biz_address_json.county.county_name}${item.biz_address_json.detaild_address}`,
-                    fontSize: 2,
+                    fontSize: 2.6,
                     lineMode: 6
                 }
-            }
+            },
+            {
+                type: "text",
+                json: {
+                    x: 10.6,
+                    y: 75.5,
+                    width: 42,
+                    height: 2.4,
+                    value: `请爱护书籍，有任何问题请联系棒棒糖微信客服`,
+                    fontSize: 1.8,
+                    lineMode: 6
+                }
+            },
+            {
+                type: 'barcode', // 条形码
+                json: {
+                    x: 17.5,
+                    y: 67,
+                    width: 25,
+                    height: 8,
+                    value: `${item.biz_books_order_no}`,
+                    fontSize: 3.2,
+                    textPosition: 0,
+                    codeType: 20
+                }
+            },
+            {
+                type: "line",
+                json: {
+                    x: 3,
+                    y: 35.8,
+                    height: 0.4,
+                    width: 54.1,
+                    rotate: 0,
+                    lineType: 1,
+                    // dashwidth: [1, 1],
+                },
+            },
         ]
 
         // 添加书籍信息
-        let y = 20
+        let y = 39
         item.goods.forEach(book => {
             printElements.push({
                 type: "text",
                 json: {
-                    x: 2,
+                    x: 3,
                     y,
-                    width: 46,
-                    height: 3,
+                    width: 45.2,
+                    height: 3.5,
                     value: `${book.book_info.name} (${book.book_info.collection_no})`,
-                    fontSize: 2,
+                    fontSize: 2.6,
                     lineMode: 6
                 }
             })
-            y += 3
+            y += 5
         })
 
         // 打印所有元素
@@ -303,6 +377,9 @@ const printLabel = async (item) => {
                     await nMPrintSocket.value.DrawLableText(element.json)
                     break
                 // 可以添加其他类型元素的处理
+                case "barcode":
+                    await nMPrintSocket.value.DrawLableBarcode(element.json)
+                    break
             }
         }
 

@@ -1000,7 +1000,7 @@ export const demoRoutes: Array<RouteRecordRaw> = [
 		component: () => import('/@/layout/routerView/parent.vue'),
 		redirect: '/book/new',
 		meta: {
-			title: '书籍信息管理',
+			title: '书籍管理',
 			isLink: '',
 			isHide: false,
 			isKeepAlive: true,
@@ -1050,6 +1050,62 @@ export const demoRoutes: Array<RouteRecordRaw> = [
 
 	},
 	{
+		path: '/order',
+		name: 'order',
+		component: () => import('/@/layout/routerView/parent.vue'),
+		redirect: '/order/pay',
+		meta: {
+			title: '订单管理',
+			isLink: '',
+			isHide: false,
+			isKeepAlive: true,
+			isAffix: false,
+			isIframe: false,
+			roles: ['admin', 'common'],
+			icon: 'iconfont icon-shouye',
+		},
+		children: [
+			{
+				path: '/order/order',
+				name: 'orderorder',
+				component: () => import('/@/views/order/Order.vue'),
+				meta: {
+					title: '借还订单',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					roles: ['admin'],
+					icon: 'iconfont icon-xitongshezhi',
+				},
+				children: [
+
+				],
+			},
+			{
+				path: '/order/pay',
+				name: 'orderpay',
+				component: () => import('/@/views/order/Pay.vue'),
+				meta: {
+					title: '会员支付订单',
+					isLink: '',
+					isHide: false,
+					isKeepAlive: true,
+					isAffix: false,
+					isIframe: false,
+					roles: ['admin'],
+					icon: 'iconfont icon-xitongshezhi',
+				},
+				children: [
+
+				],
+			},
+
+		],
+
+	},
+	{
 		path: '/user',
 		name: 'user',
 		component: () => import('/@/layout/routerView/parent.vue'),
@@ -1083,61 +1139,6 @@ export const demoRoutes: Array<RouteRecordRaw> = [
 
 				],
 			},
-		],
-
-	},
-	{
-		path: '/order',
-		name: 'order',
-		component: () => import('/@/layout/routerView/parent.vue'),
-		redirect: '/order/pay',
-		meta: {
-			title: '订单管理',
-			isLink: '',
-			isHide: false,
-			isKeepAlive: true,
-			isAffix: false,
-			isIframe: false,
-			roles: ['admin', 'common'],
-			icon: 'iconfont icon-shouye',
-		},
-		children: [
-			{
-				path: '/order/pay',
-				name: 'orderpay',
-				component: () => import('/@/views/order/Pay.vue'),
-				meta: {
-					title: '会员支付订单',
-					isLink: '',
-					isHide: false,
-					isKeepAlive: true,
-					isAffix: false,
-					isIframe: false,
-					roles: ['admin'],
-					icon: 'iconfont icon-xitongshezhi',
-				},
-				children: [
-
-				],
-			},
-			{
-				path: '/order/order',
-				name: 'orderorder',
-				component: () => import('/@/views/order/Order.vue'),
-				meta: {
-					title: '借还订单',
-					isLink: '',
-					isHide: false,
-					isKeepAlive: true,
-					isAffix: false,
-					isIframe: false,
-					roles: ['admin'],
-					icon: 'iconfont icon-xitongshezhi',
-				},
-				children: [
-
-				],
-			}
 		],
 
 	},

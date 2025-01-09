@@ -349,14 +349,13 @@ const startBatchPrintJobTest = async () => {
         lineMode: 6
       })
 
-      await nMPrintSocket.value.DrawLableQrCode({
+      await nMPrintSocket.value.DrawLableBarCode({
         x: 7.6,
         y: 21.9,
         width: 30,
         height: 8,
         value: book.collection_no,
         fontSize: 3,
-        lineMode: 6,
         textPosition: 0,
         codeType: 20,
       })
