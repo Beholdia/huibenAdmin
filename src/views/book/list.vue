@@ -259,7 +259,8 @@ const startBatchPrintJobTest = async () => {
         height: 2.5,
         value: '嘉兴棒棒糖绘本乐园',
         fontSize: 1.9,
-        lineMode: 6
+        lineMode: 6,
+        textAlignHorizonral: 1
       })
       await nMPrintSocket.value.DrawLableText({
         x: 3,
@@ -351,11 +352,13 @@ const startBatchPrintJobTest = async () => {
       await nMPrintSocket.value.DrawLableQrCode({
         x: 7.6,
         y: 21.9,
-        width: 25,
+        width: 30,
         height: 8,
         value: book.collection_no,
         fontSize: 3,
-        lineMode: 6
+        lineMode: 6,
+        textPosition: 0,
+        codeType: 20,
       })
 
       // 提交打印
