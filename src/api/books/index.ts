@@ -48,7 +48,7 @@ export function bookList(params: object) {
     url: "/api/v1/system/book/list",
     method: "get",
     params,
-    headers:{
+    headers: {
       needLoading: true
     }
   })
@@ -245,5 +245,12 @@ export function clear() {
   return request({
     url: "/api/v1/system/home/clear",
     method: "get",
+  })
+}
+export function printBook(params) {
+  return request({
+    url: "/api/v1/system/book/entity/print",
+    method: "get",
+    params: { book_entity_id: params },
   })
 }

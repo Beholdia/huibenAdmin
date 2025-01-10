@@ -49,12 +49,13 @@
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { bookList, changeSaleStatus as changeSaleStatusApi } from '/@/api/books/index.ts';
+import { bookList, changeSaleStatus as changeSaleStatusApi, printBook } from '/@/api/books/index.ts';
 import BaseFilter from '/@/components/form/BaseFilter.vue'
 import { ElMessage, ElMessageBox } from 'element-plus';
 import NewBookDrawer from './component/newBookDrawer.vue';
 import BorrowList from './component/BorrowList.vue';
 import PrinterDrawer from '/@/components/PrinterDrawer.vue'
+
 
 const form = ref({
   keyword: null,
@@ -330,6 +331,7 @@ const startBatchPrintJobTest = async () => {
         fontSize: 2.6,
         lineMode: 6
       })
+      const age = (await printBook(book.id)).data.age;
       await nMPrintSocket.value.DrawLableText({
         x: 3,
         y: 16.1,
@@ -344,7 +346,7 @@ const startBatchPrintJobTest = async () => {
         y: 16.4,
         width: 30,
         height: 3.1,
-        value: '3-4岁',
+        value: age,
         fontSize: 2.3,
         lineMode: 6
       })
@@ -386,7 +388,8 @@ const onCloseBookDrawer = async (refresh, id) => {
 }
 
 onMounted(async () => {
-  getList(page.value);
+  await getList(page.value);
+  // const age = (await printBook(749)).data.age;
 });
 </script>
 
