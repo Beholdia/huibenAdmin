@@ -9,7 +9,7 @@ el-drawer(:modelValue="show",:show-close="false" style="padding:20px" title="新
       el-input-number(v-model="form.price" placeholder="请输入价格")
     el-form-item(label="书库位置",)
       el-input(v-model="shukuweizhi" disabled)
-    el-form-item(label="状态",required)
+    el-form-item(label="状态",required,v-if="props.showSaleStatus")
       el-select(v-model="form.sale_status" placeholder="请选择状态")
         el-option(label="上架" value="on_sale")
         el-option(label="下架" value="off_sale")
@@ -40,6 +40,7 @@ const editorRef = ref(null);
 const show = defineModel('show', { type: Boolean });
 const props = defineProps({
   isbn_id: { type: Number },
+  showSaleStatus: { default: true },
   detail: Object,
   pic: String,
   title: String,

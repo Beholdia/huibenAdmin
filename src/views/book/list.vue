@@ -42,7 +42,7 @@
             el-button(type="primary" size="small" v-if="row.sale_status=== 'off_sale'" @click="changeSaleStatus(row)") 上架
             el-button(type="warning" size="small" v-else @click="changeSaleStatus(row)") 下架
     el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
-    NewBookDrawer(v-model:show="showBookDrawer"  @onClose="onCloseBookDrawer" :detail="currentDetail")
+    NewBookDrawer(v-model:show="showBookDrawer"  @onClose="onCloseBookDrawer" :detail="currentDetail" :showSaleStatus="false")
   BorrowList(:id="borrowId" v-model:show="borrowRecordVisible" )
   PrinterDrawer(v-model="showPrinterDrawer" @printer-ready="onPrinterReady")
 </template>
@@ -154,7 +154,7 @@ const changeSaleStatus = async (row) => {
       cancelButtonText: '取消',
       type: 'warning',
     })
-    await changeSaleStatusApi({ biz_books_entity_ids: [row.biz_books_id], sale_status: row.sale_status === 'on_sale' ? 'off_sale' : 'on_sale' });
+    await changeSaleStatusApi({ biz_books_entity_ids: [row.id], sale_status: row.sale_status === 'on_sale' ? 'off_sale' : 'on_sale' });
     ElMessage.success('操作成功');
     await getList(page.value);
   } catch (error) {
@@ -180,7 +180,7 @@ const changeSaleStatusAll = async (status) => {
       cancelButtonText: '取消',
       type: 'warning',
     })
-    await changeSaleStatusApi({ biz_books_ids: multipleSelection.value.map((item) => item.biz_books_id), sale_status: status });
+    await changeSaleStatusApi({ biz_books_entity_ids: multipleSelection.value.map((item) => item.id), sale_status: status });
     getList(page.value);
   } catch (error) {
     console.log(error);
