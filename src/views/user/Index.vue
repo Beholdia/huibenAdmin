@@ -6,7 +6,7 @@
     div(style="color:rgba(144,147,153)") 共有注册用户{{total_reg_user}}人，体验会员{{statistics?.experienceVip}}人，黄金会员{{statistics?.goldVip}}人，尊享会员{{statistics?.blackVip}}人
     el-table(:data="list" style="width: 100%",@selection-change="handleSelectionChange")
       //- el-table-column(type="selection" width="55")
-      el-table-column(prop="biz_user_id" label="序号")
+      el-table-column(prop="biz_user_id" label="序号" width="100")
       el-table-column( label="头像" width="100")
         template(#default="{row}")
           el-avatar.cover(:src="row.avatar" v-if="row.avatar")
