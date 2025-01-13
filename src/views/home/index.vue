@@ -19,23 +19,23 @@
 	.row()
 		.column()
 			.title 用户总量
-			.count {{ detail?.user_count }}
+			.count {{ detail?.total_user_count }}
 		.column()
 			.title 付费用户
 			.count {{ detail?.pay_user_count }}
 		.column()
 			.title 今日新增
-			.count {{ detail?.total_user_count }}
+			.count {{ detail?.user_count }}
 	.row()
 		.column()
 			.title 累计收入
-			.count {{ detail?.total_income }}
+			.count {{ detail?.total_income/100 }}
 		.column()
 			.title 近7日收入
-			.count {{ detail?.seven_day_income }}
+			.count {{ detail?.seven_day_income/100 }}
 		.column()
 			.title 今日收入
-			.count {{ detail?.today_income }}
+			.count {{ detail?.today_income/100 }}
 </template>
 
 <script setup>
