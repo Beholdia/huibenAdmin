@@ -3,7 +3,7 @@
 	el-button( type="info" class="refresh" plain @click="getList" style="border:none;position:absolute;right:100px;top:0px;") 刷新
 		el-icon
 			Refresh
-	el-button( type="info" class="clear" plain @click="clearData" style="border:none;position:absolute;right:0px;top:0px;") 清空
+	el-button( type="info" class="clear" plain @click="clearData" style="border:none;position:absolute;right:0px;top:0px;" v-if="showClear") 清空
 		//- el-icon
 			Refresh
 	.row()
@@ -51,7 +51,9 @@ const clearData = async () => {
 	const res = await clear()
 	await getList();
 }
+const showClear = ref(false);
 onMounted(async () => {
+	if (process.env.NODE_ENV === 'development') showClear.value = true;
 	await getList()
 })
 
