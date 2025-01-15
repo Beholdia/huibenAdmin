@@ -13,7 +13,7 @@
                 p {{detail.main_title}} {{detail.sub_title}}
                 p 手机号：{{detail.phone}}
             .bottom
-                p 共借阅：{{detail.total_borrow_times}}次，借阅：{{detail.total_borrow_count}}本，节省：{{detail.savings}}元
+                p 共借阅：{{detail.total_borrow_times}}次，借阅：{{detail.total_borrow_count}}本，节省：{{detail.savings/100}}元
     .list
         .title
             p 借阅书籍

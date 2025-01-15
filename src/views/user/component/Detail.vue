@@ -8,9 +8,9 @@ el-drawer(:modelValue="show",:show-close="false" style="padding:20px" title="用
           el-form-item(label="昵称")
             el-input(v-model="form.item.nickname" disabled)
           el-form-item(label="手机号")
-            el-input(v-model="form.item.mobile" disabled)
+            el-input(v-model="form.item.phone" disabled)
           el-form-item(label="小区")
-            el-input(v-model="form.item.community" disabled)
+            el-input(v-model="form.item.community")
           el-form-item(label="书箱装否")
             el-select(v-model="form.item.book_box")
               el-option(label="是" :value="1")
@@ -68,7 +68,8 @@ const setBox = async () => {
   await setUserBox(
     {
       "biz_user_id": props.id,
-      "book_box": form.value.item.book_box
+      "book_box": form.value.item.book_box,
+      "community": form.value.item.community
     }
   )
   ElMessage.success('修改成功');

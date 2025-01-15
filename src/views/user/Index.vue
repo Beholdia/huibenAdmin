@@ -9,8 +9,8 @@
       el-table-column(prop="biz_user_id" label="序号" width="100")
       el-table-column( label="头像" width="100")
         template(#default="{row}")
-          el-avatar.cover(:src="row.avatar" v-if="row.avatar")
-          el-avatar.cover(src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" v-else)
+          el-avatar.cover(:src="row.avatar" v-if="row.avatar" @click="goDetail(row.biz_user_id)")
+          el-avatar.cover(src="https://cube.elemecdn.com/3/7c/3ea6beec64369c2642b92c6726f1epng.png" v-else @click="goDetail(row.biz_user_id)")
       el-table-column(prop="nickname" label="昵称" width="200px")
         template(#default="{row}")
           div(@click="goDetail(row.biz_user_id)" style="cursor: pointer") {{ row.nickname }}
