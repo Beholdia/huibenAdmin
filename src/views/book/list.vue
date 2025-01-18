@@ -272,15 +272,6 @@ const startBatchPrintJobTest = async () => {
         fontSize: 3.2,
         lineMode: 6
       })
-      await nMPrintSocket.value.DrawLableText({
-        x: 3,
-        y: 3.5,
-        width: 13,
-        height: 4.2,
-        value: '馆藏ID',
-        fontSize: 3.2,
-        lineMode: 6
-      })
 
       // 馆藏id
       await nMPrintSocket.value.DrawLableText({

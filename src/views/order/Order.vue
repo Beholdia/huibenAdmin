@@ -378,7 +378,10 @@ const printLabel = async (item) => {
                     break
                 // 可以添加其他类型元素的处理
                 case "barcode":
-                    await nMPrintSocket.value.DrawLableBarcode(element.json)
+                    await nMPrintSocket.value.DrawLableBarCode(element.json)
+                    break
+                case "line":
+                    await nMPrintSocket.value.DrawLableLine(element.json)
                     break
             }
         }
