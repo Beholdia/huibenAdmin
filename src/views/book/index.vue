@@ -185,7 +185,7 @@ const formFields = ref([
   { label: "CIP核准号", key: "cip" },
   { label: "ISBN号", key: "isbn" },
   { label: "正书名", key: "title" },
-  { label: "系列名", key: "series" },
+  { label: "系列名", key: "series",type:"remote" },
   { label: "封面", key: "pic", type: "uploader", width: "calc(90% + 32px)", },
 ]);
 

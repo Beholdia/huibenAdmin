@@ -50,6 +50,7 @@
     "vue-ueditor-wrap": "^3.0.8"
   },
   "devDependencies": {
+    "province-city-china": "^8.5.7",
     "@types/node": "^20.11.28",
     "@types/nprogress": "^0.2.3",
     "@types/sortablejs": "^1.15.8",

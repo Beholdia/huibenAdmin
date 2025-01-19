@@ -3,7 +3,8 @@ el-form(:inline="true" label-width="100px" label-position="left" class="currentF
 :rules="rules")
   el-form-item(v-for="item,index  in props.formList", :label="item.label"  :style="{width:item.width||'45%'}" :prop="item.key"  )
     el-input( v-model.trim = "filter[ item.key ] ", v-if="item.type === 'input'||!item.type",:placeholder="`请输入${item.label}`", clearable)
-    //- el-check-tag(checked v-if="item.type === 'tag'" v-for="i in 5") checked
+    el-select(v-model.trim="filter[item.key]"  filterable remote reserve-keyword :remote-method="remoteSeries" :loading="loading" v-if="item.type == 'remote'")
+      el-option(v-for="item, in seriesOptions" :key="item" :label="item" :value="item")
     el-check-tag(v-if="item.type === 'tag'" v-for="subItem in item.options" :checked="subItem.checked" 
     @change="onChangeTag(subItem)" ) {{ subItem[item.props.label] }}
     el-select(v-model.trim="filter[ item.key ]" :placeholder="`请选择${item.label}`",clearable,v-if="item.type === 'select'" :multiple="item.multiple")
@@ -25,8 +26,10 @@ el-form(:inline="true" label-width="100px" label-position="left" class="currentF
   </template>
 
 <script setup>
-import { reactive, ref } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import Uploader from '/@/components/Uploader.vue';
+import { searchSeries } from '/@/api/books/index';
+
 const imageUploader = ref(null);
 
 const props = defineProps({
@@ -37,15 +40,28 @@ const props = defineProps({
 
 const filter = reactive({});
 const status = ref(false);
+const seriesOptions = ref([]);
+const loading = ref(false);
 
 const emit = defineEmits(['onSubmit', 'onAdd', 'onDelete']);
+
+
+const remoteSeries = async (query) => {
+  if (query) {
+    loading.value = true
+    seriesOptions.value = (await searchSeries({ keyword: query })).data.series;
+    if (seriesOptions.value.length == 0) seriesOptions.value = [query]
+    loading.value = false
+  } else {
+    seriesOptions.value = []
+  }
+}
 
 const rules = reactive({
   isbn: { required: true, message: '请输入ISBN', trigger: 'blur' },
   title: { required: true, message: '请输入正书名', trigger: 'blur' },
   isbn_language_cate_id: { required: true, message: '请选择语言分类', trigger: 'blur' }
 });
-// const ruleForm = reactive({ isbn: '' });
 const ruleFormRef = ref(null);
 const onChangeTag = (item) => {
   item.checked = item.checked ? false : true;
@@ -58,12 +74,16 @@ const submitForm = async (formEl) => {
   if (!formEl) return
   await formEl.validate((valid, fields) => {
     if (valid) {
-      emit('onSubmit', filter,imageUploader?.value?.[0]?.fileList?.[0]?.url);
+      emit('onSubmit', filter, imageUploader?.value?.[0]?.fileList?.[0]?.url);
     } else {
       console.log('error submit!', fields)
     }
   })
 }
+onMounted(() => {
+
+})
+
 defineExpose({
   filter,
   onSubmit,

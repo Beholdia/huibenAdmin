@@ -58,3 +58,11 @@ export function confirmPack(params: object) {
     data: params,
   });
 }
+// 修改地址
+export function editAddress(params: object) {
+  return request({
+    url: '/api/v1/system/book/order/address/edit',
+    method: 'post',
+    data: params,
+  });
+}

@@ -254,3 +254,11 @@ export function printBook(params) {
     params: { book_entity_id: params },
   })
 }
+// 远程关键字搜索洗礼堂
+export function searchSeries(params){
+  return request({
+    url: "/api/v1/system/book/series/search",
+    method: "get",
+    params,
+  })
+}

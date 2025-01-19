@@ -34,16 +34,21 @@
                     template(v-if="item.user_order_status != 'canceled'")
                         el-button(type="primary" size="small" v-if="!item.packed_at" @click="packed(item)") 完成打包
                         el-button(color="gray" size="small" v-if="item.packed_at") 已打包
-                        
+
                         el-button(color="black" size="small" @click="printLabel(item)" :disabled="!printerReady") 打印标签
                     el-button(type="info" size="small" v-if="item.user_order_status == 'canceled'") 订单已取消
             .content
                 .info
-                    el-avatar(:src="item.biz_user.avatar" :preview-src-list = " [ item.biz_user.avatar ] " :preview-teleported="true" style="width: 50px; height: 50px")
+                    .avatar(style="display: flex;flex-direction:column;align-items: center;gap:10px")
+                        el-avatar(:src="item.biz_user.avatar" :preview-src-list = " [ item.biz_user.avatar ] " :preview-teleported="true" style="width: 50px; height: 50px")
+                        | {{ item.biz_user?.biz_vip_detail?.main_title +'-'+item.biz_user?.biz_vip_detail?.sub_title}}
                     .name
-                        p {{item.biz_user.nickname}}
-                        p {{item.biz_user.phone}}
+                        //- p {{item.biz_user.nickname}}
+                        //- p {{item.biz_user.phone}}
+                        p {{item.biz_address_json.name}}
+                        p {{item.biz_address_json.phone}}
                         p {{item.biz_address_json.province.province_name}}{{item.biz_address_json.city.city_name}}{{item.biz_address_json.county.county_name}}{{item.biz_address_json.detaild_address}}
+                        el-button(size="small" @click="editAddress(item)") 编辑地址
                 .books
                     .books_item(v-for="book,index in item.goods" :key="index")
                         .cover()
@@ -54,6 +59,7 @@
                         p {{book.book_info?.collection_no}}
     el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
     PrinterDrawer(v-model="showPrinterDrawer" @printer-ready="onPrinterReady" )
+    EditAddress(v-model:show= "showAddress" :detail="address"  :id="orderId" @onClose="onCloseEditAddress")
 
 </template>
 
@@ -65,6 +71,7 @@ import { onMounted } from 'vue'
 import BaseFilter from '/@/components/form/BaseFilter.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import PrinterDrawer from '/@/components/PrinterDrawer.vue'
+import EditAddress from './component/EditAddress.vue'
 
 const status = ref('wait_to_delivery')
 const tabs = [
@@ -178,6 +185,23 @@ watch(() => [status.value, myInput.value], () => {
 onMounted(async () => {
     await getList();
 })
+
+const address = ref({})
+const orderId = ref(0);
+const showAddress = ref(false);
+// 修改地址
+const editAddress = (item) => {
+    address.value = item.biz_address_json;
+    orderId.value = item.biz_books_order_id;
+    if(!orderId.value) return ;
+    showAddress.value = true;
+}
+const onCloseEditAddress = async(refresh)=>{
+    address.value = {};
+    orderId.value =0;
+    if(refresh) await getList()
+}
+
 
 const showPrinterDrawer = ref(false)
 

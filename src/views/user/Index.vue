@@ -72,6 +72,11 @@ const filterList = ref([
     options: [],
     props: { label: 'label', value: 'value' }
   },
+  {
+    label: '关键词',
+    model: 'keyword',
+    type: 'input',
+  },
 ]);
 
 const filter = ref(null);

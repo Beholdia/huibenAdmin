@@ -76,7 +76,6 @@ const search = async () => {
 // });
 
 watch(() => props.biz_user_id, async () => {
-    console.log('1111q', props.biz_user_id)
     if (props.biz_user_id) {
         clear();
         biz_user_id.value = props.biz_user_id;
