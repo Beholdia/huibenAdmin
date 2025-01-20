@@ -414,16 +414,25 @@ const printLabel = async (item) => {
         }
 
         // 提交打印
-        await nMPrintSocket.value.commitJob(null, JSON.stringify({
+        const commitRes = await nMPrintSocket.value.commitJob(null, JSON.stringify({
             printerImageProcessingInfo: {
                 printQuantity: 1
             }
         }))
 
-        // 结束打印任务
-        await nMPrintSocket.value.endJob()
-
-        ElMessage.success('打印成功')
+        // 处理返回的页码
+        if (commitRes.resultAck.printQuantity > 0) {
+            console.log('打印页码:', commitRes.resultAck.onPrintPageCompleted);
+            // 结束打印任务
+            const endRes = await nMPrintSocket.value.endJob();
+            if (endRes.resultAck.errorCode === 0) {
+                ElMessage.success('打印成功');
+            } else {
+                ElMessage.error('结束打印任务失败');
+            }
+        } else {
+            ElMessage.error('打印失败，未返回页码');
+        }
     } catch (err) {
         console.error('打印失败:', err)
         ElMessage.error('打印失败')

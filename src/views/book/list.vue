@@ -23,8 +23,8 @@
       el-table-column(prop="collection_no" label="馆藏书号")
       el-table-column(label="书架号")
         template(#default="{row}")
-          div(style="cursor:pointer")
-            p(v-if="row.biz_bookshelf_id") {{shelfs.find(item=>item?.biz_bookshelf_id==row.biz_bookshelf_id)}}
+          div(style="cursor:pointer" @click="setShelfs(item.id)")
+            p(v-if="row.biz_bookshelf_id") {{shelfs.find(item=>item?.biz_bookshelf_id==row.biz_bookshelf_id).name}}
             p(v-else) 暂无书架
       el-table-column( label="借阅记录" width="100")
         template(#default="{row}")
@@ -213,9 +213,11 @@ const getList = async (val) => {
 
 const showShelfVisible = ref(false);
 const shelfId = ref(null);
-const setShelfs = async (status) => {
+const bookId = ref(null)
+const setShelfs = async (id) => {
   try {
-    if (!multipleSelection.value.length) {
+    if (id) bookId.value = id;
+    if (!multipleSelection.value.length && !id) {
       ElMessage({
         message: '请选择书籍',
         type: 'warning',
@@ -230,7 +232,11 @@ const setShelfs = async (status) => {
   }
 }
 const onSetShelf = async () => {
-  await setShelf({ book_entity_ids: multipleSelection.value.map((item) => item.id), biz_bookshelf_id: status });
+  if (!bookId.value) { await setShelf({ book_entity_ids: multipleSelection.value.map((item) => item.id), biz_bookshelf_id: shelfId.value }); } else {
+    await setShelf({ book_entity_ids: [bookId.value], biz_bookshelf_id: shelfId.value });
+  }
+  showShelfVisible.value = false;
+  bookId.value = null;
   await getList(page.value);
   ElMessage.success('操作成功');
 }
