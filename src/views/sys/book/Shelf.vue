@@ -18,6 +18,7 @@
       template(#default="{row}")
         //- el-button(type="primary" size="small" @click="editDict(row)") 编辑
         el-button(type="danger" size="small" @click="deleteDict(row)") 删除
+  el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
   EditDicDetail(v-model:show="editDictVisible",@onClose="closeEditDict ",:id="currentDictId")
 </template>
 
@@ -29,37 +30,9 @@ import EditDicDetail from './component/EditDicDetailDialog.vue';
 import Tags from './component/Tags.vue';
 
 const editDictVisible = ref(false);
-const type = ref("shelf");// 默认为年龄分类
-const types = ref([{
-  label: "年龄分类",
-  value: "isbn_age_cate"
-},
-{
-  label: "主题标签",
-  value: "isbn_theme_tag"
-},
-{
-  label: "特色标签",
-  value: "isbn_feature_tag"
-}, {
-  label: "系列分类",
-  value: "isbn_series_cate"
-}, {
-  label: "特色人物",
-  value: "isbn_featured_character"
-}, {
-  label: "知名品牌",
-  value: "isbn_wellknow_brand"
-}, {
-  label: "书籍仓库",
-  value: "book_warehouse"
-},
-{
-  label: "书架号",
-  value: "book_shelf",
-  route: 'shelf'
-}
-]);
+
+const page = ref(1);
+const total = ref(0);
 const list = ref([
 ]);
 const currentDictId = ref(0);
@@ -166,9 +139,11 @@ const changeCategory = (val) => {
 
 }
 
-const getList = async () => {
-  const res = await bookShelfList();
+const getList = async (pageNum) => {
+  if (pageNum) page.value = pageNum;
+  const res = await bookShelfList({ page: page.value, limit: 10 });
   list.value = res?.data?.items || [];
+  total.value = res?.data?.total || 0;
 }
 
 onMounted(async () => {

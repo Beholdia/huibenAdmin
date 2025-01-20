@@ -1280,21 +1280,21 @@ export const demoRoutes: Array<RouteRecordRaw> = [
 					// 		icon: 'iconfont icon-shouye',
 					// 	},
 					// },
-					// {
-					// 	path: '/sys/book/shelf',
-					// 	name: 'sysbookshelf',
-					// 	component: () => import('/@/views/sys/book/Shelf.vue'),
-					// 	meta: {
-					// 		title: '书架号',
-					// 		isLink: '',
-					// 		isHide: false,
-					// 		isKeepAlive: true,
-					// 		isAffix: false,
-					// 		isIframe: false,
-					// 		roles: ['admin', 'common'],
-					// 		icon: 'iconfont icon-shouye',
-					// 	},
-					// },
+					{
+						path: '/sys/book/shelf',
+						name: 'sysbookshelf',
+						component: () => import('/@/views/sys/book/Shelf.vue'),
+						meta: {
+							title: '书架号',
+							isLink: '',
+							isHide: false,
+							isKeepAlive: true,
+							isAffix: false,
+							isIframe: false,
+							roles: ['admin', 'common'],
+							icon: 'iconfont icon-shouye',
+						},
+					},
 				]
 			},
 			{

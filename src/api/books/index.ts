@@ -65,10 +65,11 @@ export function changeSaleStatus(params: object) {
   })
 }
 // 书架字典列表
-export function bookShelfList() {
+export function bookShelfList(params) {
   return request({
     url: "/api/v1/system/book/shelf/list",
     method: "get",
+    params
   })
 }
 //普通字典列表
@@ -165,15 +166,22 @@ export function deleteBookShelf(params: string) {
     params: { biz_bookshelf_id: params },
   })
 }
-// 添加书架号
+// // 添加书架号
+// export function addBookShelf(params: object) {
+//   return request({
+//     url: "/api/v1/system/book/shelf/add",
+//     method: "post",
+//     data: params,
+//   })
+// }
+// 添加书架号新的
 export function addBookShelf(params: object) {
   return request({
-    url: "/api/v1/system/book/shelf/add",
+    url: "/api/v1/system/book/shelf/store",
     method: "post",
     data: params,
   })
 }
-
 // 获取字典选择框列表
 export function optionSelect() {
   return request({
@@ -255,10 +263,26 @@ export function printBook(params) {
   })
 }
 // 远程关键字搜索洗礼堂
-export function searchSeries(params){
+export function searchSeries(params) {
   return request({
     url: "/api/v1/system/book/series/search",
     method: "get",
     params,
+  })
+}
+
+// 设置书架
+export function setShelf(params) {
+  return request({
+    url: "/api/v1/system/book/bookshelf/set",
+    method: "post",
+    data: params,
+  })
+}
+// 书架选项
+export function shelfOption() {
+  return request({
+    url: "/api/v1/system/book/shelf/options/list",
+    method: "get",
   })
 }

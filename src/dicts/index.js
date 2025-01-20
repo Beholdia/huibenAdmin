@@ -36,11 +36,11 @@ export const sysBookTags = [
   //   value: "book_warehouse",
   //   route: 'warehouse'
   // },
-  // {
-  //   label: "书架号",
-  //   value: 'shelf',
-  //   route: 'shelf'
-  // }
+  {
+    label: "书架号",
+    value: 'shelf',
+    route: 'shelf'
+  }
 ]
 
 export const sysXcxTags = [{

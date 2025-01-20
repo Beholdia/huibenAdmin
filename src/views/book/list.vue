@@ -8,6 +8,7 @@
       template(#button2)
         el-button(type="primary", @click="startBatchPrintJobTest()" :disabled="!printerReady") 批量打印
         el-button(type="primary", @click="openPrinterDrawer") 打印设置
+        el-button(type="primary", @click="setShelfs") 书架
   .wrapper
     .huibenStatistic 共有书籍{{statistics?.count_total}}本，借出{{statistics?.count_borrowed}}本，可借{{statistics?.count_available}}本
     el-table(:data="list" style="width: 100%",@selection-change="handleSelectionChange")
@@ -20,7 +21,11 @@
       el-table-column(prop="name" label="书名" )
       el-table-column(prop="isbn" label="ISBN号")
       el-table-column(prop="collection_no" label="馆藏书号")
-      //- el-table-column(prop="book_shelf.name" label="书架号")
+      el-table-column(label="书架号")
+        template(#default="{row}")
+          div(style="cursor:pointer")
+            p(v-if="row.biz_bookshelf_id") {{shelfs.find(item=>item?.biz_bookshelf_id==row.biz_bookshelf_id)}}
+            p(v-else) 暂无书架
       el-table-column( label="借阅记录" width="100")
         template(#default="{row}")
           el-button(link disabled v-if="row.borrow_times == 0" )  {{row.borrow_times}}
@@ -45,11 +50,17 @@
     NewBookDrawer(v-model:show="showBookDrawer"  @onClose="onCloseBookDrawer" :detail="currentDetail" :showSaleStatus="false")
   BorrowList(:id="borrowId" v-model:show="borrowRecordVisible" )
   PrinterDrawer(v-model="showPrinterDrawer" @printer-ready="onPrinterReady")
+  el-dialog(v-model="showShelfVisible")
+    el-select(v-model="shelfId" placeholder="请选择书架" style="width: 100%")
+      el-option(v-for="item in shelfs" :key="item.biz_bookshelf_id" :label="item.name" :value="item.biz_bookshelf_id")
+    template(#footer)
+      el-button(@click="showShelfVisible = false") 取消
+      el-button(type="primary" @click="onSetShelf") 确定
 </template>
 
 <script setup>
 import { ref, onMounted } from 'vue';
-import { bookList, changeSaleStatus as changeSaleStatusApi, printBook } from '/@/api/books/index.ts';
+import { bookList, changeSaleStatus as changeSaleStatusApi, printBook, shelfOption, setShelf } from '/@/api/books/index.ts';
 import BaseFilter from '/@/components/form/BaseFilter.vue'
 import { ElMessage, ElMessageBox } from 'element-plus';
 import NewBookDrawer from './component/newBookDrawer.vue';
@@ -67,6 +78,8 @@ const total = ref(0);
 const limit = ref(10);
 const selectedId = ref(null);
 const titleName = ref(null);
+
+const shelfs = ref([])
 
 // 借阅记录的弹窗
 const borrowId = ref(null)
@@ -196,6 +209,31 @@ const getList = async (val) => {
   list.value = res.data.items;
   statistics.value = res.data.statistics;
 };
+
+
+const showShelfVisible = ref(false);
+const shelfId = ref(null);
+const setShelfs = async (status) => {
+  try {
+    if (!multipleSelection.value.length) {
+      ElMessage({
+        message: '请选择书籍',
+        type: 'warning',
+      });
+      return;
+    }
+    showShelfVisible.value = true;
+
+
+  } catch (error) {
+    console.log(error);
+  }
+}
+const onSetShelf = async () => {
+  await setShelf({ book_entity_ids: multipleSelection.value.map((item) => item.id), biz_bookshelf_id: status });
+  await getList(page.value);
+  ElMessage.success('操作成功');
+}
 
 // 添加打印相关的响应式变量
 const showPrinterDrawer = ref(false)
@@ -380,6 +418,7 @@ const onCloseBookDrawer = async (refresh, id) => {
 
 onMounted(async () => {
   await getList(page.value);
+  shelfs.value = (await shelfOption()).data.items;
   // const age = (await printBook(749)).data.age;
 });
 </script>
