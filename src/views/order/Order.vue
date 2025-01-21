@@ -449,7 +449,7 @@ const printLabel = async (item) => {
                     y,
                     width: 45.2,
                     height: 3.5,
-                    value: `${book.book_info.name} (${book.book_info.collection_no}) ${book.biz_bookshelf_id ? shelfs.value.find(item => item?.biz_bookshelf_id == book.biz_bookshelf_id)?.name : '暂无'}`,
+                    value: `${book.book_info.name} (${book.book_info.collection_no}) ${book.book_info?.biz_bookshelf_id ? shelfs.value.find(item => item?.biz_bookshelf_id == book.book_info.biz_bookshelf_id)?.name : '暂无'}`,
                     fontSize: 2.6,
                     lineMode: 6,
                     textAlignHorizonral: 0,
