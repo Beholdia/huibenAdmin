@@ -75,6 +75,8 @@ import BaseFilter from '/@/components/form/BaseFilter.vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import PrinterDrawer from '/@/components/PrinterDrawer.vue'
 import EditAddress from './component/EditAddress.vue'
+import { shelfOption } from '/@/api/books/index.ts';
+
 
 const status = ref('wait_to_delivery')
 const tabs = [
@@ -184,9 +186,11 @@ watch(() => [status.value, myInput.value], () => {
     }
 })
 
+const shelfs = ref([])
 
 onMounted(async () => {
     await getList();
+    shelfs.value = (await shelfOption()).data.items;
 })
 
 const address = ref({})
@@ -196,13 +200,13 @@ const showAddress = ref(false);
 const editAddress = (item) => {
     address.value = item.biz_address_json;
     orderId.value = item.biz_books_order_id;
-    if(!orderId.value) return ;
+    if (!orderId.value) return;
     showAddress.value = true;
 }
-const onCloseEditAddress = async(refresh)=>{
+const onCloseEditAddress = async (refresh) => {
     address.value = {};
-    orderId.value =0;
-    if(refresh) await getList()
+    orderId.value = 0;
+    if (refresh) await getList()
 }
 
 
@@ -261,7 +265,13 @@ const printLabel = async (item) => {
                     value: '嘉兴棒棒糖绘本乐园-配送单',
                     fontSize: 3.2,
                     lineMode: 6,
-                    textAlignHorizonral: 1
+                    textAlignHorizonral: 1,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             // 订单号
@@ -274,7 +284,14 @@ const printLabel = async (item) => {
                     height: 3.5,
                     value: `订单号`,
                     fontSize: 2.6,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             {
@@ -286,7 +303,14 @@ const printLabel = async (item) => {
                     height: 4.2,
                     value: `${item.biz_books_order_no}`,
                     fontSize: 3.2,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             // 创建时间
@@ -299,7 +323,14 @@ const printLabel = async (item) => {
                     height: 3.5,
                     value: `创建时间`,
                     fontSize: 2.6,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             {
@@ -311,7 +342,14 @@ const printLabel = async (item) => {
                     height: 3.5,
                     value: `${item.created_at}`,
                     fontSize: 2.6,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             // 用户信息
@@ -324,7 +362,14 @@ const printLabel = async (item) => {
                     height: 4.2,
                     value: `${item.biz_user.nickname}  ${item.biz_user.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}`,
                     fontSize: 3.2,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             // 地址
@@ -337,7 +382,14 @@ const printLabel = async (item) => {
                     height: 3.5,
                     value: `${item.biz_address_json.province.province_name}${item.biz_address_json.city.city_name}${item.biz_address_json.county.county_name}${item.biz_address_json.detaild_address}`,
                     fontSize: 2.6,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             {
@@ -349,7 +401,14 @@ const printLabel = async (item) => {
                     height: 2.4,
                     value: `请爱护书籍，有任何问题请联系棒棒糖微信客服`,
                     fontSize: 1.8,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             {
@@ -362,7 +421,8 @@ const printLabel = async (item) => {
                     value: `${item.biz_books_order_no}`,
                     fontSize: 3.2,
                     textPosition: 0,
-                    codeType: 20
+                    codeType: 20,
+                    rotate: 0,
                 }
             },
             {
@@ -389,9 +449,16 @@ const printLabel = async (item) => {
                     y,
                     width: 45.2,
                     height: 3.5,
-                    value: `${book.book_info.name} (${book.book_info.collection_no})`,
+                    value: `${book.book_info.name} (${book.book_info.collection_no}) ${book.biz_bookshelf_id ? shelfs.value.find(item => item?.biz_bookshelf_id == book.biz_bookshelf_id)?.name : '暂无'}`,
                     fontSize: 2.6,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             })
             y += 5
@@ -419,27 +486,26 @@ const printLabel = async (item) => {
                 printQuantity: 1
             }
         }))
+        console.log('打印回调', commitRes)
 
         // 处理返回的页码
-        if (commitRes.resultAck.printQuantity > 0) {
-            console.log('打印页码:', commitRes.resultAck.onPrintPageCompleted);
+        if (commitRes.resultAck.printQuantity == 1 && commitRes.resultAck.onPrintPageCompleted == 1) {
             // 结束打印任务
             const endRes = await nMPrintSocket.value.endJob();
             if (endRes.resultAck.errorCode === 0) {
                 ElMessage.success('打印成功');
-            } else {
-                ElMessage.error('结束打印任务失败');
             }
         } else {
-            ElMessage.error('打印失败，未返回页码');
+            console.log('发送下一页打印数据')
+            // ElMessage.error('打印失败，未返回页码');
         }
     } catch (err) {
         console.error('打印失败:', err)
         ElMessage.error('打印失败')
     }
 }
-const previewImage= ref('')
-const previewVisible= ref(false);
+const previewImage = ref('')
+const previewVisible = ref(false);
 
 const previewLabel = async (item) => {
     try {
@@ -462,7 +528,13 @@ const previewLabel = async (item) => {
                     value: '嘉兴棒棒糖绘本乐园-配送单',
                     fontSize: 3.2,
                     lineMode: 6,
-                    textAlignHorizonral: 1
+                    textAlignHorizonral: 1,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             // 订单号
@@ -475,7 +547,14 @@ const previewLabel = async (item) => {
                     height: 3.5,
                     value: `订单号`,
                     fontSize: 2.6,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             {
@@ -487,7 +566,14 @@ const previewLabel = async (item) => {
                     height: 4.2,
                     value: `${item.biz_books_order_no}`,
                     fontSize: 3.2,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             // 创建时间
@@ -500,7 +586,14 @@ const previewLabel = async (item) => {
                     height: 3.5,
                     value: `创建时间`,
                     fontSize: 2.6,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             {
@@ -512,7 +605,14 @@ const previewLabel = async (item) => {
                     height: 3.5,
                     value: `${item.created_at}`,
                     fontSize: 2.6,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             // 用户信息
@@ -525,7 +625,14 @@ const previewLabel = async (item) => {
                     height: 4.2,
                     value: `${item.biz_user.nickname}  ${item.biz_user.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}`,
                     fontSize: 3.2,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             // 地址
@@ -538,7 +645,14 @@ const previewLabel = async (item) => {
                     height: 3.5,
                     value: `${item.biz_address_json.province.province_name}${item.biz_address_json.city.city_name}${item.biz_address_json.county.county_name}${item.biz_address_json.detaild_address}`,
                     fontSize: 2.6,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             {
@@ -550,7 +664,14 @@ const previewLabel = async (item) => {
                     height: 2.4,
                     value: `请爱护书籍，有任何问题请联系棒棒糖微信客服`,
                     fontSize: 1.8,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             },
             {
@@ -563,7 +684,8 @@ const previewLabel = async (item) => {
                     value: `${item.biz_books_order_no}`,
                     fontSize: 3.2,
                     textPosition: 0,
-                    codeType: 20
+                    codeType: 20,
+                    rotate: 0,
                 }
             },
             {
@@ -592,7 +714,14 @@ const previewLabel = async (item) => {
                     height: 3.5,
                     value: `${book.book_info.name} (${book.book_info.collection_no})`,
                     fontSize: 2.6,
-                    lineMode: 6
+                    lineMode: 6,
+                    textAlignHorizonral: 0,
+                    fontFamily: '思源黑体',
+                    rotate: 0,
+                    textAlignVertical: 1,
+                    letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+                    lineSpacing: 1.0,
+                    fontStyle: [false, false, false, false],
                 }
             })
             y += 5
@@ -615,12 +744,12 @@ const previewLabel = async (item) => {
         }
 
         // 提交打印
-       const previewRes = await nMPrintSocket.value.generateImagePreviewImage(8,);
+        const previewRes = await nMPrintSocket.value.generateImagePreviewImage(8,);
 
-            console.log('预览内容',previewRes)
-            previewImage.value = "data:image/jpeg;base64," + JSON.parse(previewRes.resultAck.info).ImageData;
-            previewVisible.value = true;
-            console.log(previewImage.value,previewVisible.value);
+        console.log('预览内容', previewRes)
+        previewImage.value = "data:image/jpeg;base64," + JSON.parse(previewRes.resultAck.info).ImageData;
+        previewVisible.value = true;
+        console.log(previewImage.value, previewVisible.value);
 
     } catch (err) {
         console.error('打印失败:', err)

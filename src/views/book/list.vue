@@ -309,7 +309,13 @@ const startBatchPrintJobTest = async () => {
         value: '嘉兴棒棒糖绘本乐园',
         fontSize: 1.9,
         lineMode: 6,
-        textAlignHorizonral: 1
+        textAlignHorizonral: 1,
+        fontFamily: '思源黑体',
+        rotate: 0,
+        textAlignVertical: 1,
+        letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+        lineSpacing: 1.0,
+        fontStyle: [false, false, false, false],
       })
       await nMPrintSocket.value.DrawLableText({
         x: 3,
@@ -318,7 +324,14 @@ const startBatchPrintJobTest = async () => {
         height: 4.2,
         value: '馆藏ID',
         fontSize: 3.2,
-        lineMode: 6
+        lineMode: 6,
+        textAlignHorizonral: 0,
+        fontFamily: '思源黑体',
+        rotate: 0,
+        textAlignVertical: 1,
+        letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+        lineSpacing: 1.0,
+        fontStyle: [false, false, false, false],
       })
 
       // 馆藏id
@@ -329,7 +342,14 @@ const startBatchPrintJobTest = async () => {
         height: 4.2,
         value: book.collection_no,
         fontSize: 3.2,
-        lineMode: 6
+        lineMode: 6,
+        textAlignHorizonral: 0,
+        fontFamily: '思源黑体',
+        rotate: 0,
+        textAlignVertical: 1,
+        letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+        lineSpacing: 1.0,
+        fontStyle: [false, false, false, false],
       })
       await nMPrintSocket.value.DrawLableText({
         x: 3,
@@ -338,7 +358,14 @@ const startBatchPrintJobTest = async () => {
         height: 3.5,
         value: '书名',
         fontSize: 2.6,
-        lineMode: 6
+        lineMode: 6,
+        textAlignHorizonral: 0,
+        fontFamily: '思源黑体',
+        rotate: 0,
+        textAlignVertical: 1,
+        letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+        lineSpacing: 1.0,
+        fontStyle: [false, false, false, false],
       })
 
       // 书名
@@ -349,7 +376,14 @@ const startBatchPrintJobTest = async () => {
         height: 3.1,
         value: book.name,
         fontSize: 2.3,
-        lineMode: 6
+        lineMode: 6,
+        textAlignHorizonral: 0,
+        fontFamily: '思源黑体',
+        rotate: 0,
+        textAlignVertical: 1,
+        letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+        lineSpacing: 1.0,
+        fontStyle: [false, false, false, false],
       })
 
       await nMPrintSocket.value.DrawLableText({
@@ -359,7 +393,14 @@ const startBatchPrintJobTest = async () => {
         height: 3.5,
         value: '书仓',
         fontSize: 2.6,
-        lineMode: 6
+        lineMode: 6,
+        textAlignHorizonral: 0,
+        fontFamily: '思源黑体',
+        rotate: 0,
+        textAlignVertical: 1,
+        letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+        lineSpacing: 1.0,
+        fontStyle: [false, false, false, false],
       })
       await nMPrintSocket.value.DrawLableText({
         x: 10.4,
@@ -368,7 +409,14 @@ const startBatchPrintJobTest = async () => {
         height: 3.5,
         value: '嘉兴凯米',
         fontSize: 2.6,
-        lineMode: 6
+        lineMode: 6,
+        textAlignHorizonral: 0,
+        fontFamily: '思源黑体',
+        rotate: 0,
+        textAlignVertical: 1,
+        letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+        lineSpacing: 1.0,
+        fontStyle: [false, false, false, false],
       })
       // const age = (await printBook(book.id)).data.age;
       await nMPrintSocket.value.DrawLableText({
@@ -379,17 +427,31 @@ const startBatchPrintJobTest = async () => {
         // value: '年龄',
         value: '书架号',
         fontSize: 2.6,
-        lineMode: 6
+        lineMode: 6,
+        textAlignHorizonral: 0,
+        fontFamily: '思源黑体',
+        rotate: 0,
+        textAlignVertical: 1,
+        letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+        lineSpacing: 1.0,
+        fontStyle: [false, false, false, false],
       })
       await nMPrintSocket.value.DrawLableText({
-        x: 10.4,
+        x: 13.4,
         y: 16.4,
         width: 30,
         height: 3.1,
         // value: age,
         value: book.biz_bookshelf_id ? shelfs.value.find(item => item?.biz_bookshelf_id == book.biz_bookshelf_id)?.name : '暂无',
         fontSize: 2.3,
-        lineMode: 6
+        lineMode: 6,
+        textAlignHorizonral: 0,
+        fontFamily: '思源黑体',
+        rotate: 0,
+        textAlignVertical: 1,
+        letterSpacing: 0.0,// 字母之间的标准间隔，单位mm
+        lineSpacing: 1.0,
+        fontStyle: [false, false, false, false],
       })
 
       await nMPrintSocket.value.DrawLableBarCode({
@@ -409,7 +471,18 @@ const startBatchPrintJobTest = async () => {
           printQuantity: 1
         }
       }))
-      console.log('~~~~~~~~~~', commitRes)
+      console.log('打印回调', commitRes)
+      // // 处理返回的页码
+      // if (commitRes.resultAck.printQuantity == 1 && commitRes.resultAck.onPrintPageCompleted == 1) {
+      //   // 结束打印任务
+      //   const endRes = await nMPrintSocket.value.endJob();
+      //   if (endRes.resultAck.errorCode === 0) {
+      //     ElMessage.success('打印成功');
+      //   }
+      // } else {
+      //   console.log('发送下一页打印数据')
+      //   // ElMessage.error('打印失败，未返回页码');
+      // }
     }
 
     // 结束打印任务
