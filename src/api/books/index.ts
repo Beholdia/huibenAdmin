@@ -277,6 +277,7 @@ export function setShelf(params) {
     url: "/api/v1/system/book/bookshelf/set",
     method: "post",
     data: params,
+    headers:{needLoading:true}
   })
 }
 // 书架选项

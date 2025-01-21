@@ -65,7 +65,7 @@ el-form(inline)
       template(#reference)
         el-button(type="danger") 批量删除
     slot(name="button")
-  el-form-item
+  el-form-item(style="width:500px")
     slot(name="button2")
     
 

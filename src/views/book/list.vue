@@ -8,7 +8,7 @@
       template(#button2)
         el-button(type="primary", @click="startBatchPrintJobTest()" :disabled="!printerReady") 批量打印
         el-button(type="primary", @click="openPrinterDrawer") 打印设置
-        el-button(type="primary", @click="setShelfs") 书架
+        el-button(type="primary", @click="setShelfs(null)") 设置书架
   .wrapper
     .huibenStatistic 共有书籍{{statistics?.count_total}}本，借出{{statistics?.count_borrowed}}本，可借{{statistics?.count_available}}本
     el-table(:data="list" style="width: 100%",@selection-change="handleSelectionChange")
@@ -23,8 +23,8 @@
       el-table-column(prop="collection_no" label="馆藏书号")
       el-table-column(label="书架号")
         template(#default="{row}")
-          div(style="cursor:pointer" @click="setShelfs(item.id)")
-            p(v-if="row.biz_bookshelf_id") {{shelfs.find(item=>item?.biz_bookshelf_id==row.biz_bookshelf_id).name}}
+          div(style="cursor:pointer" @click="setShelfs(row)")
+            p(v-if="row.biz_bookshelf_id") {{shelfs.find(item=>item?.biz_bookshelf_id==row.biz_bookshelf_id)?.name}}
             p(v-else) 暂无书架
       el-table-column( label="借阅记录" width="100")
         template(#default="{row}")
@@ -50,7 +50,7 @@
     NewBookDrawer(v-model:show="showBookDrawer"  @onClose="onCloseBookDrawer" :detail="currentDetail" :showSaleStatus="false")
   BorrowList(:id="borrowId" v-model:show="borrowRecordVisible" )
   PrinterDrawer(v-model="showPrinterDrawer" @printer-ready="onPrinterReady")
-  el-dialog(v-model="showShelfVisible")
+  el-dialog(v-model="showShelfVisible" title="设置书架")
     el-select(v-model="shelfId" placeholder="请选择书架" style="width: 100%")
       el-option(v-for="item in shelfs" :key="item.biz_bookshelf_id" :label="item.name" :value="item.biz_bookshelf_id")
     template(#footer)
@@ -214,10 +214,13 @@ const getList = async (val) => {
 const showShelfVisible = ref(false);
 const shelfId = ref(null);
 const bookId = ref(null)
-const setShelfs = async (id) => {
+const setShelfs = async (row) => {
   try {
-    if (id) bookId.value = id;
-    if (!multipleSelection.value.length && !id) {
+    if (row?.id) {
+      bookId.value = row.id;
+      shelfId.value = row.biz_bookshelf_id;
+    }
+    if (!multipleSelection.value.length && !row?.id) {
       ElMessage({
         message: '请选择书籍',
         type: 'warning',
@@ -237,6 +240,7 @@ const onSetShelf = async () => {
   }
   showShelfVisible.value = false;
   bookId.value = null;
+  shelfId.value = null;
   await getList(page.value);
   ElMessage.success('操作成功');
 }
@@ -366,13 +370,14 @@ const startBatchPrintJobTest = async () => {
         fontSize: 2.6,
         lineMode: 6
       })
-      const age = (await printBook(book.id)).data.age;
+      // const age = (await printBook(book.id)).data.age;
       await nMPrintSocket.value.DrawLableText({
         x: 3,
         y: 16.1,
         width: 7.8,
         height: 3.5,
-        value: '年龄',
+        // value: '年龄',
+        value: '书架号',
         fontSize: 2.6,
         lineMode: 6
       })
@@ -381,7 +386,8 @@ const startBatchPrintJobTest = async () => {
         y: 16.4,
         width: 30,
         height: 3.1,
-        value: age,
+        // value: age,
+        value: book.biz_bookshelf_id ? shelfs.value.find(item => item?.biz_bookshelf_id == book.biz_bookshelf_id)?.name : '暂无',
         fontSize: 2.3,
         lineMode: 6
       })
@@ -398,11 +404,12 @@ const startBatchPrintJobTest = async () => {
       })
 
       // 提交打印
-      await nMPrintSocket.value.commitJob(null, JSON.stringify({
+      const commitRes = await nMPrintSocket.value.commitJob(null, JSON.stringify({
         printerImageProcessingInfo: {
           printQuantity: 1
         }
       }))
+      console.log('~~~~~~~~~~', commitRes)
     }
 
     // 结束打印任务
