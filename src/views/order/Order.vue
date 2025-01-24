@@ -623,7 +623,7 @@ const previewLabel = async (item) => {
                     y: 24.3,
                     width: 35,
                     height: 4.2,
-                    value: `${item.biz_user.nickname}  ${item.biz_user.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}`,
+                    value: `${item.biz_address_json.name}  ${item.biz_address_json.phone.replace(/(\d{3})\d{4}(\d{4})/, '$1****$2')}`,
                     fontSize: 3.2,
                     lineMode: 6,
                     textAlignHorizonral: 0,
