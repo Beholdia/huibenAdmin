@@ -23,7 +23,7 @@ el-drawer(:modelValue="show",:show-close="false" style="padding:20px" title="用
         .address
           .sub_title(v-if="form?.biz_address?.length") 邮寄地址
           .address_item(v-for="i in form.biz_address")
-            p {{ i.province.province_name }}{{ i.city.city_name }}{{ i.county.county_name }}{{ i.detaild_address}}
+            p {{ i.province.province_name }}{{ i.city.city_name }}{{ i.county.county_name }}{{i.community}}{{ i.detaild_address}}
             p 昵称：{{i.name}}
             p 手机号：{{i.phone}}
         .kid

@@ -48,7 +48,7 @@
                         //- p {{item.biz_user.phone}}
                         p {{item.biz_address_json.name}}
                         p {{item.biz_address_json.phone}}
-                        p {{item.biz_address_json.province.province_name}}{{item.biz_address_json.city.city_name}}{{item.biz_address_json.county.county_name}}{{item.biz_address_json.detaild_address}}
+                        p {{item.biz_address_json.province.province_name}}{{item.biz_address_json.city.city_name}}{{item.biz_address_json.county.county_name}}{{item.biz_address_json.community}}{{item.biz_address_json.detaild_address}}
                         el-button(size="small" @click="editAddress(item)") 编辑地址
                 .books
                     .books_item(v-for="book,index in item.goods" :key="index")

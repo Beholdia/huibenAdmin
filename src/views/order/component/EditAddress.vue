@@ -7,6 +7,8 @@ el-drawer(:modelValue="show",:show-close="false" style="padding:20px" title="修
       el-input(v-model="form.phone" placeholder="请输入联系电话")
     el-form-item(label="城市",required)
       AreaPicker(ref="areaRef" :detail ="form")
+    el-form-item(label="小区",required)
+      el-input(v-model="form.community" placeholder="请输入小区")
     el-form-item(label="详细地址",required)
       el-input(v-model="form.detaild_address" placeholder="请输入详细地址")
   template(#footer)
@@ -27,7 +29,7 @@ const imageUploader = ref(null);
 const show = defineModel('show', { type: Boolean });
 const props = defineProps({
   detail: Object,
-  id:Number
+  id: Number
 });
 
 const form = ref({})
@@ -46,14 +48,15 @@ const onClose = (refreshList) => {
 };
 const onSave = async () => {
   console.log(areaRef.value.data)
-  const { name, phone, province_id, city_id, county_id, detaild_address } = form.value;// 单位为元
-  if (!name || !phone || !province_id || !city_id || !county_id || !detaild_address||areaRef.value.data.length<3) {
+  const { name, phone, province_id, city_id, county_id, detaild_address, community } = form.value;// 单位为元
+  if (!name || !phone || !province_id || !city_id || !county_id || !detaild_address || areaRef.value.data.length < 3 || !community) {
     return ElMessage.error('请填写完整信息');
   }
   await editAddress({
-    "biz_books_order_id":props.id ,
+    "biz_books_order_id": props.id,
     name,
     phone,
+    community,
     "province_id": areaRef.value.data[0],
     "city_id": areaRef.value.data[1],
     "county_id": areaRef.value.data[2],
