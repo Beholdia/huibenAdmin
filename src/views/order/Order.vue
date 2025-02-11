@@ -54,7 +54,8 @@
                     .books_item(v-for="book,index in item.goods" :key="index")
                         .cover()
                             el-image(:src="book.book_info?.pic"  style="width: 100px; height: 100px")
-                            el-icon(v-if="book.borrow_status=='returned' " class="rukuIcon" size="30")
+                            img.returned(v-if="book.borrow_status=='returned' " class="rukuIcon" class="rukuIcon" src="../../assets/returned.png" )
+                            // el-icon(v-if="book.borrow_status=='returned' " class="rukuIcon" size="30")
                                 CircleCheck
                         p {{book.book_info?.name}}
                         p {{book.book_info?.collection_no}}
@@ -837,6 +838,10 @@ const previewLabel = async (item) => {
                             position: absolute;
                             right: 0;
                             bottom: 0;
+                            width: 40px;
+                            height: 40px;
+                            // background: #fff;
+                            border-radius: 50%;
                         }
                     }
 
