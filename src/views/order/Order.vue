@@ -381,7 +381,7 @@ const printLabel = async (item) => {
                     y: 29.5,
                     width: 52.7,
                     height: 3.5,
-                    value: `${item.biz_address_json.province.province_name}${item.biz_address_json.city.city_name}${item.biz_address_json.county.county_name}${item.biz_address_json.detaild_address}`,
+                    value: `${item.biz_address_json.province.province_name}${item.biz_address_json.city.city_name}${item.biz_address_json.county.county_name}${item.biz_address_json.community}${item.biz_address_json.detaild_address}`,
                     fontSize: 2.6,
                     lineMode: 6,
                     textAlignHorizonral: 0,

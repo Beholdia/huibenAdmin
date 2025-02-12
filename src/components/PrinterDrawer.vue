@@ -73,7 +73,7 @@
 </template>
 
 <script setup>
-import { ref, defineProps, defineEmits } from 'vue'
+import { ref, defineProps, defineEmits, onMounted, onUnmounted } from 'vue'
 import Socket from '../utils/Socket'
 import NMPrintSocket from '../utils/Print'
 import { ElMessage } from 'element-plus'
@@ -95,6 +95,7 @@ const usbSelectPrinter = ref('')
 const onlineUsbBool = ref(false)
 const initBool = ref(false)
 const nMPrintSocket = ref(null)
+const socketData = ref(null)
 
 const printSettings = ref({
   density: 3,
@@ -104,9 +105,9 @@ const printSettings = ref({
 
 // 初始化打印服务
 onMounted(() => {
-  const socketData = new Socket("ws://127.0.0.1:37989")
+  socketData.value = new Socket("ws://127.0.0.1:37989")
 
-  socketData.open(
+  socketData.value.open(
     (openBool) => {
       printSocketOpen.value = openBool
       if (!openBool) {
@@ -118,7 +119,11 @@ onMounted(() => {
     }
   )
 
-  nMPrintSocket.value = new NMPrintSocket(socketData);
+  nMPrintSocket.value = new NMPrintSocket(socketData.value);
+  
+  // 添加页面刷新/关闭事件监听
+  window.addEventListener('beforeunload', closeSocket)
+  
   setTimeout(async () => {
     try {
       await getPrinters();
@@ -128,6 +133,25 @@ onMounted(() => {
       console.log(error)
     }
   }, 1000)
+})
+
+// 关闭WebSocket连接的方法
+const closeSocket = () => {
+  console.log('关闭WebSocket连接')
+  if (socketData.value) {
+    socketData.value.close()
+    socketData.value = null
+  }
+  printSocketOpen.value = false
+  onlineUsbBool.value = false
+  initBool.value = false
+}
+
+// 组件卸载时关闭WebSocket连接
+onUnmounted(() => {
+  closeSocket()
+  // 移除事件监听
+  window.removeEventListener('beforeunload', closeSocket)
 })
 
 // 获取打印机列表
