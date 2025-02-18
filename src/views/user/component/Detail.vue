@@ -15,6 +15,7 @@ el-drawer(:modelValue="show",:show-close="false" style="padding:20px" title="用
             el-select(v-model="form.item.book_box")
               el-option(label="是" :value="1")
               el-option(label="否" :value="0")
+              el-option(label="自提" :value="2")
         el-button(type="primary" style="margin-left:auto;width:100px;display:block" @click="setBox") 保存
         //- p 昵称：{{form.item.nickname}}
         //- p 手机号：{{form.item.mobile}}

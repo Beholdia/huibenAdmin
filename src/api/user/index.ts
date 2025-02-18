@@ -106,3 +106,10 @@ export function setUserBox(params: object) {
     data: params,
   });
 }
+export function addExpired(params: object) {
+  return request({
+    url: '/api/v1/system/vip/expired_day/increase',
+    method: 'post',
+    data: params,
+  });
+}

@@ -35,22 +35,37 @@
       //- el-table-column(label="是否体验会员")
       //-   template(#default="{row}")
       //-     el-switch(v-model="row.status" @change="editStatus(row)" :active-value="1" :inactive-value="0" inline-prompt active-text="正常" inactive-text="禁用" size="small")
-      el-table-column(label="操作" width="160px" fixed="right")
+      el-table-column(label="操作" width="260px" fixed="right")
         template(#default="{row}")
           .buttons
             el-button(type="danger" size="small" v-if="row.status==1 " @click="changeStatus(row)") 禁
             el-button(type="primary" size="small" v-else @click="changeStatus(row)") 解封
             el-button(size="small" :disabled="row.biz_vip" @click="setTrial(row.biz_user_id)") 成为体验会员
+            //- el-button(size="small" :disabled="!row?.biz_vip?.biz_vip_id||row.biz_vip.biz_vip_id == 5" @click="increaseExpired(row.biz_user_id)") 增加有效期
+            el-button(size="small" @click="increaseExpired(row.biz_user_id)") 增加有效期
     el-pagination(@current-change="val => getList(val)" background layout="prev, pager, next" :total="total" style="justify-content: center;margin-top: 20px", :page-size="limit")
   Detail(v-model:show="showDetail" :id="selectedId")
+  el-dialog(title="增加有效期" v-model="showAddExpired" width="60%" center)
+    el-form(label-width="120px" label-position="left")
+      el-form-item(label="增加天数")
+        el-input(v-model="addExpiredInfo.day_count" placeholder="请输入增加天数" type="number")
+      el-form-item(label="理由")
+        div(style="width:100%")
+          el-radio-group(v-model="addExpiredInfo.descDefault")
+            el-radio(v-for="item,index in changeDescs" :label="item" @change="changeDesc" :key="index") {{item}}
+          el-input(type="textarea" v-model="addExpiredInfo.desc" placeholder="请输入理由")
+    template(#footer)
+      el-button(@click="showAddExpired = false") 取消
+      el-button(type="primary" @click="confirmAddExpired") 确定
   </template>
 
 <script setup>
-import { userList, editUserStatus, setUserTrial } from '/@/api/user/index.ts';
+import { userList, editUserStatus, setUserTrial, addExpired } from '/@/api/user/index.ts';
 import BaseFilter from '/@/components/form/BaseFilter.vue'
 import { vipList } from '/@/api/member/index.ts';
 import Detail from './component/Detail.vue';
 import { ElMessage } from 'element-plus';
+import { reactive } from 'vue';
 
 const proxy = getCurrentInstance().proxy;
 const form = ref({
@@ -63,6 +78,24 @@ const total = ref(0);
 const limit = ref(10);
 const selectedId = ref(0);
 const showDetail = ref(false);
+
+const showAddExpired = ref(false);
+
+const addExpiredInfo = ref({
+  "biz_user_id": 1,
+  "day_count": 30,
+  "desc": "邀请会员获得",
+  descDefault: "邀请会员获得"
+}
+)
+const changeDescs = reactive([
+  "邀请会员获得",
+  "管理员手动添加",
+  "其他"
+])
+const changeDesc = (val) => {
+  addExpiredInfo.value.desc = val
+}
 
 const filterList = ref([
   {
@@ -149,6 +182,15 @@ const setTrial = async (biz_user_id) => {
     // console.log(error);
   }
 }
+// 增加有效期
+const increaseExpired = async (biz_user_id) => {
+  showAddExpired.value = true;
+  addExpiredInfo.value.biz_user_id = biz_user_id;
+}
+const confirmAddExpired = async () => {
+  await addExpired({ ...addExpiredInfo.value });
+}
+
 const statistics = ref();
 const total_reg_user = ref(0);
 const getList = async (val) => {
