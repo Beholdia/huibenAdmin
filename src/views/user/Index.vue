@@ -188,7 +188,17 @@ const increaseExpired = async (biz_user_id) => {
   addExpiredInfo.value.biz_user_id = biz_user_id;
 }
 const confirmAddExpired = async () => {
-  await addExpired({ ...addExpiredInfo.value });
+  try {
+    
+    await addExpired({ ...addExpiredInfo.value });
+    showAddExpired.value= false;
+    ElMessage({
+      message: '增加成功',
+      type: 'success',
+    });
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 const statistics = ref();
