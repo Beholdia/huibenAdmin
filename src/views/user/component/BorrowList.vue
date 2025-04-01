@@ -60,21 +60,18 @@ const clear = () => {
     page.value = 1;
     limit.value = 10;
 }
-const getList = async () => {
+const getList = async (val) => {
+    if (val) page.value = val;
     const res = await borrowList({ page: page.value, limit: limit.value, biz_user_id: biz_user_id.value });
     detail.value = res.data;
     list.value = res.data.items || [];
-    total.alue = res.data.total || 0;
+    total.value = res.data.total || 0;
 }
 
 const search = async () => {
     clear();
     await getList();
 }
-// onMounted(async () => {
-//     await getList();
-// });
-
 watch(() => props.biz_user_id, async () => {
     if (props.biz_user_id) {
         clear();
